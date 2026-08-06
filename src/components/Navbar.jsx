@@ -70,15 +70,7 @@ export default function Navbar({ onOpenContact }) {
         </div>
 
         {/* Mobile Hamburger Menu button */}
-        <div className="flex md:hidden items-center gap-3">
-          <button
-            onClick={onOpenContact}
-            className="p-2 rounded-full border border-orange-500/80 text-orange-400 bg-orange-500/10"
-            aria-label="Llamar"
-          >
-            <Phone className="w-4.5 h-4.5" />
-          </button>
-          
+        <div className="flex md:hidden items-center">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white"
