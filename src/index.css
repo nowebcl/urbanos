@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Urbanos Gestión Inmobiliaria - Global 90% Compact Zoom Scale */
+
+:root {
+  --bg-dark: #080c14;
+  --bg-card: #0e1422;
+  --bg-card-hover: #141d30;
+  
+  --primary-orange: #f97316;
+  --teal-accent: #14b8a6;
+  
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  font-size: 14px; /* Slightly more compact base font size */
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: #f8fafc;
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+  zoom: 0.9; /* 90% visual scale as requested */
+}
+
+/* Fallback for browsers without zoom property */
+@supports not (zoom: 0.9) {
+  body {
+    transform: scale(0.9);
+    transform-origin: top center;
+    width: 111.11%;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(8, 12, 20, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-search-card {
+  background: rgba(14, 20, 34, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #080c14;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-orange);
+}
+
+/* Buttons */
+.btn-orange {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+}
+
+.btn-orange:hover {
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
+}
+
+.btn-orange:active {
+  transform: translateY(0);
+}
