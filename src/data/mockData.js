@@ -55,23 +55,170 @@ export const STATS = [
 export const AGENTS = [
   {
     id: 1,
-    name: 'Felipe Loyola',
-    role: 'Director Comercial & Broker Senior',
-    phone: '+56 9 9593 0321',
-    email: 'floyola@urbanosgestion.cl',
+    name: 'Cristián Muñoz',
+    role: 'Agente Inmobiliario Senior',
+    phone: '+56 9 6192 4570',
+    email: 'urbanos@urbanosinmobiliaria.cl',
     image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
   },
   {
     id: 2,
-    name: 'Camila Valenzuela',
-    role: 'Asesora Inmobiliaria Senior',
-    phone: '+56 9 8412 9044',
-    email: 'cvalenzuela@urbanosgestion.cl',
+    name: 'Felipe Loyola',
+    role: 'Director Comercial & Broker',
+    phone: '+56 9 9593 0321',
+    email: 'contacto@urbanosgestion.cl',
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80'
   }
 ];
 
 export const PROPERTIES = [
+  {
+    id: 1047,
+    code: 'URB-1047',
+    slug: 'se-arrienda-casa-parcela-amobalda-puerto-varas-1-900-000',
+    title: 'Se Arrienda Casa Amoblada en Puerto Varas $1.500.000',
+    commune: 'Puerto Varas',
+    location: 'Puerto Varas, Región de Los Lagos',
+    address: 'Sector Residencial Puerto Varas (Cerca Colegio Alemán)',
+    priceDisplay: '$1.500.000',
+    priceUF: 40,
+    priceCLP: 1500000,
+    bedrooms: 7,
+    bathrooms: 3,
+    parking: 3,
+    area: '150m²',
+    landArea: '1.300m²',
+    isFeatured: true,
+    operation: 'Arriendo',
+    type: 'Casa',
+    createdAt: '2025-07-14',
+    image: 'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-11-at-11.26.40-1-150x150.jpeg',
+    gallery: [
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-11-at-11.26.40-1-150x150.jpeg',
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-11-at-11.26.41-1-150x150.jpeg',
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/07/WhatsApp-Image-2025-07-11-at-11.26.42-1-150x150.jpeg',
+      '/images/puerto_varas.jpg'
+    ],
+    agent: AGENTS[0],
+    description: '¡Espectacular Casa totalmente Amoblada! Dos construcciones independientes ideales para hasta 7 personas con 5 dormitorios principales + 2 adicionales. Ideal para familias numerosas, ejecutivos o profesionales de empresas. Disfruta de una propiedad amplia, totalmente equipada y lista para habitar en uno de los sectores más cotizados de Puerto Varas.',
+    features: [
+      'Totalmente Amoblada y Equipada',
+      '1.300m² Terreno / 150m² Construcción',
+      'WiFi e Internet Cable Incluido',
+      'Conectividad a Colegio Alemán (9 min)',
+      'Estacionamiento techado para 3 vehículos',
+      'Zona segura y de alto estándar'
+    ],
+    mapCoords: { lat: -41.3195, lng: -72.9854 }
+  },
+  {
+    id: 4421,
+    code: 'URB-4421',
+    slug: 'arrienda-propiedad-habilitada-para-taller-mecanico-500-000',
+    title: 'Arrienda Propiedad Habilitada para Taller Mecánico! $500.000',
+    commune: 'Puerto Montt',
+    location: 'Puerto Montt, Región de Los Lagos',
+    address: 'A pasos del Regimiento, Puerto Montt',
+    priceDisplay: '$500.000',
+    priceUF: 13.5,
+    priceCLP: 500000,
+    bedrooms: 0,
+    bathrooms: 1,
+    parking: 4,
+    area: '120m²',
+    landArea: '200m²',
+    isFeatured: true,
+    operation: 'Arriendo',
+    type: 'Casa Comercial',
+    createdAt: '2026-06-26',
+    image: 'https://urbanosinmobiliaria.cl/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-26-at-16.08.48.jpeg',
+    gallery: [
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2026/06/WhatsApp-Image-2026-06-26-at-16.08.48.jpeg',
+      '/images/puerto_montt.jpg'
+    ],
+    agent: AGENTS[0],
+    description: '¡Se Arrienda Propiedad Habilitada para Taller Mecánico! Excelente oportunidad para establecer o potenciar tu negocio en un sector estratégico de Puerto Montt, a pasos del Regimiento en zona de alto flujo vehicular automotriz. Incluye elevador vehicular profesional instalado.',
+    features: [
+      'Espacio habilitado para taller mecánico',
+      'Elevador vehicular profesional incluido',
+      'Excelente visibilidad comercial',
+      'Fácil acceso para clientes y camiones',
+      'Sector consolidado automotriz'
+    ],
+    mapCoords: { lat: -41.4693, lng: -72.9424 }
+  },
+  {
+    id: 2805,
+    code: 'URB-2805',
+    slug: 'se-arrienda-casa-en-parcelacion-playa-chamiza-550-000-ggcc-30-000',
+    title: 'Se arrienda casa en Parcelación Playa Chamiza $580.000',
+    commune: 'Puerto Montt',
+    location: 'Puerto Montt, Región de Los Lagos',
+    address: 'Parcelación Playa Chamiza, Puerto Montt',
+    priceDisplay: '$580.000',
+    priceUF: 15.5,
+    priceCLP: 580000,
+    bedrooms: 2,
+    bathrooms: 2,
+    parking: 2,
+    area: '80m²',
+    landArea: '500m²',
+    isFeatured: true,
+    operation: 'Arriendo',
+    type: 'Casa',
+    createdAt: '2025-11-29',
+    image: 'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/11/WhatsApp-Image-2025-11-27-at-18.43.20-1-150x150.jpeg',
+    gallery: [
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/11/WhatsApp-Image-2025-11-27-at-18.43.20-1-150x150.jpeg',
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/11/WhatsApp-Image-2025-11-27-at-18.43.20-2-150x150.jpeg',
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2025/11/WhatsApp-Image-2025-11-27-at-18.43.19-1-150x150.jpeg'
+    ],
+    agent: AGENTS[0],
+    description: 'Hermosa y amplia casa en Parcelación Playa Chamiza a solo 15 minutos del centro de Puerto Montt. El valor incluye agua, gastos comunes e Internet Fibra Óptica. Casa muy luminosa con excelente distribución y entorno de naturaleza.',
+    features: [
+      'Incluye Agua e Internet Fibra Óptica',
+      'A 15 minutos del centro de Puerto Montt',
+      '2 Dormitorios y 2 Baños',
+      'Entorno tranquilo rodeado de naturaleza',
+      'Acceso controlado a parcelación'
+    ],
+    mapCoords: { lat: -41.4812, lng: -72.8512 }
+  },
+  {
+    id: 3396,
+    code: 'URB-3396',
+    slug: 'arriendo-mensual-cabana-tipo-loft-en-isla-puluqui-calbuco-900-000',
+    title: 'Arriendo Mensual Loft en Isla Puluqui- Calbuco $700.000',
+    commune: 'Osorno',
+    location: 'Calbuco / Chiloé, Región de Los Lagos',
+    address: 'Isla Puluqui, Calbuco',
+    priceDisplay: '$700.000',
+    priceUF: 18.5,
+    priceCLP: 700000,
+    bedrooms: 2,
+    bathrooms: 1,
+    parking: 2,
+    area: '70m²',
+    landArea: '1.000m²',
+    isFeatured: true,
+    operation: 'Arriendo',
+    type: 'Casa',
+    createdAt: '2026-03-12',
+    image: 'https://urbanosinmobiliaria.cl/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-11-at-21.15.53-1-150x150.jpeg',
+    gallery: [
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-11-at-21.15.53-1-150x150.jpeg',
+      'https://urbanosinmobiliaria.cl/wp-content/uploads/2026/03/WhatsApp-Image-2026-03-11-at-21.17.36-1-150x150.jpeg'
+    ],
+    agent: AGENTS[0],
+    description: 'Se arrienda acogedora cabaña tipo Loft en Isla Puluqui, Calbuco. Ideal para profesionales o personas trasladadas a la zona. Conectividad diaria con transbordador y acceso directo a la playa a solo 5 minutos del embarcadero.',
+    features: [
+      'Acceso directo a la playa',
+      'A 5 min en auto del embarcadero',
+      'Totalmente equipada para 4 personas',
+      'Entorno natural de paz y tranquilidad'
+    ],
+    mapCoords: { lat: -41.7912, lng: -73.0112 }
+  },
   {
     id: 1,
     code: 'URB-101',
@@ -98,17 +245,14 @@ export const PROPERTIES = [
       '/images/puerto_montt.jpg',
       '/images/house_valle_volcanes.jpg'
     ],
-    agent: AGENTS[0],
-    description: 'Espectacular casa mediterránea de arquitectura contemporánea en parcela de 5.000m². Entorno natural privilegiado a minutos del centro de Puerto Montt. Construcción en termopanel, excelente aislación térmica, piso flotante de alto tráfico y terminaciones en madera nativa de alerce y roble. Cuenta con amplio living comedor con estufa a pellet, cocina integrada y quincho cerrado.',
+    agent: AGENTS[1],
+    description: 'Espectacular casa mediterránea de arquitectura contemporánea en parcela de 5.000m². Entorno natural privilegiado a minutos del centro de Puerto Montt. Construcción en termopanel y terminaciones en madera nativa.',
     features: [
       'Bosque nativo en terreno',
       'Calefacción central a pellet',
       'Agua de vertiente y APR',
       'Quincho cerrado equipado',
-      'Conexión Fibra Óptica',
-      'Portón eléctrico de acceso',
-      'Ventanas Termopanel PVC',
-      'Bodega exterior 20m²'
+      'Conexión Fibra Óptica'
     ],
     mapCoords: { lat: -41.4693, lng: -72.9424 }
   },
@@ -139,16 +283,13 @@ export const PROPERTIES = [
       '/images/frutillar.jpg'
     ],
     agent: AGENTS[1],
-    description: 'Amplio departamento con vista panorámica inmejorable al Lago Llanquihue y Volcán Osorno en exclusivo condominio de Puerto Varas. Edificio de primera categoría con conserjería 24/7, piscina climatizada, gimnasio equipado y salón gourmet con terraza panorámica.',
+    description: 'Amplio departamento con vista panorámica inmejorable al Lago Llanquihue y Volcán Osorno. Edificio de primera categoría con conserjería 24/7, piscina climatizada, gimnasio y quincho.',
     features: [
-      'Vista en primera línea al Lago y Volcán',
-      'Piscina Climatizada en condominio',
+      'Vista al Lago y Volcán',
+      'Piscina Climatizada',
       'Bodega amplia en subterráneo',
-      'Ventanas Termopanel Pella',
-      'Calefacción por losa radiante',
-      'Estacionamiento doble en línea',
-      'Accesibilidad Universal',
-      'Salón de eventos equipado'
+      'Termopanel Pella',
+      'Calefacción radiante'
     ],
     mapCoords: { lat: -41.3195, lng: -72.9854 }
   },
@@ -179,14 +320,13 @@ export const PROPERTIES = [
       '/images/puerto_montt.jpg'
     ],
     agent: AGENTS[0],
-    description: 'Excelente oportunidad en uno de los sectores residenciales de mayor plusvalía y demanda de Puerto Montt. Casa ampliada y 100% regularizada. Cercanía inmediata a colegios San Javier y Pumahue, supermercados Lider y Jumbo, farmacias y centros médicos.',
+    description: 'Excelente oportunidad en uno de los sectores residenciales de mayor plusvalía de Puerto Montt. Casa ampliada regularizada, cercana a colegios San Javier y Pumahue, supermercados y clínicas.',
     features: [
-      'Amplia cocina amoblada y equipada',
-      'Estufa a pellet de alta eficiencia',
-      'Loggia techada y lavadero',
-      'Patio trasero consolidado con césped',
-      'Sistema de cámaras de seguridad',
-      'Dormitorio principal en suite walk-in closet'
+      'Amplia cocina equipada',
+      'Estufa a pellet',
+      'Loggia techada',
+      'Patio consolidado',
+      'Cámara de seguridad'
     ],
     mapCoords: { lat: -41.4552, lng: -72.9214 }
   },
@@ -217,13 +357,12 @@ export const PROPERTIES = [
       '/images/dept_puerto_varas.jpg'
     ],
     agent: AGENTS[1],
-    description: 'Acogedora casa de estilo sureño tradicional con revestimiento duradero y excelente iluminación natural durante todo el día. Ubicada en un barrio residencial consolidado, seguro y muy tranquilo en Puerto Varas.',
+    description: 'Acogedora casa de estilo sureño tradicional con revestimiento duradero y excelente iluminación natural. Barrio residencial tranquilo y consolidado en Puerto Varas.',
     features: [
-      'Combustión lenta Bosca instalada',
-      'Antejardín formado',
-      'Estacionamiento techado para 2 autos',
-      'Portón eléctrico de acceso vehicular',
-      'Bodega de jardín'
+      'Combustión lenta Bosca',
+      'Antejardín',
+      'Estacionamiento techado',
+      'Portón eléctrico'
     ],
     mapCoords: { lat: -41.3255, lng: -72.9789 }
   },
@@ -253,13 +392,12 @@ export const PROPERTIES = [
       '/images/puerto_varas.jpg'
     ],
     agent: AGENTS[0],
-    description: 'Exclusivo lote plano con lomaje suave y acceso directo a la playa del Lago Llanquihue en Frutillar Bajo. Proyecto listo para construir residencia de lujo. Cableado eléctrico subterráneo y agua potable conectada.',
+    description: 'Exclusivo lote plano con lomaje suave y frente directo al Lago Llanquihue en Frutillar Bajo. Luz subterránea y red de agua conectada.',
     features: [
-      'Acceso directo a playa del lago',
-      'Factibilidad eléctrica subterránea',
-      'Rol propio e inscripción en CBR',
-      'Lomaje suave panorámico',
-      'Entorno natural protegido'
+      'Acceso directo al lago',
+      'Factibilidad eléctrica',
+      'Rol propio',
+      'Lomaje suave'
     ],
     mapCoords: { lat: -41.1321, lng: -73.0234 }
   },
@@ -288,85 +426,13 @@ export const PROPERTIES = [
       '/images/osorno.jpg'
     ],
     agent: AGENTS[1],
-    description: 'Estratégica propiedad comercial de alto flujo peatonal y vehicular en pleno centro cívico de Osorno. Ideal para sede corporativa, clínica médica, instituto o restaurante gastronómico.',
+    description: 'Propiedad comercial de alto flujo peatonal y vehicular en pleno centro de Osorno. Ideal para clínicas, oficinas corporativas, instituciones o restaurant.',
     features: [
-      'Zonificación Comercial C1',
-      'Red Eléctrica Trifásica',
-      'Accesibilidad Universal homologada',
-      'Gran vitrina a la calle',
-      'Amplia zona de bodega posterior'
+      'Zonificación comercial',
+      'Red trifásica',
+      'Accesibilidad universal',
+      'Gran vitrina'
     ],
     mapCoords: { lat: -40.5741, lng: -73.1362 }
-  },
-  {
-    id: 7,
-    code: 'URB-107',
-    slug: 'arriendo-departamento-estudio-puerto-montt',
-    title: 'Arriendo Departamento Amoblado Centro Puerto Montt',
-    commune: 'Puerto Montt',
-    location: 'Puerto Montt, Región de Los Lagos',
-    address: 'Calle Urmeneta 520',
-    priceDisplay: '$580.000',
-    priceUF: 15.5,
-    priceCLP: 580000,
-    bedrooms: 1,
-    bathrooms: 1,
-    parking: 1,
-    area: '48m²',
-    landArea: '48m²',
-    isFeatured: false,
-    operation: 'Arriendo',
-    type: 'Departamento',
-    createdAt: '2026-02-03',
-    image: '/images/dept_puerto_varas.jpg',
-    gallery: [
-      '/images/dept_puerto_varas.jpg',
-      '/images/puerto_montt.jpg'
-    ],
-    agent: AGENTS[0],
-    description: 'Excelente departamento 1 dormitorio completamente amoblado y equipado. Incluye estacionamiento subterráneo y bodega. Gastos comunes incluidos en el valor. Disponible para arriendo anual.',
-    features: [
-      'Totalmente Amoblado',
-      'Calefacción eléctrica mural',
-      'Conexión a lavadora',
-      'Conserjería 24 hrs',
-      'Cerca de mall y terminal'
-    ],
-    mapCoords: { lat: -41.4721, lng: -72.9398 }
-  },
-  {
-    id: 8,
-    code: 'URB-108',
-    slug: 'arriendo-casa-en-condominio-puerto-varas',
-    title: 'Arriendo Casa en Condominio Ensenada',
-    commune: 'Puerto Varas',
-    location: 'Puerto Varas, Región de Los Lagos',
-    address: 'Ruta 225 Km 12, Ensenada',
-    priceDisplay: 'UF 45',
-    priceUF: 45,
-    priceCLP: 1687500,
-    bedrooms: 4,
-    bathrooms: 3,
-    parking: 3,
-    area: '180m²',
-    landArea: '5.000m²',
-    isFeatured: false,
-    operation: 'Arriendo',
-    type: 'Casa',
-    createdAt: '2026-02-05',
-    image: '/images/house_monte_verde.jpg',
-    gallery: [
-      '/images/house_monte_verde.jpg',
-      '/images/puerto_varas.jpg'
-    ],
-    agent: AGENTS[1],
-    description: 'Hermosa casa estilo sureño en condominio cerrado con acceso controlado. Terreno de 5.000m² con árboles nativos y vista despejada al Volcán Calbuco. Arriendo por periodo mínimo de 12 meses.',
-    features: [
-      'Acceso controlado 24/7',
-      'Calefacción central radiante',
-      'Bosque nativo en parcela',
-      'Fibra óptica disponible'
-    ],
-    mapCoords: { lat: -41.3412, lng: -72.8941 }
   }
 ];
