@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, Filter, RefreshCw, SlidersHorizontal, ArrowUpDown, MapPin, Bed, Bath, Car, Maximize2, ArrowRight } from 'lucide-react';
+import { Search, RefreshCw, ArrowUpDown, MapPin, Bed, Bath, Car, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PROPERTIES, CITIES } from '../data/mockData';
+
+const ITEMS_PER_PAGE = 12;
 
 export default function CatalogPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,7 +23,12 @@ export default function CatalogPage() {
   const [maxPriceUF, setMaxPriceUF] = useState('');
   const [minBeds, setMinBeds] = useState('All');
   const [sortBy, setSortBy] = useState('newest'); // newest, price-desc, price-asc
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset pagination to page 1 whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [operation, city, type, query, minBeds, minPriceUF, maxPriceUF, sortBy]);
 
   // Filter & sort logic
   const filteredAndSortedProperties = useMemo(() => {
@@ -69,6 +76,20 @@ export default function CatalogPage() {
     return result;
   }, [operation, city, type, query, minBeds, minPriceUF, maxPriceUF, sortBy]);
 
+  const totalPages = Math.ceil(filteredAndSortedProperties.length / ITEMS_PER_PAGE) || 1;
+
+  const paginatedProperties = useMemo(() => {
+    const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredAndSortedProperties.slice(startIdx, startIdx + ITEMS_PER_PAGE);
+  }, [filteredAndSortedProperties, currentPage]);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 250, behavior: 'smooth' });
+    }
+  };
+
   const handleReset = () => {
     setOperation('All');
     setCity('All');
@@ -78,10 +99,26 @@ export default function CatalogPage() {
     setMaxPriceUF('');
     setMinBeds('All');
     setSortBy('newest');
+    setCurrentPage(1);
     setSearchParams({});
   };
 
-  const visibleProperties = filteredAndSortedProperties.slice(0, visibleCount);
+  // Helper for page numbers list
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, start + maxVisiblePages - 1);
+
+    if (end - start < maxVisiblePages - 1) {
+      start = Math.max(1, end - maxVisiblePages + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
 
   return (
     <div className="min-h-screen bg-[#080c14] py-10 px-4 sm:px-6 lg:px-8">
@@ -96,7 +133,7 @@ export default function CatalogPage() {
             Propiedades en el Sur de Chile
           </h1>
           <p className="text-sm text-slate-400 mt-2 max-w-2xl">
-            Explora nuestra selección curada de casas, departamentos, terrenos y locales comerciales en la Región de Los Lagos.
+            Explora nuestra selección completa de casas, departamentos, terrenos y locales comerciales en la Región de Los Lagos y alrededores.
           </p>
         </div>
 
@@ -111,7 +148,7 @@ export default function CatalogPage() {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Buscar por título, comuna, sector o código (ej: URB-101)..."
+                placeholder="Buscar por título, comuna, sector o código (ej: URB-1047)..."
                 className="w-full pl-10 pr-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-teal-400"
               />
             </div>
@@ -222,7 +259,7 @@ export default function CatalogPage() {
         {/* Status Bar & Sort Selector */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0e1422] p-4 rounded-xl border border-slate-800">
           <div className="text-xs sm:text-sm text-slate-300 font-semibold">
-            Mostrando <span className="text-teal-400 font-bold">{visibleProperties.length}</span> de <span className="text-white font-bold">{filteredAndSortedProperties.length}</span> propiedades disponibles
+            Mostrando <span className="text-teal-400 font-bold">{paginatedProperties.length}</span> de <span className="text-white font-bold">{filteredAndSortedProperties.length}</span> propiedades (Página {currentPage} de {totalPages})
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -255,7 +292,7 @@ export default function CatalogPage() {
         ) : (
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {visibleProperties.map((prop) => (
+              {paginatedProperties.map((prop) => (
                 <div
                   key={prop.id}
                   onClick={() => navigate(`/propiedades/${prop.slug}`)}
@@ -336,15 +373,46 @@ export default function CatalogPage() {
               ))}
             </div>
 
-            {/* Load More Button */}
-            {visibleCount < filteredAndSortedProperties.length && (
-              <div className="text-center pt-6">
-                <button
-                  onClick={() => setVisibleCount(prev => prev + 6)}
-                  className="px-8 py-3 rounded-full border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-lg"
-                >
-                  Cargar más propiedades ({filteredAndSortedProperties.length - visibleCount} restantes)
-                </button>
+            {/* Instant Numbered Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-800">
+                <span className="text-xs text-slate-400 font-semibold">
+                  Página {currentPage} de {totalPages} ({filteredAndSortedProperties.length} propiedades totales)
+                </span>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="p-2.5 rounded-xl border border-slate-700 bg-[#0e1422] text-slate-300 hover:text-white hover:border-slate-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    aria-label="Página anterior"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  {getPageNumbers().map(p => (
+                    <button
+                      key={p}
+                      onClick={() => handlePageChange(p)}
+                      className={`w-9 h-9 rounded-xl text-xs font-extrabold transition-all ${
+                        currentPage === p
+                          ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30 border border-orange-400'
+                          : 'bg-[#0e1422] border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="p-2.5 rounded-xl border border-slate-700 bg-[#0e1422] text-slate-300 hover:text-white hover:border-slate-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    aria-label="Página siguiente"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             )}
           </div>
