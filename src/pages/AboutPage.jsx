@@ -29,7 +29,7 @@ export default function AboutPage({ onOpenContact }) {
     },
     {
       title: 'Red de Especialistas',
-      description: 'Contamos con una amplia red de contactos e inversionistas en Región de Los Lagos, Valparaíso y Metropolitana.',
+      description: 'Contamos con una amplia red de contactos e inversionistas en la Región de Los Lagos, Valparaíso y Metropolitana.',
       icon: Users,
       color: 'text-orange-400'
     }
@@ -51,13 +51,13 @@ export default function AboutPage({ onOpenContact }) {
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase">
-            CONOCE NUESTRO EQUIPO
+            SOBRE NOSOTROS
           </span>
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight">
-            Gestión Inmobiliaria Profesional en el Sur de Chile
+            Urbanos Gestión Inmobiliaria
           </h1>
-          <p className="max-w-3xl mx-auto text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-            Más de 12 años conectando a familias e inversionistas con las mejores propiedades en Los Lagos, Valparaíso y Santiago.
+          <p className="max-w-3xl mx-auto text-base sm:text-lg text-slate-200 leading-relaxed font-semibold">
+            En Urbanos Gestión Inmobiliaria nos especializamos en el corretaje de propiedades, enfocándonos en acompañar a nuestros clientes en la búsqueda, adquisición y venta de inmuebles en la Región de Los Lagos, Región de Valparaíso y Metropolitana.
           </p>
         </div>
       </section>
@@ -67,33 +67,33 @@ export default function AboutPage({ onOpenContact }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
           <div className="space-y-5">
-            <span className="text-xs font-bold tracking-widest text-orange-400 uppercase">NUESTRA HISTORIA</span>
+            <span className="text-xs font-bold tracking-widest text-orange-400 uppercase">EXPERIENCIA Y RESPALDO</span>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white leading-snug">
-              Experiencia, criterio profesional y conocimiento territorial
+              Trayectoria, transparencia y excelencia en cada operación
             </h2>
             <p className="text-sm text-slate-300 leading-relaxed">
-              En <strong className="text-white">Urbanos Gestión Inmobiliaria</strong> nos especializamos en la comercialización y administración de propiedades de alta calidad en la Región de Los Lagos (Puerto Montt, Puerto Varas, Frutillar, Osorno), ampliando nuestra cobertura a sectores estratégicos de la Región de Valparaíso y la Región Metropolitana.
+              En <strong className="text-white">Urbanos Gestión Inmobiliaria</strong> nos especializamos en el corretaje de propiedades, enfocándonos en acompañar a nuestros clientes en la búsqueda, adquisición y venta de inmuebles en la Región de Los Lagos, Región de Valparaíso y Metropolitana.
             </p>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Comprender el dinamismo del mercado sureño, la normativa urbana y el valor único de terrenos y residencias en entornos naturales es el pilar de nuestro éxito.
+              Nuestra trayectoria y experiencia en el mercado inmobiliario respaldan nuestro compromiso con la excelencia, la transparencia y la entrega de un servicio profesional orientado a generar valor y confianza en cada operación.
             </p>
 
             <div className="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
               <div className="flex items-center gap-2 text-slate-200">
                 <CheckCircle className="w-4 h-4 text-teal-400" />
-                <span>Tasación profesional de mercado</span>
+                <span>Gestión en Región de Los Lagos</span>
               </div>
               <div className="flex items-center gap-2 text-slate-200">
                 <CheckCircle className="w-4 h-4 text-teal-400" />
-                <span>Marketing digital avanzado</span>
+                <span>Gestión en Región de Valparaíso</span>
               </div>
               <div className="flex items-center gap-2 text-slate-200">
                 <CheckCircle className="w-4 h-4 text-teal-400" />
-                <span>Estudio de títulos y legal</span>
+                <span>Gestión en Región Metropolitana</span>
               </div>
               <div className="flex items-center gap-2 text-slate-200">
                 <CheckCircle className="w-4 h-4 text-teal-400" />
-                <span>Administración integral de arriendos</span>
+                <span>Asesoría Legal y Escrituración</span>
               </div>
             </div>
           </div>
@@ -108,9 +108,9 @@ export default function AboutPage({ onOpenContact }) {
             <div className="absolute bottom-6 left-6 right-6 p-4 bg-[#0e1422]/90 backdrop-blur-md rounded-2xl border border-slate-800">
               <div className="flex items-center gap-2 text-teal-400 text-xs font-bold mb-1">
                 <MapPin className="w-4 h-4" />
-                <span>Oficina Central en Puerto Montt</span>
+                <span>Cobertura Multirregional</span>
               </div>
-              <span className="text-xs text-slate-300">Atención personalizada en toda la Macrozona Sur de Chile.</span>
+              <span className="text-xs text-slate-300">Atención profesional presencial y remota para propietarios e inversionistas.</span>
             </div>
           </div>
 
@@ -120,7 +120,7 @@ export default function AboutPage({ onOpenContact }) {
         <div className="space-y-8 pt-8">
           <div className="text-center space-y-2">
             <span className="text-xs font-bold tracking-widest text-teal-400 uppercase">NUESTROS PILARES</span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">Valores que guián nuestra gestión</h2>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">Valores que guían nuestra gestión</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

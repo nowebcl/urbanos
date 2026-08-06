@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Building, ShieldCheck, FileText, Wrench, Wallet, CheckCircle2, Send, Phone, MessageSquare, Tag, FileSignature, Calendar } from 'lucide-react';
+import { Building, ShieldCheck, FileText, Wrench, Wallet, CheckCircle2, Send, Phone, MessageSquare, Tag, FileSignature, Calendar, Award, HeartHandshake } from 'lucide-react';
 
 export default function ServicesPage() {
-  const [activeTab, setActiveTab] = useState('captacion'); // 'captacion' | 'oferta' | 'administracion'
+  const [activeTab, setActiveTab] = useState('captacion'); // 'captacion' | 'oferta'
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
@@ -11,69 +11,118 @@ export default function ServicesPage() {
     setTimeout(() => setFormSubmitted(false), 5000);
   };
 
-  const managementFeatures = [
-    {
-      title: 'Selección Rigurosa de Arrendatarios',
-      description: 'Evaluación comercial, financiera (DICOM) y laboral exhaustiva para garantizar postulantes confiables.',
-      icon: ShieldCheck
-    },
-    {
-      title: 'Redacción de Contratos Legales',
-      description: 'Contratos redactados por abogados especialistas con cláusulas de resguardo ante notario.',
-      icon: FileText
-    },
-    {
-      title: 'Cobranza Oportuna y Depósitos',
-      description: 'Gestión puntual de cobro mensual de arriendos y transferencia garantizada a tu cuenta bancaria.',
-      icon: Wallet
-    },
-    {
-      title: 'Mantenciones e Incidencias 24/7',
-      description: 'Coordinación inmediata de servicios técnicos, reparaciones y supervisión de estado del inmueble.',
-      icon: Wrench
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-[#080c14] text-slate-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-16">
         
         {/* Page Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
+        <div className="text-center max-w-4xl mx-auto space-y-4">
           <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase">
-            SERVICIOS INMOBILIARIOS INTEGRALES
+            NUESTROS SERVICIOS INMOBILIARIOS
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Gestión, Venta & Administración
+            Venta, Arriendo y Administración de Propiedades
           </h1>
           <p className="text-sm sm:text-base text-slate-300 font-normal leading-relaxed">
-            Cobertura profesional en la Región de Los Lagos, Valparaíso y Metropolitana. Nos encargamos de todo el proceso legal, comercial y de tasación.
+            Nuestra trayectoria y experiencia en el mercado inmobiliario respaldan nuestro compromiso con la excelencia, la transparencia y la entrega de un servicio profesional orientado a generar valor y confianza en cada operación.
           </p>
         </div>
 
-        {/* Administration Services Overview */}
-        <div className="space-y-8">
-          <div className="text-center space-y-2">
-            <span className="text-xs font-bold tracking-widest text-orange-400 uppercase">ADMINISTRACIÓN DE ARRIENDOS</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Tranquilidad total para propietarios de inmuebles
-            </h2>
+        {/* 3 Core Services Detailed Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          {/* Service 1: Compra y Venta */}
+          <div className="bg-[#0e1422] p-8 rounded-3xl border border-slate-800 space-y-5 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
+            <div className="space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
+                <Tag className="w-7 h-7 stroke-[1.75]" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-white">Compra y Venta</h2>
+              <p className="text-xs font-bold text-teal-400 uppercase tracking-wider">
+                Asesoría experta para comprar o vender con seguridad y confianza.
+              </p>
+              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                Nuestro equipo de especialistas te acompaña durante todo el proceso de compra o venta de tu propiedad, entregando una asesoría integral y personalizada. Nos encargamos de la valorización del inmueble, estrategia comercial, promoción, gestión de visitas, negociación, revisión legal y coordinación del proceso de escrituración, asegurando una operación eficiente, transparente y enfocada en obtener el mejor resultado para ti.
+              </p>
+            </div>
+            
+            <div className="pt-4 border-t border-slate-800/80">
+              <button
+                onClick={() => { setActiveTab('captacion'); window.scrollTo({ top: 900, behavior: 'smooth' }); }}
+                className="w-full py-2.5 rounded-xl border border-orange-500/50 bg-orange-500/10 text-orange-300 hover:bg-orange-500/20 text-xs font-bold transition-all"
+              >
+                Encargar Venta o Tasación
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {managementFeatures.map((f, i) => {
-              const Icon = f.icon;
-              return (
-                <div key={i} className="bg-[#0e1422] p-6 rounded-2xl border border-slate-800 space-y-3 hover:border-slate-600 transition-all">
-                  <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-teal-400">
-                    <Icon className="w-6 h-6 stroke-[1.75]" />
-                  </div>
-                  <h3 className="text-base font-bold text-white">{f.title}</h3>
-                  <p className="text-xs text-slate-300 leading-relaxed font-normal">{f.description}</p>
-                </div>
-              );
-            })}
+          {/* Service 2: Arriendos */}
+          <div className="bg-[#0e1422] p-8 rounded-3xl border border-slate-800 space-y-5 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
+            <div className="space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
+                <Building className="w-7 h-7 stroke-[1.75]" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-white">Arriendos</h2>
+              <p className="text-xs font-bold text-orange-400 uppercase tracking-wider">
+                Encuentra al arrendatario ideal con el respaldo de un equipo experto.
+              </p>
+              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                Gestionamos de manera integral el proceso de arriendo de tu propiedad, desde la promoción y evaluación de los postulantes hasta la elaboración y firma del contrato, inventario, entrega del inmueble y seguimiento de cada etapa. Nuestro objetivo es proteger tu patrimonio, minimizar riesgos y asegurar un arriendo seguro, transparente y eficiente.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-800/80">
+              <button
+                onClick={() => { setActiveTab('captacion'); window.scrollTo({ top: 900, behavior: 'smooth' }); }}
+                className="w-full py-2.5 rounded-xl border border-teal-500/50 bg-teal-500/10 text-teal-300 hover:bg-teal-500/20 text-xs font-bold transition-all"
+              >
+                Publicar en Arriendo
+              </button>
+            </div>
           </div>
+
+          {/* Service 3: Administración de Arriendos */}
+          <div className="bg-[#0e1422] p-8 rounded-3xl border border-slate-800 space-y-5 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
+            <div className="space-y-4">
+              <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
+                <ShieldCheck className="w-7 h-7 stroke-[1.75]" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-white">Administración de Arriendos</h2>
+              <p className="text-xs font-bold text-teal-400 uppercase tracking-wider">
+                Maximiza la rentabilidad de tu propiedad. Nosotros nos encargamos de todo.
+              </p>
+              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                En Urbanos Gestión Inmobiliaria ofrecemos un servicio integral de administración de arriendos, diseñado para proteger tu patrimonio y optimizar el rendimiento de tu inversión.
+              </p>
+              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                Nuestro equipo de especialistas gestiona cada etapa del proceso, desde la selección de arrendatarios y la formalización de contratos hasta la cobranza oportuna de las rentas, el control de pagos, la coordinación de mantenciones, la gestión de incidencias y el seguimiento permanente de la propiedad.
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-800/80">
+              <a
+                href="https://wa.me/56995930321?text=Hola,%20quisiera%20solicitar%20información%20sobre%20la%20Administración%20de%20Arriendos%20de%20mi%20propiedad"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-orange-500 bg-orange-500/10 text-white text-xs font-bold hover:bg-orange-500/20 transition-all"
+              >
+                <MessageSquare className="w-4 h-4 text-orange-400" />
+                <span>Consultar por Administración</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Trust Banner Quote */}
+        <div className="bg-gradient-to-r from-[#0e1422] via-[#141d30] to-[#0e1422] p-8 sm:p-10 rounded-3xl border border-slate-800 text-center space-y-4 shadow-2xl">
+          <Award className="w-10 h-10 text-teal-400 mx-auto" />
+          <h3 className="text-xl sm:text-2xl font-extrabold text-white max-w-3xl mx-auto">
+            "Con un servicio profesional, transparente y personalizado, te entregamos la tranquilidad de saber que tu inmueble está administrado con altos estándares de gestión, permitiéndote disfrutar de los beneficios de tu inversión sin dedicar tiempo a su administración."
+          </h3>
+          <span className="text-xs font-bold text-orange-400 uppercase tracking-widest block">
+            URBANOS GESTIÓN INMOBILIARIA — REGIÓN DE LOS LAGOS, VALPARAÍSO Y METROPOLITANA
+          </span>
         </div>
 
         {/* Interactive Action Forms Area: Captación / Orden de Venta / Oferta de Compra */}
@@ -116,21 +165,21 @@ export default function ServicesPage() {
                     Pon tu propiedad en manos de especialistas
                   </h2>
                   <p className="text-sm text-slate-300 leading-relaxed">
-                    Completa la información para autorizar el corretaje y solicitar una **evaluación comercial sin costo** por parte de nuestros agentes.
+                    Completa la información para autorizar la publicación comercial y solicitar una **tasación o evaluación de mercado sin costo** por parte de nuestros agentes.
                   </p>
 
                   <div className="space-y-3 pt-2">
                     <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
-                      <span>Publicación en portales líderes y redes sociales de Urbanos.</span>
+                      <span>Promoción en portales líderes y redes oficiales de Urbanos.</span>
                     </div>
                     <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
-                      <span>Sesión de fotografía HD y recorridos guiados.</span>
+                      <span>Filtro comercial y financiero exhaustivo de interesados.</span>
                     </div>
                     <div className="flex items-start gap-3 text-xs sm:text-sm text-slate-300">
                       <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0 mt-0.5" />
-                      <span>Verificación y filtro comercial de clientes compradores.</span>
+                      <span>Revisión legal y coordinación completa hasta la promesa o escritura.</span>
                     </div>
                   </div>
                 </>
@@ -165,7 +214,7 @@ export default function ServicesPage() {
                   className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-teal-500/50 bg-teal-500/10 text-teal-300 font-bold text-xs hover:bg-teal-500/20 transition-all"
                 >
                   <MessageSquare className="w-4 h-4 text-teal-400" />
-                  <span>WhatsApp de Atención (+56 9 9593 0321)</span>
+                  <span>WhatsApp de Atención Directa (+56 9 9593 0321)</span>
                 </a>
               </div>
             </div>
@@ -184,7 +233,7 @@ export default function ServicesPage() {
                   <CheckCircle2 className="w-12 h-12 text-teal-400 mx-auto" />
                   <h4 className="text-lg font-bold text-white">¡Solicitud Registrada con Éxito!</h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto">
-                    Un asesor especializado se pondrá en contacto contigo en breve.
+                    Un asesor especializado de Urbanos se pondrá en contacto contigo en breve.
                   </p>
                 </div>
               ) : (
@@ -273,7 +322,7 @@ export default function ServicesPage() {
                           <input
                             type="text"
                             required
-                            placeholder="Ej: URB-101 o Dirección"
+                            placeholder="Ej: URB-1047 o Dirección"
                             className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-teal-400"
                           />
                         </div>
