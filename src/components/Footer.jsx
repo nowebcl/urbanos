@@ -1,20 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import UrbanosLogo from './UrbanosLogo';
 import { MapPin, Phone, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer id="contacto" className="bg-[#05080e] border-t border-slate-800/90 text-slate-400 pt-14 pb-10">
+    <footer className="bg-[#05080e] border-t border-slate-800/90 text-slate-400 pt-14 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Main Footer Grid matching Image 1 */}
+        {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-800/80">
           
           {/* Col 1: Brand Info */}
           <div className="space-y-3">
-            <UrbanosLogo layout="horizontal" />
+            <Link to="/">
+              <UrbanosLogo layout="horizontal" />
+            </Link>
             <p className="text-xs text-slate-400 leading-relaxed font-normal pt-2 max-w-xs">
-              Corretaje de propiedades premium en el sur de Chile. Asesoría experta para comprar, arrendar, vender y administración de propiedades.
+              Corretaje de propiedades premium en el sur de Chile. Asesoría experta para comprar, arrendar, vender y administración de propiedades en Región de Los Lagos, Valparaíso y Metropolitana.
             </p>
           </div>
 
@@ -25,16 +28,19 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <a href="#inicio" className="text-teal-400 font-semibold hover:underline">Inicio</a>
+                <Link to="/" className="hover:text-teal-400 transition-colors">Inicio</Link>
               </li>
               <li>
-                <a href="#propiedades" className="hover:text-slate-200 transition-colors">Propiedades</a>
+                <Link to="/propiedades" className="hover:text-teal-400 transition-colors">Propiedades</Link>
               </li>
               <li>
-                <a href="#nosotros" className="hover:text-slate-200 transition-colors">Nosotros</a>
+                <Link to="/nosotros" className="hover:text-teal-400 transition-colors">Nosotros</Link>
               </li>
               <li>
-                <a href="#contacto" className="hover:text-slate-200 transition-colors">Contacto</a>
+                <Link to="/servicios" className="hover:text-teal-400 transition-colors">Servicios & Captación</Link>
+              </li>
+              <li>
+                <Link to="/contacto" className="hover:text-teal-400 transition-colors">Contacto</Link>
               </li>
             </ul>
           </div>
@@ -108,10 +114,10 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Legal Bar matching Image 1 */}
+        {/* Bottom Legal Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-3 text-center sm:text-left">
           <div>
-            © 2024 Urbanos Gestión Inmobiliaria. Todos los derechos reservados.
+            © 2026 Urbanos Gestión Inmobiliaria. Todos los derechos reservados.
           </div>
           <div>
             Hecho en Puerto Montt, Chile. · Desarrollado por <span className="text-slate-400 font-semibold">Newob Labs</span>
