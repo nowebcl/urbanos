@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ContentProvider } from './context/ContentContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -15,46 +15,54 @@ import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
 import AdminPage from './pages/AdminPage';
 
-export default function App() {
+function AppContent() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const location = useLocation();
+  const isAdminRoute = location.pathname === '/admin';
 
+  return (
+    <div className="min-h-screen bg-[#080c14] text-slate-100 flex flex-col font-sans selection:bg-orange-500 selection:text-white">
+      
+      {/* Top Admin Control Bar */}
+      <AdminBar />
+
+      {/* Persistent Navbar (hidden on /admin) */}
+      {!isAdminRoute && <Navbar onOpenContact={() => setIsContactModalOpen(true)} />}
+
+      {/* Dynamic Route View */}
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<HomePage onOpenContact={() => setIsContactModalOpen(true)} />} />
+          <Route path="/propiedades" element={<CatalogPage />} />
+          <Route path="/propiedades/:slug" element={<PropertyDetailPage />} />
+          <Route path="/nosotros" element={<AboutPage onOpenContact={() => setIsContactModalOpen(true)} />} />
+          <Route path="/servicios" element={<ServicesPage />} />
+          <Route path="/vender-arrendar" element={<ServicesPage />} />
+          <Route path="/contacto" element={<ContactPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+
+      {/* Persistent Footer (hidden on /admin) */}
+      {!isAdminRoute && <Footer />}
+
+      {/* Global Quick Contact Modal */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
+
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <ContentProvider>
       <Router>
         <ScrollToTop />
-        <div className="min-h-screen bg-[#080c14] text-slate-100 flex flex-col font-sans selection:bg-orange-500 selection:text-white">
-          
-          {/* Top Admin Control Bar */}
-          <AdminBar />
-
-          {/* Persistent Navbar */}
-          <Navbar onOpenContact={() => setIsContactModalOpen(true)} />
-
-          {/* Dynamic Route View */}
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<HomePage onOpenContact={() => setIsContactModalOpen(true)} />} />
-              <Route path="/propiedades" element={<CatalogPage />} />
-              <Route path="/propiedades/:slug" element={<PropertyDetailPage />} />
-              <Route path="/nosotros" element={<AboutPage onOpenContact={() => setIsContactModalOpen(true)} />} />
-              <Route path="/servicios" element={<ServicesPage />} />
-              <Route path="/vender-arrendar" element={<ServicesPage />} />
-              <Route path="/contacto" element={<ContactPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-
-          {/* Persistent Footer */}
-          <Footer />
-
-          {/* Global Quick Contact Modal */}
-          <ContactModal
-            isOpen={isContactModalOpen}
-            onClose={() => setIsContactModalOpen(false)}
-          />
-
-        </div>
+        <AppContent />
       </Router>
     </ContentProvider>
   );

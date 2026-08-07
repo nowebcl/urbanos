@@ -338,7 +338,7 @@ export default function AdminPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@urbanoinmobiliaria.cl"
+                placeholder="Correo electrónico"
                 className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
@@ -350,7 +350,7 @@ export default function AdminPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Contraseña"
                 className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
@@ -363,6 +363,15 @@ export default function AdminPage() {
               {loading ? 'Autenticando...' : 'Iniciar Sesión Admin'}
             </button>
           </form>
+
+          <div className="pt-2 text-center">
+            <a
+              href="/"
+              className="text-xs text-slate-400 hover:text-teal-400 font-medium transition-colors inline-flex items-center gap-1"
+            >
+              ← Volver al sitio principal
+            </a>
+          </div>
         </div>
       </div>
     );
