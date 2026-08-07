@@ -316,7 +316,7 @@ export default function AdminPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@urbanosgestion.cl"
+                placeholder="admin@urbanoinmobiliaria.cl"
                 className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
