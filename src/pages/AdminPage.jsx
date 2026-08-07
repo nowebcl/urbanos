@@ -319,44 +319,48 @@ export default function AdminPage() {
   // If NOT logged in, show Login Screen
   if (!session) {
     return (
-      <div className="min-h-[85vh] bg-[#080c14] flex items-center justify-center py-12 px-4 selection:bg-orange-500 selection:text-white">
-        <div className="max-w-md w-full bg-[#0e1422] border border-slate-800 p-8 rounded-3xl shadow-2xl space-y-6">
-          <div className="text-center space-y-2">
-            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 text-orange-400 mx-auto flex items-center justify-center">
-              <Lock className="w-7 h-7" />
+      <div className="min-h-screen bg-gradient-to-b from-[#0b1220] via-[#080c14] to-[#04060a] flex items-center justify-center py-12 px-4 selection:bg-orange-500 selection:text-white">
+        <div className="max-w-md w-full bg-[#0e1422] border border-slate-700/80 p-8 sm:p-10 rounded-3xl shadow-2xl space-y-6 relative overflow-hidden">
+          
+          {/* Subtle Glow */}
+          <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full filter blur-2xl pointer-events-none" />
+
+          <div className="text-center space-y-3 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/30 text-orange-400 mx-auto flex items-center justify-center shadow-lg">
+              <Lock className="w-8 h-8" />
             </div>
-            <h1 className="text-2xl font-extrabold text-white">Panel Administrador</h1>
-            <p className="text-xs text-slate-400">Ingresa tus credenciales para gestionar propiedades</p>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">Panel Administrador</h1>
+            <p className="text-xs text-slate-300">Ingresa tus credenciales para gestionar el sitio web</p>
           </div>
 
           {loginError && (
-            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-medium">
+            <div className="p-3.5 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-semibold">
               {loginError}
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4 relative z-10">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Correo Electrónico</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Correo Electrónico</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Correo electrónico"
-                className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                className="w-full px-4 py-3 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Contraseña</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Contraseña</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Contraseña"
-                className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                className="w-full px-4 py-3 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
 
@@ -369,7 +373,7 @@ export default function AdminPage() {
             </button>
           </form>
 
-          <div className="pt-2 text-center">
+          <div className="pt-2 text-center relative z-10">
             <a
               href="/"
               className="text-xs text-slate-400 hover:text-teal-400 font-medium transition-colors inline-flex items-center gap-1"

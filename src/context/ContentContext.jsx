@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
-const DEFAULT_CONTENT = {
+export const DEFAULT_CONTENT = {
   hero_badge: 'Gestión Inmobiliaria Integral & Estrategia Digital',
   hero_title: 'Encuentra el hogar ideal para comenzar tu próxima historia',
   hero_bajada: 'En Urbanos Gestión Inmobiliaria hacemos que cada operación inmobiliaria sea más simple, segura y exitosa. Te acompañamos con asesoría personalizada en la compra, venta, arriendo y administración de propiedades.',
@@ -25,7 +25,7 @@ const DEFAULT_CONTENT = {
   contact_address: 'Av Austral, Jardín Austral, Puerto Montt'
 };
 
-const ContentContext = createContext();
+const ContentContext = createContext(null);
 
 export function ContentProvider({ children }) {
   const [content, setContent] = useState(DEFAULT_CONTENT);
@@ -43,23 +43,43 @@ export function ContentProvider({ children }) {
   useEffect(() => {
     fetchContentFromSupabase();
 
-    // Check Auth Session from Supabase
-    supabase.auth.getSession().then(({ data: { session: supSession } }) => {
-      if (supSession) {
-        setSession(supSession);
-        localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
-      }
-    });
+    try {
+      supabase.auth.getSession().then(({ data: { session: supSession } }) => {
+        if (supSession) {
+          setSession(supSession);
+          localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
+        }
+      });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, supSession) => {
-      if (supSession) {
-        setSession(supSession);
-        localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
-      }
-    });
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, supSession) => {
+        if (supSession) {
+          setSession(supSession);
+          localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
+        }
+      });
 
-    return () => subscription.unsubscribe();
+      return () => subscription.unsubscribe();
+    } catch (e) {
+      console.warn('Auth subscription notice:', e);
+    }
   }, []);
+
+  const fetchContentFromSupabase = async () => {
+    try {
+      const { data, error } = await supabase.from('site_content').select('*');
+      if (data && data.length > 0) {
+        const dbContent = { ...DEFAULT_CONTENT };
+        data.forEach(item => {
+          dbContent[item.key] = item.content;
+        });
+        setContent(dbContent);
+      }
+    } catch (err) {
+      console.warn('Supabase site_content query notice:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const updateContentKey = async (key, newValue) => {
     // Optimistic local state update
@@ -106,5 +126,18 @@ export function ContentProvider({ children }) {
 }
 
 export function useContent() {
-  return useContext(ContentContext);
+  const context = useContext(ContentContext);
+  if (!context) {
+    return {
+      content: DEFAULT_CONTENT,
+      updateContentKey: async () => {},
+      session: null,
+      setSession: () => {},
+      isEditMode: false,
+      setIsEditMode: () => {},
+      loading: false,
+      refetchContent: () => {}
+    };
+  }
+  return context;
 }
