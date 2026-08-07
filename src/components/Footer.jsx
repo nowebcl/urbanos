@@ -17,7 +17,7 @@ export default function Footer() {
               <UrbanosLogo layout="horizontal" />
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed font-normal pt-2 max-w-xs">
-              Corretaje de propiedades premium en el sur de Chile. Asesoría experta para comprar, arrendar, vender y administración de propiedades en Región de Los Lagos, Valparaíso y Metropolitana.
+              En Urbanos Gestión Inmobiliaria hacemos que cada operación sea más simple, segura y exitosa. Cobertura en Región de Los Lagos, V Región y Metropolitana.
             </p>
           </div>
 
@@ -53,18 +53,18 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs">
               <li className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
-                <span>Puerto Montt, Los Lagos, Chile</span>
+                <span>Av Austral, Jardín Austral, Puerto Montt</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-teal-400 shrink-0" />
-                <a href="tel:+56995930321" className="hover:text-orange-400 transition-colors">
-                  +56 9 9593 0321
+                <a href="tel:+56961924570" className="hover:text-orange-400 transition-colors">
+                  +56 9 6192 4570
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-teal-400 shrink-0" />
-                <a href="mailto:contacto@urbanosgestion.cl" className="hover:text-orange-400 transition-colors">
-                  contacto@urbanosgestion.cl
+                <a href="mailto:urbanos@urbanosinmobiliaria.cl" className="hover:text-orange-400 transition-colors">
+                  urbanos@urbanosinmobiliaria.cl
                 </a>
               </li>
             </ul>
@@ -120,7 +120,7 @@ export default function Footer() {
             © 2026 Urbanos Gestión Inmobiliaria. Todos los derechos reservados.
           </div>
           <div>
-            Hecho en Puerto Montt, Chile. · Desarrollado por <span className="text-slate-400 font-semibold">Newob Labs</span>
+            Hecho en Puerto Montt, Chile.
           </div>
         </div>
 

@@ -20,38 +20,37 @@ export default function HeroSection({
   return (
     <section id="inicio" className="relative pt-8 pb-16 md:pt-12 md:pb-24 overflow-hidden flex flex-col justify-center">
       
-      {/* Background Image matching Image 1 */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
           src="/images/hero_bg.jpg"
-          alt="Sur de Chile"
+          alt="Urbanos Gestión Inmobiliaria"
           className="w-full h-full object-cover object-center filter brightness-[0.45] contrast-125"
         />
         {/* Dark Gradients */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#080c14]/90 via-[#080c14]/50 to-[#080c14]" />
       </div>
 
-      {/* Main Content Container matching Image 1 */}
+      {/* Main Content Container */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         
-        {/* Top Pill Badge matching Image 1 */}
+        {/* Top Pill Badge */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0c121e]/90 border border-teal-500/40 text-slate-100 text-xs sm:text-sm font-medium mb-5 shadow-lg backdrop-blur-md">
           <MapPin className="w-4 h-4 text-teal-400" />
-          <span>Especialistas en el Sur de Chile</span>
+          <span>Gestión Inmobiliaria Integral</span>
         </div>
 
-        {/* Main Title matching Image 1 */}
+        {/* Main Title */}
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.1] mb-4 text-balance">
-          Encuentra el lugar <br />
-          donde quieres vivir
+          Encuentra el hogar ideal para comenzar tu próxima historia
         </h1>
 
-        {/* Subtitle matching Image 1 */}
-        <p className="max-w-2xl text-xs sm:text-sm md:text-base text-slate-300 font-normal leading-relaxed mb-7 text-balance">
-          Corretaje de propiedades curado para el sur de Chile. Casas, departamentos, oficinas y terrenos seleccionados con criterio profesional en Los Lagos.
+        {/* Subtitle / Bajada */}
+        <p className="max-w-3xl text-xs sm:text-sm md:text-base text-slate-200 font-normal leading-relaxed mb-7 text-balance">
+          En Urbanos Gestión Inmobiliaria hacemos que cada operación inmobiliaria sea más simple, segura y exitosa. Te acompañamos con asesoría personalizada en la compra, venta, arriendo y administración de propiedades, ofreciendo un servicio cercano, transparente y comprometido con lograr los mejores resultados para nuestros clientes.
         </p>
 
-        {/* Main Search Card Box matching Image 1 */}
+        {/* Main Search Card Box */}
         <div className="w-full max-w-2xl bg-[#0f172a] border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl text-left">
           
           {/* Operation Tabs (Venta / Arriendo) */}
@@ -94,7 +93,7 @@ export default function HeroSection({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Comuna, ciudad o palabra clave del sur..."
+                placeholder="Comuna, ciudad o palabra clave (ej: Puerto Varas, Puerto Montt, Quilpué)..."
                 className="w-full pl-10 pr-3.5 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-teal-400 transition-all"
               />
             </div>
@@ -108,7 +107,7 @@ export default function HeroSection({
             </button>
           </form>
 
-          {/* Property Category Chips matching Image 1 */}
+          {/* Property Category Chips */}
           <div className="flex flex-wrap items-center gap-2 pt-0.5">
             {propertyTypes.map((type) => {
               const Icon = type.icon;
