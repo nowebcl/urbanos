@@ -35,8 +35,7 @@ export default function HeroSection({
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         
         {/* Top Pill Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0c121e]/90 border border-teal-500/40 text-slate-100 text-xs sm:text-sm font-medium mb-6 shadow-xl backdrop-blur-md">
-          <Sparkles className="w-4 h-4 text-teal-400" />
+        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#0c121e]/90 border border-teal-500/40 text-slate-100 text-xs sm:text-sm font-medium mb-6 shadow-xl backdrop-blur-md">
           <span>Gestión Inmobiliaria Integral & Estrategia Digital</span>
         </div>
 
