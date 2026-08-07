@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HeroSection from '../components/HeroSection';
-import CityExplorer from '../components/CityExplorer';
 import StatsBar from '../components/StatsBar';
 import PropertiesGrid from '../components/PropertiesGrid';
 import CtaBanner from '../components/CtaBanner';
@@ -43,11 +42,6 @@ export default function HomePage({ onOpenContact }) {
         selectedType={selectedType}
         setSelectedType={setSelectedType}
         onExecuteSearch={handleExecuteSearch}
-      />
-
-      <CityExplorer
-        activeCity={activeCity}
-        onSelectCity={handleSelectCity}
       />
 
       <StatsBar />
