@@ -44,7 +44,7 @@ export default function HeroSection({
         </div>
 
         {/* Main Title - Proportioned size */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.18] mb-5 text-balance drop-shadow-md">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.2] mb-4 text-balance drop-shadow-md">
           <EditableText
             contentKey="hero_title"
             fallback="Encuentra el hogar ideal para comenzar tu próxima historia"
