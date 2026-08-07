@@ -6,7 +6,7 @@ export default function UrbanosLogo({ className = "", layout = "horizontal" }) {
   return (
     <div className={`flex ${isVertical ? 'flex-col items-start gap-3' : 'items-center gap-3'} select-none ${className}`}>
       
-      {/* Exact SVG Icon Mark matching Image 2 */}
+      {/* Exact SVG Icon Mark */}
       <svg 
         viewBox="0 0 240 160" 
         className="h-10 sm:h-11 w-auto shrink-0 filter drop-shadow-md"
@@ -49,12 +49,12 @@ export default function UrbanosLogo({ className = "", layout = "horizontal" }) {
         />
       </svg>
 
-      {/* Brand Typography */}
+      {/* Brand Typography matching user image */}
       <div className="flex flex-col justify-center leading-none">
-        <span className="font-heading font-extrabold tracking-[0.08em] text-white text-lg sm:text-xl uppercase leading-none">
+        <span className="font-sans font-black tracking-[0.14em] text-white text-xl sm:text-2xl uppercase leading-none">
           URBANOS
         </span>
-        <span className="font-sans text-[8.5px] sm:text-[9.5px] font-bold text-slate-300 tracking-[0.28em] uppercase mt-1 opacity-90">
+        <span className="font-sans text-[8px] sm:text-[9.5px] font-extrabold text-white tracking-[0.38em] uppercase mt-1">
           GESTIÓN INMOBILIARIA
         </span>
       </div>
