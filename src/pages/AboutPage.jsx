@@ -45,9 +45,9 @@ export default function AboutPage({ onOpenContact }) {
           <img
             src="/images/puerto_varas.jpg"
             alt="Nosotros Urbanos"
-            className="w-full h-full object-cover object-center filter brightness-[0.3] contrast-125"
+            className="w-full h-full object-cover object-center filter brightness-[0.65] sm:brightness-[0.35] contrast-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#080c14]/80 via-transparent to-[#080c14]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#080c14]/65 via-[#080c14]/30 to-[#080c14] sm:from-[#080c14]/80 sm:to-[#080c14]" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">

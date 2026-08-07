@@ -25,10 +25,10 @@ export default function HeroSection({
         <img
           src="/images/hero_bg.jpg"
           alt="Urbanos Gestión Inmobiliaria"
-          className="w-full h-full object-cover object-center filter brightness-[0.4] contrast-125 scale-105 transition-transform duration-1000"
+          className="w-full h-full object-cover object-center filter brightness-[0.75] sm:brightness-[0.45] contrast-110 scale-105 transition-transform duration-1000"
         />
-        {/* Dark Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#080c14]/90 via-[#080c14]/60 to-[#080c14]" />
+        {/* Responsive Dark Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080c14]/70 via-[#080c14]/35 to-[#080c14] sm:from-[#080c14]/90 sm:via-[#080c14]/60 sm:to-[#080c14]" />
       </div>
 
       {/* Main Content Container */}
