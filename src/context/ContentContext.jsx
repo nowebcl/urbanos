@@ -29,41 +29,37 @@ const ContentContext = createContext();
 
 export function ContentProvider({ children }) {
   const [content, setContent] = useState(DEFAULT_CONTENT);
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(() => {
+    try {
+      const saved = localStorage.getItem('urbanos_admin_session');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchContentFromSupabase();
 
-    // Check Auth Session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    // Check Auth Session from Supabase
+    supabase.auth.getSession().then(({ data: { session: supSession } }) => {
+      if (supSession) {
+        setSession(supSession);
+        localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
+      }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, supSession) => {
+      if (supSession) {
+        setSession(supSession);
+        localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const fetchContentFromSupabase = async () => {
-    try {
-      const { data, error } = await supabase.from('site_content').select('*');
-      if (data && data.length > 0) {
-        const dbContent = { ...DEFAULT_CONTENT };
-        data.forEach(item => {
-          dbContent[item.key] = item.content;
-        });
-        setContent(dbContent);
-      }
-    } catch (err) {
-      console.warn('Supabase site_content query notice:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const updateContentKey = async (key, newValue) => {
     // Optimistic local state update
@@ -82,12 +78,22 @@ export function ContentProvider({ children }) {
     }
   };
 
+  const setAdminSession = (newSession) => {
+    setSession(newSession);
+    if (newSession) {
+      localStorage.setItem('urbanos_admin_session', JSON.stringify(newSession));
+    } else {
+      localStorage.removeItem('urbanos_admin_session');
+    }
+  };
+
   return (
     <ContentContext.Provider
       value={{
         content,
         updateContentKey,
         session,
+        setSession: setAdminSession,
         isEditMode,
         setIsEditMode,
         loading,

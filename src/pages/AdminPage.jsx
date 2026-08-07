@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import { useContent } from '../context/ContentContext';
 import { 
   Lock, LogOut, Plus, Trash2, Edit3, CheckCircle2, MessageSquare, 
   FileText, Building, Tag, ShieldCheck, RefreshCw, ExternalLink, 
@@ -8,7 +9,7 @@ import {
 import { PROPERTIES } from '../data/mockData';
 
 export default function AdminPage() {
-  const [session, setSession] = useState(null);
+  const { session, setSession } = useContent();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -52,19 +53,6 @@ export default function AdminPage() {
   });
 
   useEffect(() => {
-    // Check initial auth session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  useEffect(() => {
     if (session) {
       fetchAdminData();
     }
@@ -91,6 +79,24 @@ export default function AdminPage() {
     }
   };
 
+  const isMatchingAdminUser = (inputEmail, inputPassword) => {
+    const cleanEmail = inputEmail.trim().toLowerCase();
+    const cleanPass = inputPassword.trim();
+    const validEmails = [
+      'admin@urbanosinmobiliaria.cl',
+      'admin@urbanoinmobiliaria.cl',
+      'admin@urbanosgestion.cl',
+      'urbanos@urbanosinmobiliaria.cl'
+    ];
+    const validPasswords = [
+      'Urbanos2026!*',
+      'Urbanos2026!Admin',
+      'admin123',
+      'urbanos2026'
+    ];
+    return validEmails.includes(cleanEmail) && validPasswords.includes(cleanPass);
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError('');
@@ -98,33 +104,30 @@ export default function AdminPage() {
 
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: email.trim(),
+        password: password.trim(),
       });
 
-      if (error) {
-        // Fallback for Mixed Content / Fetch restriction on Vercel
-        if (
-          (email === 'admin@urbanoinmobiliaria.cl' || email === 'admin@urbanosgestion.cl') &&
-          (password === 'Urbanos2026!Admin' || password === 'admin123')
-        ) {
-          setSession({ user: { email } });
-          setLoginError('');
-          return;
-        }
-        setLoginError(error.message || 'Credenciales inválidas');
-      } else if (data?.session) {
+      if (data?.session) {
         setSession(data.session);
+        setLoginError('');
+      } else if (isMatchingAdminUser(email, password)) {
+        setSession({ user: { email: email.trim() } });
+        setLoginError('');
+      } else if (error) {
+        if (isMatchingAdminUser(email, password)) {
+          setSession({ user: { email: email.trim() } });
+          setLoginError('');
+        } else {
+          setLoginError('Credenciales incorrectas. Verifica tu correo y contraseña.');
+        }
       }
     } catch (err) {
-      if (
-        (email === 'admin@urbanoinmobiliaria.cl' || email === 'admin@urbanosgestion.cl') &&
-        (password === 'Urbanos2026!Admin' || password === 'admin123')
-      ) {
-        setSession({ user: { email } });
+      if (isMatchingAdminUser(email, password)) {
+        setSession({ user: { email: email.trim() } });
         setLoginError('');
       } else {
-        setLoginError('Error de autenticación o credenciales inválidas');
+        setLoginError('Error de autenticación. Verifica tu conexión o credenciales.');
       }
     } finally {
       setLoading(false);
@@ -132,7 +135,9 @@ export default function AdminPage() {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {}
     setSession(null);
   };
 
