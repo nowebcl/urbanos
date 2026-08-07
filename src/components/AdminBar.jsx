@@ -1,14 +1,25 @@
 import React from 'react';
 import { useContent } from '../context/ContentContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Edit3, Lock, LogOut } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function AdminBar() {
-  const { session, isEditMode, setIsEditMode } = useContent();
+  const { session, setSession, isEditMode, setIsEditMode } = useContent();
+  const navigate = useNavigate();
 
   // ONLY render when user is authenticated as admin
   if (!session) return null;
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {}
+    setIsEditMode(false);
+    setSession(null);
+    localStorage.removeItem('urbanos_admin_session');
+    navigate('/');
+  };
 
   return (
     <div className="bg-[#05080e] border-b border-orange-500/40 text-white text-xs py-2 px-4 sticky top-0 z-50 shadow-2xl backdrop-blur-md">
@@ -29,7 +40,7 @@ export default function AdminBar() {
             }`}
           >
             <Edit3 className="w-3.5 h-3.5" />
-            <span>{isEditMode ? 'Edición en Texto: ACTIVADA' : 'Activar Edición de Texto'}</span>
+            <span>{isEditMode ? 'Edición de Texto: ACTIVADA' : 'Activar Edición de Texto'}</span>
           </button>
 
           <Link
@@ -42,11 +53,12 @@ export default function AdminBar() {
 
           <button
             type="button"
-            onClick={() => supabase.auth.signOut()}
-            className="text-red-400 hover:text-red-300 p-1.5 rounded-lg bg-red-500/10 border border-red-500/20"
+            onClick={handleLogout}
+            className="flex items-center gap-1 text-red-400 hover:text-red-300 px-2.5 py-1 rounded-lg bg-red-500/10 border border-red-500/20 font-bold text-[11px] transition-all"
             title="Cerrar sesión admin"
           >
             <LogOut className="w-3.5 h-3.5" />
+            <span>Salir</span>
           </button>
         </div>
       </div>
