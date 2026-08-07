@@ -33,18 +33,18 @@ export default function HeroSection({
       </div>
 
       {/* Main Content Container */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
         
         {/* Top Pill Badge */}
-        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#0c121e]/90 border border-teal-500/40 text-slate-100 text-xs sm:text-sm font-medium mb-6 shadow-xl backdrop-blur-md">
+        <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#0c121e]/90 border border-teal-500/40 text-slate-100 text-xs sm:text-sm font-medium mb-5 shadow-xl backdrop-blur-md">
           <EditableText
             contentKey="hero_badge"
             fallback="Gestión Inmobiliaria Integral & Estrategia Digital"
           />
         </div>
 
-        {/* Main Title */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-5 text-balance">
+        {/* Main Title - Proportioned size */}
+        <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-[1.2] mb-4 text-balance">
           <EditableText
             contentKey="hero_title"
             fallback="Encuentra el hogar ideal para comenzar tu próxima historia"
@@ -52,8 +52,8 @@ export default function HeroSection({
           />
         </h1>
 
-        {/* Subtitle / Concise Bajada */}
-        <p className="max-w-2xl text-sm sm:text-base text-slate-300 font-normal leading-relaxed mb-8 text-balance">
+        {/* Subtitle / Bajada - Enhanced readable size */}
+        <p className="max-w-3xl text-base sm:text-lg text-slate-200 font-normal leading-relaxed mb-8 text-balance">
           <EditableText
             contentKey="hero_bajada"
             fallback="Hacemos que cada operación inmobiliaria sea simple, segura y exitosa. Asesoría personalizada en compra, venta, arriendo y administración."
@@ -61,15 +61,15 @@ export default function HeroSection({
           />
         </p>
 
-        {/* Main Search Card Box */}
-        <div className="w-full max-w-2xl bg-[#0f172a]/95 border border-slate-700/80 rounded-3xl p-5 sm:p-6 shadow-2xl text-left backdrop-blur-xl">
+        {/* Main Search Card Box - Expanded and spacious */}
+        <div className="w-full max-w-3xl bg-[#0f172a]/95 border border-slate-700/80 rounded-3xl p-6 sm:p-7 shadow-2xl text-left backdrop-blur-xl space-y-4">
           
           {/* Operation Tabs (Venta / Arriendo) */}
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setSelectedOperation('Venta')}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+              className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
                 selectedOperation === 'Venta'
                   ? 'bg-slate-800 text-white border border-slate-600 shadow-md'
                   : 'text-slate-400 hover:text-slate-200 bg-transparent'
@@ -80,7 +80,7 @@ export default function HeroSection({
             <button
               type="button"
               onClick={() => setSelectedOperation('Arriendo')}
-              className={`px-5 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+              className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${
                 selectedOperation === 'Arriendo'
                   ? 'bg-slate-800 text-white border border-slate-600 shadow-md'
                   : 'text-slate-400 hover:text-slate-200 bg-transparent'
@@ -90,36 +90,36 @@ export default function HeroSection({
             </button>
           </div>
 
-          {/* Search Input Row */}
+          {/* Search Input Row - Generous inputs */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               onExecuteSearch();
             }}
-            className="flex flex-col sm:flex-row items-center gap-2.5 mb-4"
+            className="flex flex-col sm:flex-row items-center gap-3"
           >
             <div className="relative flex-1 w-full flex items-center">
-              <Search className="absolute left-4 w-4 h-4 text-slate-400 pointer-events-none z-10" />
+              <Search className="absolute left-4 w-5 h-5 text-slate-400 pointer-events-none z-10" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Comuna, ciudad o palabra clave..."
-                className="w-full pl-11 pr-4 py-3 bg-[#080c14] border border-slate-700 rounded-2xl text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-teal-400 transition-all shadow-inner"
+                className="w-full pl-12 pr-4 py-3.5 bg-[#080c14] border border-slate-700 rounded-2xl text-white placeholder-slate-400 text-sm sm:text-base focus:outline-none focus:border-teal-400 transition-all shadow-inner"
               />
             </div>
             
             <button
               type="submit"
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-7 py-3 btn-orange rounded-2xl text-xs sm:text-sm font-bold tracking-wide transition-all whitespace-nowrap shadow-lg shrink-0"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3.5 btn-orange rounded-2xl text-sm sm:text-base font-bold tracking-wide transition-all whitespace-nowrap shadow-xl shrink-0"
             >
               <span>Buscar</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5" />
             </button>
           </form>
 
           {/* Property Category Chips */}
-          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-800/80">
+          <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-slate-800/80">
             {propertyTypes.map((type) => {
               const Icon = type.icon;
               const isSelected = selectedType === type.id;
@@ -128,13 +128,13 @@ export default function HeroSection({
                   key={type.id}
                   type="button"
                   onClick={() => setSelectedType(selectedType === type.id ? 'All' : type.id)}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${
                     isSelected
                       ? 'bg-teal-500/20 border-teal-400 text-white'
                       : 'bg-slate-900/90 border-slate-700 text-slate-300 hover:border-slate-500 hover:text-white'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 text-slate-400" />
+                  <Icon className="w-4 h-4 text-slate-400" />
                   <span>{type.label}</span>
                 </button>
               );
@@ -144,13 +144,13 @@ export default function HeroSection({
         </div>
 
         {/* Feature Badges Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-8 text-xs font-medium text-slate-300">
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-8 text-xs sm:text-sm font-medium text-slate-300">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-teal-400" />
+            <ShieldCheck className="w-4.5 h-4.5 text-teal-400" />
             <span>Filtros de Seguridad Legal</span>
           </div>
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-orange-400" />
+            <TrendingUp className="w-4.5 h-4.5 text-orange-400" />
             <span>Estrategia Digital Multicanal</span>
           </div>
         </div>

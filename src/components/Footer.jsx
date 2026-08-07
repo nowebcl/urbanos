@@ -120,7 +120,7 @@ export default function Footer() {
             © 2026 Urbanos Gestión Inmobiliaria. Todos los derechos reservados.
           </div>
           <div>
-            Hecho en Puerto Montt, Chile.
+            Desarrollado por <a href="https://www.noweb.cl" target="_blank" rel="noreferrer" className="text-slate-300 hover:text-orange-400 font-bold transition-colors">NOWEB Labs</a>
           </div>
         </div>
 
