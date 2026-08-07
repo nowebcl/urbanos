@@ -12,6 +12,8 @@ import AboutPage from './pages/AboutPage';
 import ServicesPage from './pages/ServicesPage';
 import ContactPage from './pages/ContactPage';
 
+import AdminPage from './pages/AdminPage';
+
 export default function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
@@ -33,6 +35,7 @@ export default function App() {
             <Route path="/servicios" element={<ServicesPage />} />
             <Route path="/vender-arrendar" element={<ServicesPage />} />
             <Route path="/contacto" element={<ContactPage />} />
+            <Route path="/admin" element={<AdminPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
