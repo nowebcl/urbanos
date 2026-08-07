@@ -32,16 +32,16 @@ export default function ServicesPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           
           {/* Service 1: Compra y Venta */}
-          <div className="bg-[#0e1422] p-8 rounded-3xl border border-slate-800 space-y-5 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
+          <div className="bg-[#0e1422] p-8 sm:p-9 rounded-3xl border border-slate-800 space-y-6 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
             <div className="space-y-4">
               <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
                 <Tag className="w-7 h-7 stroke-[1.75]" />
               </div>
-              <h2 className="text-2xl font-extrabold text-white">Compra y Venta</h2>
-              <p className="text-xs font-bold text-teal-400 uppercase tracking-wider">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Compra y Venta</h2>
+              <p className="text-xs sm:text-sm font-bold text-teal-400 uppercase tracking-wider leading-snug">
                 Asesoría experta para comprar o vender con seguridad y confianza.
               </p>
-              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
                 Nuestro equipo de especialistas te acompaña durante todo el proceso de compra o venta de tu propiedad, entregando una asesoría integral y personalizada. Nos encargamos de la valorización del inmueble, estrategia comercial, promoción, gestión de visitas, negociación, revisión legal y coordinación del proceso de escrituración, asegurando una operación eficiente, transparente y enfocada en obtener el mejor resultado para ti.
               </p>
             </div>
@@ -49,7 +49,7 @@ export default function ServicesPage() {
             <div className="pt-4 border-t border-slate-800/80">
               <button
                 onClick={() => { setActiveTab('captacion'); window.scrollTo({ top: 900, behavior: 'smooth' }); }}
-                className="w-full py-2.5 rounded-xl border border-orange-500/50 bg-orange-500/10 text-orange-300 hover:bg-orange-500/20 text-xs font-bold transition-all"
+                className="w-full py-3 rounded-xl border border-orange-500/50 bg-orange-500/10 text-orange-300 hover:bg-orange-500/20 text-xs sm:text-sm font-bold transition-all"
               >
                 Encargar Venta o Tasación
               </button>
@@ -57,16 +57,16 @@ export default function ServicesPage() {
           </div>
 
           {/* Service 2: Arriendos */}
-          <div className="bg-[#0e1422] p-8 rounded-3xl border border-slate-800 space-y-5 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
+          <div className="bg-[#0e1422] p-8 sm:p-9 rounded-3xl border border-slate-800 space-y-6 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
             <div className="space-y-4">
               <div className="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
                 <Building className="w-7 h-7 stroke-[1.75]" />
               </div>
-              <h2 className="text-2xl font-extrabold text-white">Arriendos</h2>
-              <p className="text-xs font-bold text-orange-400 uppercase tracking-wider">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Arriendos</h2>
+              <p className="text-xs sm:text-sm font-bold text-orange-400 uppercase tracking-wider leading-snug">
                 Encuentra al arrendatario ideal con el respaldo de un equipo experto.
               </p>
-              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
                 Gestionamos de manera integral el proceso de arriendo de tu propiedad, desde la promoción y evaluación de los postulantes hasta la elaboración y firma del contrato, inventario, entrega del inmueble y seguimiento de cada etapa. Nuestro objetivo es proteger tu patrimonio, minimizar riesgos y asegurar un arriendo seguro, transparente y eficiente.
               </p>
             </div>
@@ -74,7 +74,7 @@ export default function ServicesPage() {
             <div className="pt-4 border-t border-slate-800/80">
               <button
                 onClick={() => { setActiveTab('captacion'); window.scrollTo({ top: 900, behavior: 'smooth' }); }}
-                className="w-full py-2.5 rounded-xl border border-teal-500/50 bg-teal-500/10 text-teal-300 hover:bg-teal-500/20 text-xs font-bold transition-all"
+                className="w-full py-3 rounded-xl border border-teal-500/50 bg-teal-500/10 text-teal-300 hover:bg-teal-500/20 text-xs sm:text-sm font-bold transition-all"
               >
                 Publicar en Arriendo
               </button>
@@ -82,19 +82,19 @@ export default function ServicesPage() {
           </div>
 
           {/* Service 3: Administración de Arriendos */}
-          <div className="bg-[#0e1422] p-8 rounded-3xl border border-slate-800 space-y-5 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
+          <div className="bg-[#0e1422] p-8 sm:p-9 rounded-3xl border border-slate-800 space-y-6 hover:border-slate-600 transition-all flex flex-col justify-between shadow-2xl">
             <div className="space-y-4">
               <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
                 <ShieldCheck className="w-7 h-7 stroke-[1.75]" />
               </div>
-              <h2 className="text-2xl font-extrabold text-white">Administración de Arriendos</h2>
-              <p className="text-xs font-bold text-teal-400 uppercase tracking-wider">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">Administración de Arriendos</h2>
+              <p className="text-xs sm:text-sm font-bold text-teal-400 uppercase tracking-wider leading-snug">
                 Maximiza la rentabilidad de tu propiedad. Nosotros nos encargamos de todo.
               </p>
-              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
                 En Urbanos Gestión Inmobiliaria ofrecemos un servicio integral de administración de arriendos, diseñado para proteger tu patrimonio y optimizar el rendimiento de tu inversión.
               </p>
-              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+              <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
                 Nuestro equipo de especialistas gestiona cada etapa del proceso, desde la selección de arrendatarios y la formalización de contratos hasta la cobranza oportuna de las rentas, el control de pagos, la coordinación de mantenciones, la gestión de incidencias y el seguimiento permanente de la propiedad.
               </p>
             </div>
@@ -104,7 +104,7 @@ export default function ServicesPage() {
                 href="https://wa.me/56995930321?text=Hola,%20quisiera%20solicitar%20información%20sobre%20la%20Administración%20de%20Arriendos%20de%20mi%20propiedad"
                 target="_blank"
                 rel="noreferrer"
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-orange-500 bg-orange-500/10 text-white text-xs font-bold hover:bg-orange-500/20 transition-all"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-orange-500 bg-orange-500/10 text-white text-xs sm:text-sm font-bold hover:bg-orange-500/20 transition-all"
               >
                 <MessageSquare className="w-4 h-4 text-orange-400" />
                 <span>Consultar por Administración</span>
@@ -131,7 +131,7 @@ export default function ServicesPage() {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={() => { setActiveTab('captacion'); setFormSubmitted(false); }}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-bold transition-all ${
                 activeTab === 'captacion'
                   ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
                   : 'bg-[#0e1422] border border-slate-700 text-slate-300 hover:text-white'
@@ -143,7 +143,7 @@ export default function ServicesPage() {
 
             <button
               onClick={() => { setActiveTab('oferta'); setFormSubmitted(false); }}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold transition-all ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-bold transition-all ${
                 activeTab === 'oferta'
                   ? 'bg-teal-500 text-slate-950 shadow-lg shadow-teal-500/20'
                   : 'bg-[#0e1422] border border-slate-700 text-slate-300 hover:text-white'
@@ -164,7 +164,7 @@ export default function ServicesPage() {
                   <h2 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
                     Pon tu propiedad en manos de especialistas
                   </h2>
-                  <p className="text-sm text-slate-300 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
                     Completa la información para autorizar la publicación comercial y solicitar una **tasación o evaluación de mercado sin costo** por parte de nuestros agentes.
                   </p>
 
@@ -189,7 +189,7 @@ export default function ServicesPage() {
                   <h2 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
                     Presenta una propuesta de adquisición
                   </h2>
-                  <p className="text-sm text-slate-300 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
                     Envía una oferta formal por cualquier propiedad de nuestro catálogo o del mercado. Nuestro equipo negociará en tu representación en los mejores términos.
                   </p>
 
