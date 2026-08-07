@@ -93,8 +93,8 @@ export default function EditableText({
 
       {/* Success Badge */}
       {savedSuccess && (
-        <span className="absolute -top-8 right-0 z-50 bg-teal-500 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-lg shadow-xl flex items-center gap-1 animate-bounce pointer-events-none">
-          <Check className="w-3 h-3 stroke-[3]" /> ¡Guardado en Base de Datos!
+        <span className="absolute -top-8 right-0 z-50 bg-teal-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-0.5 rounded-lg shadow-xl flex items-center gap-1 animate-bounce pointer-events-none">
+          <Check className="w-3 h-3 stroke-[3]" /> Guardado
         </span>
       )}
     </span>
