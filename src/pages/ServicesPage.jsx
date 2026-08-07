@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Building, ShieldCheck, FileText, Wrench, Wallet, CheckCircle2, Send, Phone, MessageSquare, Tag, FileSignature, Calendar, Award, HeartHandshake } from 'lucide-react';
+import EditableText from '../components/EditableText';
 
 export default function ServicesPage() {
   const [activeTab, setActiveTab] = useState('captacion'); // 'captacion' | 'oferta'
@@ -17,14 +18,18 @@ export default function ServicesPage() {
         
         {/* Page Header */}
         <div className="text-center max-w-4xl mx-auto space-y-4">
-          <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase">
-            NUESTROS SERVICIOS INMOBILIARIOS
+          <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase block">
+            <EditableText contentKey="services_pretitle" fallback="NUESTROS SERVICIOS INMOBILIARIOS" />
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Venta, Arriendo y Administración de Propiedades
+            <EditableText contentKey="services_main_title" fallback="Venta, Arriendo y Administración de Propiedades" multiline />
           </h1>
           <p className="text-sm sm:text-base text-slate-300 font-normal leading-relaxed">
-            Nuestra trayectoria y experiencia en el mercado inmobiliario respaldan nuestro compromiso con la excelencia, la transparencia y la entrega de un servicio profesional orientado a generar valor y confianza en cada operación.
+            <EditableText
+              contentKey="services_main_bajada"
+              fallback="Nuestra trayectoria y experiencia en el mercado inmobiliario respaldan nuestro compromiso con la excelencia, la transparencia y la entrega de un servicio profesional orientado a generar valor y confianza en cada operación."
+              multiline
+            />
           </p>
         </div>
 
@@ -37,12 +42,18 @@ export default function ServicesPage() {
               <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
                 <Tag className="w-7 h-7 stroke-[1.75]" />
               </div>
-              <h2 className="text-2xl font-extrabold text-white min-h-[3rem] flex items-center">Compra y Venta</h2>
+              <h2 className="text-2xl font-extrabold text-white min-h-[3rem] flex items-center">
+                <EditableText contentKey="service1_title" fallback="Compra y Venta" />
+              </h2>
               <p className="text-xs font-bold text-teal-400 uppercase tracking-wider leading-snug min-h-[2.5rem] flex items-center">
-                Asesoría experta para comprar o vender con seguridad y confianza.
+                <EditableText contentKey="service1_sub" fallback="Asesoría experta para comprar o vender con seguridad y confianza." multiline />
               </p>
               <p className="text-sm text-slate-300 leading-relaxed font-normal">
-                Te acompañamos en todo el proceso de compraventa con asesoría personalizada: valorización del inmueble, estrategia comercial, difusión multicanal, gestión de visitas, negociación y revisión legal hasta la entrega final.
+                <EditableText
+                  contentKey="service1_desc"
+                  fallback="Te acompañamos en todo el proceso de compraventa con asesoría personalizada: valorización del inmueble, estrategia comercial, difusión multicanal, gestión de visitas, negociación y revisión legal hasta la entrega final."
+                  multiline
+                />
               </p>
             </div>
             
@@ -51,7 +62,7 @@ export default function ServicesPage() {
                 onClick={() => { setActiveTab('captacion'); window.scrollTo({ top: 900, behavior: 'smooth' }); }}
                 className="w-full py-3 rounded-xl border border-orange-500/50 bg-orange-500/10 text-orange-300 hover:bg-orange-500/20 text-xs sm:text-sm font-bold transition-all"
               >
-                Encargar Venta o Tasación
+                <EditableText contentKey="service1_btn" fallback="Encargar Venta o Tasación" />
               </button>
             </div>
           </div>
@@ -62,12 +73,18 @@ export default function ServicesPage() {
               <div className="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
                 <Building className="w-7 h-7 stroke-[1.75]" />
               </div>
-              <h2 className="text-2xl font-extrabold text-white min-h-[3rem] flex items-center">Arriendos</h2>
+              <h2 className="text-2xl font-extrabold text-white min-h-[3rem] flex items-center">
+                <EditableText contentKey="service2_title" fallback="Arriendos" />
+              </h2>
               <p className="text-xs font-bold text-orange-400 uppercase tracking-wider leading-snug min-h-[2.5rem] flex items-center">
-                Encuentra al arrendatario ideal con el respaldo de un equipo experto.
+                <EditableText contentKey="service2_sub" fallback="Encuentra al arrendatario ideal con el respaldo de un equipo experto." multiline />
               </p>
               <p className="text-sm text-slate-300 leading-relaxed font-normal">
-                Gestionamos de forma integral el arriendo de tu propiedad: promoción destacada, evaluación rigurosa de postulantes, redacción de contratos, inventario detallado y entrega segura para proteger tu patrimonio.
+                <EditableText
+                  contentKey="service2_desc"
+                  fallback="Gestionamos de forma integral el arriendo de tu propiedad: promoción destacada, evaluación rigurosa de postulantes, redacción de contratos, inventario detallado y entrega segura para proteger tu patrimonio."
+                  multiline
+                />
               </p>
             </div>
 
@@ -76,7 +93,7 @@ export default function ServicesPage() {
                 onClick={() => { setActiveTab('captacion'); window.scrollTo({ top: 900, behavior: 'smooth' }); }}
                 className="w-full py-3 rounded-xl border border-teal-500/50 bg-teal-500/10 text-teal-300 hover:bg-teal-500/20 text-xs sm:text-sm font-bold transition-all"
               >
-                Publicar en Arriendo
+                <EditableText contentKey="service2_btn" fallback="Publicar en Arriendo" />
               </button>
             </div>
           </div>
@@ -87,12 +104,18 @@ export default function ServicesPage() {
               <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
                 <ShieldCheck className="w-7 h-7 stroke-[1.75]" />
               </div>
-              <h2 className="text-2xl font-extrabold text-white min-h-[3rem] flex items-center">Administración de Arriendos</h2>
+              <h2 className="text-2xl font-extrabold text-white min-h-[3rem] flex items-center">
+                <EditableText contentKey="service3_title" fallback="Administración de Arriendos" />
+              </h2>
               <p className="text-xs font-bold text-teal-400 uppercase tracking-wider leading-snug min-h-[2.5rem] flex items-center">
-                Maximiza la rentabilidad de tu propiedad. Nos encargamos de todo.
+                <EditableText contentKey="service3_sub" fallback="Maximiza la rentabilidad de tu propiedad. Nos encargamos de todo." multiline />
               </p>
               <p className="text-sm text-slate-300 leading-relaxed font-normal">
-                Servicio integral para optimizar el rendimiento de tu inversión: selección de inquilinos, cobranza puntual de rentas, control de pagos, coordinación de mantenciones, incidencias y seguimiento constante.
+                <EditableText
+                  contentKey="service3_desc"
+                  fallback="Servicio integral para optimizar el rendimiento de tu inversión: selección de inquilinos, cobranza puntual de rentas, control de pagos, coordinación de mantenciones, incidencias y seguimiento constante."
+                  multiline
+                />
               </p>
             </div>
 
@@ -104,7 +127,7 @@ export default function ServicesPage() {
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-orange-500 bg-orange-500/10 text-white text-xs sm:text-sm font-bold hover:bg-orange-500/20 transition-all"
               >
                 <MessageSquare className="w-4 h-4 text-orange-400" />
-                <span>Consultar por Administración</span>
+                <span><EditableText contentKey="service3_btn" fallback="Consultar por Administración" /></span>
               </a>
             </div>
           </div>
@@ -115,10 +138,14 @@ export default function ServicesPage() {
         <div className="bg-gradient-to-r from-[#0e1422] via-[#141d30] to-[#0e1422] p-8 sm:p-10 rounded-3xl border border-slate-800 text-center space-y-4 shadow-2xl">
           <Award className="w-10 h-10 text-teal-400 mx-auto" />
           <h3 className="text-xl sm:text-2xl font-extrabold text-white max-w-3xl mx-auto">
-            "Con un servicio profesional, transparente y personalizado, te entregamos la tranquilidad de saber que tu inmueble está administrado con altos estándares de gestión, permitiéndote disfrutar de los beneficios de tu inversión sin dedicar tiempo a su administración."
+            <EditableText
+              contentKey="services_quote_title"
+              fallback='"Con un servicio profesional, transparente y personalizado, te entregamos la tranquilidad de saber que tu inmueble está administrado con altos estándares de gestión, permitiéndote disfrutar de los beneficios de tu inversión sin dedicar tiempo a su administración."'
+              multiline
+            />
           </h3>
           <span className="text-xs font-bold text-orange-400 uppercase tracking-widest block">
-            URBANOS GESTIÓN INMOBILIARIA — REGIÓN DE LOS LAGOS, VALPARAÍSO Y METROPOLITANA
+            <EditableText contentKey="services_quote_footer" fallback="URBANOS GESTIÓN INMOBILIARIA — REGIÓN DE LOS LAGOS, VALPARAÍSO Y METROPOLITANA" />
           </span>
         </div>
 

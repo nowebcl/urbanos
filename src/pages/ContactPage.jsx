@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 import { sendSupabaseLead } from '../lib/supabaseServices';
+import EditableText from '../components/EditableText';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -35,14 +36,18 @@ export default function ContactPage() {
         
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase">
-            ESTAMOS PARA AYUDARTE
+          <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase block">
+            <EditableText contentKey="contact_pretitle" fallback="ESTAMOS PARA AYUDARTE" />
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Contacto & Atención Comercial
+            <EditableText contentKey="contact_main_title" fallback="Contacto & Atención Comercial" />
           </h1>
           <p className="text-sm text-slate-300">
-            Ponte en contacto con nuestro equipo de profesionales en la Región de Los Lagos, Valparaíso y Metropolitana.
+            <EditableText
+              contentKey="contact_main_bajada"
+              fallback="Ponte en contacto con nuestro equipo de profesionales en la Región de Los Lagos, Valparaíso y Metropolitana."
+              multiline
+            />
           </p>
         </div>
 
@@ -52,11 +57,17 @@ export default function ContactPage() {
             <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
               <MapPin className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-white">Ubicación & Dirección</h3>
+            <h3 className="text-base font-bold text-white">
+              <EditableText contentKey="contact_card1_title" fallback="Ubicación & Dirección" />
+            </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              <strong className="text-white">Av Austral, Jardín Austral</strong><br />
-              Puerto Montt, Región de Los Lagos, Chile.<br />
-              <span className="text-slate-400">Cobertura en Los Lagos, V Región y Metropolitana.</span>
+              <strong className="text-white">
+                <EditableText contentKey="contact_address" fallback="Av Austral, Jardín Austral, Puerto Montt" />
+              </strong><br />
+              <EditableText contentKey="contact_card1_detail" fallback="Puerto Montt, Región de Los Lagos, Chile." /><br />
+              <span className="text-slate-400">
+                <EditableText contentKey="contact_card1_sub" fallback="Cobertura en Los Lagos, V Región y Metropolitana." />
+              </span>
             </p>
           </div>
 
@@ -64,10 +75,14 @@ export default function ContactPage() {
             <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-400">
               <Phone className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-white">Teléfono & WhatsApp</h3>
+            <h3 className="text-base font-bold text-white">
+              <EditableText contentKey="contact_card2_title" fallback="Teléfono & WhatsApp" />
+            </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Llamadas & Chat: <a href="tel:+56961924570" className="text-orange-400 font-bold hover:underline">+56 9 6192 4570</a><br />
-              Atención Comercial continua de Lunes a Sábado.
+              Llamadas & Chat: <span className="text-orange-400 font-bold">
+                <EditableText contentKey="contact_phone" fallback="+56 9 6192 4570" />
+              </span><br />
+              <EditableText contentKey="contact_card2_hours" fallback="Atención Comercial continua de Lunes a Sábado." />
             </p>
           </div>
 
@@ -75,10 +90,14 @@ export default function ContactPage() {
             <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-400">
               <Mail className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-white">Correo Electrónico</h3>
+            <h3 className="text-base font-bold text-white">
+              <EditableText contentKey="contact_card3_title" fallback="Correo Electrónico" />
+            </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              <a href="mailto:urbanos@urbanosinmobiliaria.cl" className="text-teal-300 font-bold hover:underline">urbanos@urbanosinmobiliaria.cl</a><br />
-              Respuesta oportuna en menos de 24 horas hábiles.
+              <span className="text-teal-300 font-bold">
+                <EditableText contentKey="contact_email" fallback="urbanos@urbanosinmobiliaria.cl" />
+              </span><br />
+              <EditableText contentKey="contact_card3_note" fallback="Respuesta oportuna en menos de 24 horas hábiles." />
             </p>
           </div>
         </div>
@@ -89,8 +108,12 @@ export default function ContactPage() {
           {/* Left Form */}
           <div className="lg:col-span-7 bg-[#0e1422] p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl space-y-6">
             <div>
-              <h2 className="text-2xl font-extrabold text-white">Envíanos un mensaje</h2>
-              <p className="text-xs text-slate-400 mt-1">Completa el formulario para consultas sobre compras, ventas o tasaciones.</p>
+              <h2 className="text-2xl font-extrabold text-white">
+                <EditableText contentKey="contact_form_title" fallback="Envíanos un mensaje" />
+              </h2>
+              <p className="text-xs text-slate-400 mt-1">
+                <EditableText contentKey="contact_form_subtitle" fallback="Completa el formulario para consultas sobre compras, ventas o tasaciones." />
+              </p>
             </div>
 
             {submitted ? (
@@ -185,7 +208,9 @@ export default function ContactPage() {
             
             {/* Map Block */}
             <div className="bg-[#0e1422] p-6 rounded-3xl border border-slate-800 space-y-4">
-              <h3 className="text-lg font-bold text-white">Dirección & Ubicación Central</h3>
+              <h3 className="text-lg font-bold text-white">
+                <EditableText contentKey="contact_map_title" fallback="Dirección & Ubicación Central" />
+              </h3>
               
               <div className="relative h-60 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center">
                 <img
@@ -199,8 +224,12 @@ export default function ContactPage() {
                   <div className="w-10 h-10 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center mx-auto border border-teal-500/50">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <span className="text-sm font-bold text-white block">Av Austral, Jardín Austral</span>
-                  <span className="text-xs text-slate-300 block">Puerto Montt, Región de Los Lagos</span>
+                  <span className="text-sm font-bold text-white block">
+                    <EditableText contentKey="contact_address" fallback="Av Austral, Jardín Austral, Puerto Montt" />
+                  </span>
+                  <span className="text-xs text-slate-300 block">
+                    <EditableText contentKey="contact_map_sub" fallback="Puerto Montt, Región de Los Lagos" />
+                  </span>
                 </div>
               </div>
             </div>
@@ -212,8 +241,12 @@ export default function ContactPage() {
                   <MessageSquare className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white">¿Prefieres chatear por WhatsApp?</h4>
-                  <p className="text-xs text-slate-300">Atención inmediata con un asesor a tu disposición.</p>
+                  <h4 className="text-sm font-bold text-white">
+                    <EditableText contentKey="contact_wa_title" fallback="¿Prefieres chatear por WhatsApp?" />
+                  </h4>
+                  <p className="text-xs text-slate-300">
+                    <EditableText contentKey="contact_wa_desc" fallback="Atención inmediata con un asesor a tu disposición." />
+                  </p>
                 </div>
               </div>
 
@@ -224,7 +257,7 @@ export default function ContactPage() {
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-teal-500 text-slate-950 font-bold text-xs hover:bg-teal-400 transition-all mt-2"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>Iniciar Chat en WhatsApp (+56 9 6192 4570)</span>
+                <span><EditableText contentKey="contact_wa_btn" fallback="Iniciar Chat en WhatsApp (+56 9 6192 4570)" /></span>
               </a>
             </div>
 

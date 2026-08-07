@@ -88,9 +88,11 @@ export default function AboutPage({ onOpenContact }) {
           
           <div className="space-y-6">
             <div>
-              <span className="text-xs font-bold tracking-widest text-orange-400 uppercase block mb-1">ENFOQUE TERRITORIAL</span>
+              <span className="text-xs font-bold tracking-widest text-orange-400 uppercase block mb-1">
+                <EditableText contentKey="about_enfoque_pre" fallback="ENFOQUE TERRITORIAL" />
+              </span>
               <h2 className="text-2xl sm:text-4xl font-extrabold text-white leading-snug">
-                Llevamos la seriedad y el sello del sur a la zona central
+                <EditableText contentKey="about_enfoque_title" fallback="Llevamos la seriedad y el sello del sur a la zona central" multiline />
               </h2>
             </div>
 
@@ -101,8 +103,12 @@ export default function AboutPage({ onOpenContact }) {
                     0{i + 1}
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-white">{r.name}</h4>
-                    <p className="text-xs text-slate-400">{r.detail}</p>
+                    <h4 className="text-sm font-bold text-white">
+                      <EditableText contentKey={`about_region_${i}_name`} fallback={r.name} />
+                    </h4>
+                    <p className="text-xs text-slate-400">
+                      <EditableText contentKey={`about_region_${i}_detail`} fallback={r.detail} />
+                    </p>
                   </div>
                 </div>
               ))}
@@ -125,9 +131,11 @@ export default function AboutPage({ onOpenContact }) {
             <div className="absolute bottom-6 left-6 right-6 p-4 bg-[#0e1422]/90 backdrop-blur-md rounded-2xl border border-slate-800">
               <div className="flex items-center gap-2 text-teal-400 text-xs font-bold mb-1">
                 <MapPin className="w-4 h-4" />
-                <span>Estrategia Digital & Presencia Nacional</span>
+                <span><EditableText contentKey="about_box_title" fallback="Estrategia Digital & Presencia Nacional" /></span>
               </div>
-              <span className="text-xs text-slate-300">Conexión directa entre el Sur y la Zona Central de Chile.</span>
+              <span className="text-xs text-slate-300">
+                <EditableText contentKey="about_box_sub" fallback="Conexión directa entre el Sur y la Zona Central de Chile." />
+              </span>
             </div>
           </div>
 
@@ -136,8 +144,12 @@ export default function AboutPage({ onOpenContact }) {
         {/* 3 Pillars Grid */}
         <div className="space-y-8">
           <div className="text-center space-y-2 max-w-xl mx-auto">
-            <span className="text-xs font-bold tracking-widest text-teal-400 uppercase">NUESTROS PILARES</span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">Gestión de Venta y Administración</h2>
+            <span className="text-xs font-bold tracking-widest text-teal-400 uppercase">
+              <EditableText contentKey="about_pillars_pre" fallback="NUESTROS PILARES" />
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
+              <EditableText contentKey="about_pillars_title" fallback="Gestión de Venta y Administración" />
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

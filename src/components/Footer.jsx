@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import UrbanosLogo from './UrbanosLogo';
 import { MapPin, Phone, Mail } from 'lucide-react';
+import EditableText from './EditableText';
 
 export default function Footer() {
   return (
@@ -17,7 +18,11 @@ export default function Footer() {
               <UrbanosLogo layout="horizontal" />
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed font-normal pt-2 max-w-xs">
-              En Urbanos Gestión Inmobiliaria hacemos que cada operación sea más simple, segura y exitosa. Cobertura en Región de Los Lagos, V Región y Metropolitana.
+              <EditableText
+                contentKey="footer_desc"
+                fallback="En Urbanos Gestión Inmobiliaria hacemos que cada operación sea más simple, segura y exitosa. Cobertura en Región de Los Lagos, V Región y Metropolitana."
+                multiline
+              />
             </p>
           </div>
 
@@ -53,19 +58,21 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs">
               <li className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
-                <span>Av Austral, Jardín Austral, Puerto Montt</span>
+                <span>
+                  <EditableText contentKey="contact_address" fallback="Av Austral, Jardín Austral, Puerto Montt" />
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-teal-400 shrink-0" />
-                <a href="tel:+56961924570" className="hover:text-orange-400 transition-colors">
-                  +56 9 6192 4570
-                </a>
+                <span className="hover:text-orange-400 transition-colors">
+                  <EditableText contentKey="contact_phone" fallback="+56 9 6192 4570" />
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-teal-400 shrink-0" />
-                <a href="mailto:urbanos@urbanosinmobiliaria.cl" className="hover:text-orange-400 transition-colors">
-                  urbanos@urbanosinmobiliaria.cl
-                </a>
+                <span className="hover:text-orange-400 transition-colors">
+                  <EditableText contentKey="contact_email" fallback="urbanos@urbanosinmobiliaria.cl" />
+                </span>
               </li>
             </ul>
           </div>

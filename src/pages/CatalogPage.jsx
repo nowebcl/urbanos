@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, RefreshCw, ArrowUpDown, MapPin, Bed, Bath, Car, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PROPERTIES, CITIES } from '../data/mockData';
+import EditableText from '../components/EditableText';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -126,14 +127,18 @@ export default function CatalogPage() {
         
         {/* Page Header */}
         <div className="border-b border-slate-800 pb-6">
-          <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase">
-            CATÁLOGO INMOBILIARIO
+          <span className="text-xs font-bold tracking-[0.2em] text-teal-400 uppercase block">
+            <EditableText contentKey="catalog_pretitle" fallback="CATÁLOGO INMOBILIARIO" />
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mt-1">
-            Propiedades en el Sur de Chile
+            <EditableText contentKey="catalog_main_title" fallback="Propiedades en el Sur de Chile" multiline />
           </h1>
           <p className="text-sm text-slate-400 mt-2 max-w-2xl">
-            Explora nuestra selección completa de casas, departamentos, terrenos y locales comerciales en la Región de Los Lagos y alrededores.
+            <EditableText
+              contentKey="catalog_main_subtitle"
+              fallback="Explora nuestra selección completa de casas, departamentos, terrenos y locales comerciales en la Región de Los Lagos y alrededores."
+              multiline
+            />
           </p>
         </div>
 

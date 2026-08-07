@@ -4,10 +4,10 @@ import EditableText from './EditableText';
 
 export default function CtaBanner({ onOpenContact }) {
   const highlights = [
-    'Evaluación & Filtro de Compradores',
-    'Asesoría Legal y Comercial',
-    'Difusión Multicanal Digital',
-    'Gestión Integral hasta la Entrega'
+    { key: 'cta_feat1', default: 'Evaluación & Filtro de Compradores' },
+    { key: 'cta_feat2', default: 'Asesoría Legal y Comercial' },
+    { key: 'cta_feat3', default: 'Difusión Multicanal Digital' },
+    { key: 'cta_feat4', default: 'Gestión Integral hasta la Entrega' }
   ];
 
   return (
@@ -28,7 +28,7 @@ export default function CtaBanner({ onOpenContact }) {
 
               <div>
                 <span className="text-xs font-bold tracking-widest text-teal-400 uppercase block mb-1">
-                  ORDEN DE VENTA & ARRIENDO
+                  <EditableText contentKey="cta_pretitle" fallback="ORDEN DE VENTA & ARRIENDO" />
                 </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
                   <EditableText
@@ -44,17 +44,17 @@ export default function CtaBanner({ onOpenContact }) {
               onClick={onOpenContact}
               className="w-full md:w-auto flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl btn-orange font-bold text-xs sm:text-sm tracking-wide transition-all shadow-xl shrink-0"
             >
-              <span>Contactar Asesor</span>
+              <span><EditableText contentKey="cta_btn" fallback="Contactar Asesor" /></span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
           {/* Clean 4 Feature Badges Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-            {highlights.map((text, i) => (
+            {highlights.map((h, i) => (
               <div key={i} className="flex items-center gap-2.5 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs font-medium text-slate-200">
                 <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                <span>{text}</span>
+                <span><EditableText contentKey={h.key} fallback={h.default} /></span>
               </div>
             ))}
           </div>
