@@ -1,22 +1,11 @@
 import React, { useState } from 'react';
-import { X, MapPin, Bed, Bath, Car, Maximize2, Phone, Mail, CheckCircle2, Calculator, Send } from 'lucide-react';
+import { X, MapPin, Bed, Bath, Car, Maximize2, Phone, Mail, CheckCircle2, Send, Clock } from 'lucide-react';
 
 export default function PropertyModal({ property, onClose, currencyMode }) {
   if (!property) return null;
 
   const [activeImage, setActiveImage] = useState(property.image);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [downPayment, setDownPayment] = useState(20); // 20%
-  const [years, setYears] = useState(20); // 20 años
-
-  const priceCLP = property.priceCLP;
-  const loanAmount = priceCLP * (1 - downPayment / 100);
-  const monthlyRate = 0.048 / 12; // 4.8% annual rate approx
-  const totalMonths = years * 12;
-  const monthlyPaymentCLP = Math.round(
-    (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
-    (Math.pow(1 + monthlyRate, totalMonths) - 1)
-  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,6 +13,18 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
     setTimeout(() => {
       setFormSubmitted(false);
     }, 4000);
+  };
+
+  const renderSpecValue = (val) => {
+    if (val && val !== '0' && val !== 0 && val !== '-') {
+      return <span className="text-base font-bold text-white block mt-0.5">{val}</span>;
+    }
+    return (
+      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/30 mt-1">
+        <Clock className="w-3 h-3 text-amber-400 shrink-0" />
+        <span>Sin información</span>
+      </span>
+    );
   };
 
   return (
@@ -65,19 +66,21 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
             </div>
             
             {/* Thumbnails */}
-            <div className="flex items-center gap-3 overflow-x-auto pb-2">
-              {property.gallery.map((imgUrl, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveImage(imgUrl)}
-                  className={`relative h-20 w-28 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
-                    activeImage === imgUrl ? 'border-orange-500 scale-105' : 'border-slate-800 opacity-60 hover:opacity-100'
-                  }`}
-                >
-                  <img src={imgUrl} alt={`Vista ${i}`} className="w-full h-full object-cover" />
-                </button>
-              ))}
-            </div>
+            {property.gallery && property.gallery.length > 0 && (
+              <div className="flex items-center gap-3 overflow-x-auto pb-2">
+                {property.gallery.map((imgUrl, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActiveImage(imgUrl)}
+                    className={`relative h-20 w-28 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
+                      activeImage === imgUrl ? 'border-orange-500 scale-105' : 'border-slate-800 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={imgUrl} alt={`Vista ${i}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Title & Price Header */}
@@ -111,22 +114,22 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
             <div className="flex flex-col items-center justify-center p-2">
               <Bed className="w-5 h-5 text-teal-400 mb-1" />
               <span className="text-xs text-slate-400 font-medium">Dormitorios</span>
-              <span className="text-base font-bold text-white">{property.bedrooms || '-'}</span>
+              {renderSpecValue(property.bedrooms)}
             </div>
             <div className="flex flex-col items-center justify-center p-2">
               <Bath className="w-5 h-5 text-teal-400 mb-1" />
               <span className="text-xs text-slate-400 font-medium">Baños</span>
-              <span className="text-base font-bold text-white">{property.bathrooms || '-'}</span>
+              {renderSpecValue(property.bathrooms)}
             </div>
             <div className="flex flex-col items-center justify-center p-2">
               <Car className="w-5 h-5 text-teal-400 mb-1" />
               <span className="text-xs text-slate-400 font-medium">Estacionamientos</span>
-              <span className="text-base font-bold text-white">{property.parking || '-'}</span>
+              {renderSpecValue(property.parking)}
             </div>
             <div className="flex flex-col items-center justify-center p-2">
               <Maximize2 className="w-5 h-5 text-teal-400 mb-1" />
               <span className="text-xs text-slate-400 font-medium">Superficie Const.</span>
-              <span className="text-base font-bold text-white">{property.area}</span>
+              {renderSpecValue(property.area)}
             </div>
           </div>
 
@@ -136,64 +139,24 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
             <div className="md:col-span-2 space-y-6">
               <div>
                 <h3 className="text-lg font-bold text-white mb-2">Descripción de la Propiedad</h3>
-                <p className="text-slate-300 text-sm leading-relaxed font-normal">
+                <p className="text-slate-300 text-sm leading-relaxed font-normal whitespace-pre-line">
                   {property.description}
                 </p>
               </div>
 
-              <div>
-                <h3 className="text-lg font-bold text-white mb-3">Características Destacadas</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {property.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-slate-300 text-sm bg-slate-900/40 px-3 py-2 rounded-lg border border-slate-800/60">
-                      <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                      <span>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Simulación Hipotecaria */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 space-y-4">
-                <div className="flex items-center gap-2 text-white font-bold">
-                  <Calculator className="w-5 h-5 text-orange-400" />
-                  <span>Calculadora Hipotecaria Estimada</span>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <label className="text-slate-400 block mb-1">Pie ({downPayment}%):</label>
-                    <input
-                      type="range"
-                      min="10"
-                      max="40"
-                      step="5"
-                      value={downPayment}
-                      onChange={(e) => setDownPayment(Number(e.target.value))}
-                      className="w-full accent-orange-500 cursor-pointer"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-slate-400 block mb-1">Plazo ({years} años):</label>
-                    <input
-                      type="range"
-                      min="10"
-                      max="30"
-                      step="5"
-                      value={years}
-                      onChange={(e) => setYears(Number(e.target.value))}
-                      className="w-full accent-teal-400 cursor-pointer"
-                    />
+              {property.features && property.features.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-3">Características Destacadas</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {property.features.map((feat, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-slate-300 text-sm bg-slate-900/40 px-3 py-2 rounded-lg border border-slate-800/60">
+                        <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
+                        <span>{feat}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-
-                <div className="pt-2 flex items-center justify-between border-t border-slate-800 text-sm">
-                  <span className="text-slate-300">Dividendo Estimado:</span>
-                  <span className="text-lg font-extrabold text-teal-300">
-                    ${monthlyPaymentCLP.toLocaleString('es-CL')} / mes
-                  </span>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Agent Contact Card */}

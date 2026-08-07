@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, Phone, Mail, MessageSquare, Send, ArrowLeft, Share2, Calculator } from 'lucide-react';
+import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, Phone, Mail, MessageSquare, Send, ArrowLeft, Share2, Clock } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 
 export default function PropertyDetailPage() {
@@ -13,19 +13,6 @@ export default function PropertyDetailPage() {
   const [activeImage, setActiveImage] = useState(property.image);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  // Mortgage Calculator state
-  const [downPayment, setDownPayment] = useState(20);
-  const [years, setYears] = useState(20);
-
-  const priceCLP = property.priceCLP;
-  const loanAmount = priceCLP * (1 - downPayment / 100);
-  const monthlyRate = 0.048 / 12;
-  const totalMonths = years * 12;
-  const monthlyPaymentCLP = Math.round(
-    (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
-    (Math.pow(1 + monthlyRate, totalMonths) - 1)
-  );
 
   // Related properties (same commune or operation)
   const relatedProperties = PROPERTIES.filter(
@@ -50,6 +37,18 @@ export default function PropertyDetailPage() {
     `Hola, me interesa la propiedad "${property.title}" (Código: ${property.code}). Quisiera solicitar una visita.`
   );
   const whatsappUrl = `https://wa.me/56995930321?text=${whatsappMessage}`;
+
+  const renderSpecValue = (val) => {
+    if (val && val !== '0' && val !== 0 && val !== '-') {
+      return <span className="text-base font-bold text-white block mt-0.5">{val}</span>;
+    }
+    return (
+      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/30 mt-1">
+        <Clock className="w-3 h-3 text-amber-400 shrink-0" />
+        <span>Sin información</span>
+      </span>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#080c14] py-8 px-4 sm:px-6 lg:px-8">
@@ -128,47 +127,49 @@ export default function PropertyDetailPage() {
           </div>
 
           {/* Gallery Thumbnail Selector */}
-          <div className="flex items-center gap-3 overflow-x-auto pb-2">
-            {property.gallery.map((imgUrl, i) => (
-              <button
-                key={i}
-                onClick={() => setActiveImage(imgUrl)}
-                className={`relative h-20 w-32 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
-                  activeImage === imgUrl ? 'border-orange-500 scale-105 shadow-lg' : 'border-slate-800 opacity-60 hover:opacity-100'
-                }`}
-              >
-                <img src={imgUrl} alt={`Vista ${i}`} className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
+          {property.gallery && property.gallery.length > 0 && (
+            <div className="flex items-center gap-3 overflow-x-auto pb-2">
+              {property.gallery.map((imgUrl, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveImage(imgUrl)}
+                  className={`relative h-20 w-32 rounded-xl overflow-hidden border-2 shrink-0 transition-all ${
+                    activeImage === imgUrl ? 'border-orange-500 scale-105 shadow-lg' : 'border-slate-800 opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={imgUrl} alt={`Vista ${i}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Quick Specs Summary Bar */}
+        {/* Quick Specs Summary Bar with Amber "Sin información" badges */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 p-4 rounded-2xl bg-[#0e1422] border border-slate-800 text-center">
-          <div className="p-2 border-r border-slate-800 last:border-r-0">
-            <Bed className="w-5 h-5 text-teal-400 mx-auto mb-1" />
+          <div className="p-2 border-r border-slate-800/80 last:border-r-0 flex flex-col items-center justify-center">
+            <Bed className="w-5 h-5 text-teal-400 mb-1" />
             <span className="text-[11px] text-slate-400 block font-medium">Dormitorios</span>
-            <span className="text-base font-bold text-white">{property.bedrooms || '-'}</span>
+            {renderSpecValue(property.bedrooms)}
           </div>
-          <div className="p-2 border-r border-slate-800 last:border-r-0">
-            <Bath className="w-5 h-5 text-teal-400 mx-auto mb-1" />
+          <div className="p-2 border-r border-slate-800/80 last:border-r-0 flex flex-col items-center justify-center">
+            <Bath className="w-5 h-5 text-teal-400 mb-1" />
             <span className="text-[11px] text-slate-400 block font-medium">Baños</span>
-            <span className="text-base font-bold text-white">{property.bathrooms || '-'}</span>
+            {renderSpecValue(property.bathrooms)}
           </div>
-          <div className="p-2 border-r border-slate-800 last:border-r-0">
-            <Car className="w-5 h-5 text-teal-400 mx-auto mb-1" />
+          <div className="p-2 border-r border-slate-800/80 last:border-r-0 flex flex-col items-center justify-center">
+            <Car className="w-5 h-5 text-teal-400 mb-1" />
             <span className="text-[11px] text-slate-400 block font-medium">Estacionamientos</span>
-            <span className="text-base font-bold text-white">{property.parking || '-'}</span>
+            {renderSpecValue(property.parking)}
           </div>
-          <div className="p-2 border-r border-slate-800 last:border-r-0">
-            <Maximize2 className="w-5 h-5 text-teal-400 mx-auto mb-1" />
+          <div className="p-2 border-r border-slate-800/80 last:border-r-0 flex flex-col items-center justify-center">
+            <Maximize2 className="w-5 h-5 text-teal-400 mb-1" />
             <span className="text-[11px] text-slate-400 block font-medium">Sup. Construida</span>
-            <span className="text-base font-bold text-white">{property.area || '-'}</span>
+            {renderSpecValue(property.area)}
           </div>
-          <div className="p-2 col-span-2 sm:col-span-1">
-            <Maximize2 className="w-5 h-5 text-teal-400 mx-auto mb-1" />
+          <div className="p-2 col-span-2 sm:col-span-1 flex flex-col items-center justify-center">
+            <Maximize2 className="w-5 h-5 text-teal-400 mb-1" />
             <span className="text-[11px] text-slate-400 block font-medium">Sup. Terreno</span>
-            <span className="text-base font-bold text-white">{property.landArea || '-'}</span>
+            {renderSpecValue(property.landArea)}
           </div>
         </div>
 
@@ -187,66 +188,19 @@ export default function PropertyDetailPage() {
             </div>
 
             {/* Features Checklist */}
-            <div className="bg-[#0e1422] p-6 rounded-2xl border border-slate-800 space-y-4">
-              <h2 className="text-xl font-bold text-white">Características y Amenidades</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {property.features.map((feat, idx) => (
-                  <div key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-300 bg-[#080c14] p-3 rounded-xl border border-slate-800/80">
-                    <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
-                    <span>{feat}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Mortgage Calculator */}
-            <div className="bg-[#0e1422] p-6 rounded-2xl border border-slate-800 space-y-4">
-              <div className="flex items-center gap-2 text-white font-bold text-lg">
-                <Calculator className="w-5 h-5 text-orange-400" />
-                <span>Simulador de Crédito Hipotecario</span>
-              </div>
-              <p className="text-xs text-slate-400">
-                Calcula una cuota referencial según el porcentaje de pie y plazo deseado.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-2">
-                <div>
-                  <label className="text-slate-300 block mb-1">Pie ({downPayment}%):</label>
-                  <input
-                    type="range"
-                    min="10"
-                    max="40"
-                    step="5"
-                    value={downPayment}
-                    onChange={(e) => setDownPayment(Number(e.target.value))}
-                    className="w-full accent-orange-500 cursor-pointer"
-                  />
-                  <span className="text-[11px] text-slate-400 font-mono">
-                    ${Math.round(priceCLP * (downPayment / 100)).toLocaleString('es-CL')} CLP
-                  </span>
-                </div>
-                <div>
-                  <label className="text-slate-300 block mb-1">Plazo ({years} años):</label>
-                  <input
-                    type="range"
-                    min="10"
-                    max="30"
-                    step="5"
-                    value={years}
-                    onChange={(e) => setYears(Number(e.target.value))}
-                    className="w-full accent-teal-400 cursor-pointer"
-                  />
-                  <span className="text-[11px] text-slate-400 font-mono">{years * 12} cuotas mensuales</span>
+            {property.features && property.features.length > 0 && (
+              <div className="bg-[#0e1422] p-6 rounded-2xl border border-slate-800 space-y-4">
+                <h2 className="text-xl font-bold text-white">Características y Amenidades</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {property.features.map((feat, idx) => (
+                    <div key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-300 bg-[#080c14] p-3 rounded-xl border border-slate-800/80">
+                      <CheckCircle2 className="w-4 h-4 text-teal-400 shrink-0" />
+                      <span>{feat}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-xs text-slate-300 font-semibold">Dividendo Estimado:</span>
-                <span className="text-lg font-extrabold text-teal-300">
-                  ${monthlyPaymentCLP.toLocaleString('es-CL')} / mes
-                </span>
-              </div>
-            </div>
+            )}
 
             {/* Map Simulator */}
             <div className="bg-[#0e1422] p-6 rounded-2xl border border-slate-800 space-y-3">
@@ -256,7 +210,6 @@ export default function PropertyDetailPage() {
               </p>
               
               <div className="relative h-64 w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center">
-                {/* Simulated dark map */}
                 <div className="absolute inset-0 bg-[#080c14] opacity-90" />
                 <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px]" />
                 
