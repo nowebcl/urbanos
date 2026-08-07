@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { Lock, LogOut, Plus, Trash2, Edit3, CheckCircle2, MessageSquare, FileText, Building, Tag, ShieldCheck, RefreshCw } from 'lucide-react';
+import { 
+  Lock, LogOut, Plus, Trash2, Edit3, CheckCircle2, MessageSquare, 
+  FileText, Building, Tag, ShieldCheck, RefreshCw, ExternalLink, 
+  UploadCloud, Image as ImageIcon, Search, ChevronDown, ChevronUp, X, Send
+} from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 
 export default function AdminPage() {
@@ -18,28 +22,33 @@ export default function AdminPage() {
   const [dbLeads, setDbLeads] = useState([]);
   const [dbOrders, setDbOrders] = useState([]);
 
-  // Form modal for property add/edit
+  // Search query for published properties
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Form collapse state
+  const [isFormOpen, setIsFormOpen] = useState(true);
+  const formRef = useRef(null);
+
+  // Form state for property add/edit
   const [editingProp, setEditingProp] = useState(null);
-  const [showPropModal, setShowPropModal] = useState(false);
   const [propForm, setPropForm] = useState({
     title: '',
     code: '',
     slug: '',
     operation: 'Venta',
-    type: 'Casa',
-    commune: 'Puerto Montt',
-    location: 'Puerto Montt, Región de Los Lagos',
-    priceDisplay: 'UF 5.000',
-    priceUF: 5000,
-    priceCLP: 187500000,
-    bedrooms: 3,
-    bathrooms: 2,
-    parking: 2,
-    area: '120m²',
-    landArea: '300m²',
+    type: 'Departamento',
+    commune: '',
+    location: '',
+    value: '',
+    currency: 'UF', // 'UF' | 'CLP'
+    bedrooms: '3',
+    bathrooms: '2',
+    area: '',
+    landArea: '',
     image: '',
+    gallery: [],
     description: '',
-    isFeatured: false
+    isFeatured: true
   });
 
   useEffect(() => {
@@ -105,29 +114,142 @@ export default function AdminPage() {
     setSession(null);
   };
 
+  // Image Upload helper (Converts File to Base64 Data URL)
+  const handleFileUpload = (file, isMain = true) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (isMain) {
+        setPropForm(prev => ({ ...prev, image: reader.result }));
+      } else {
+        setPropForm(prev => {
+          if (prev.gallery.length >= 5) {
+            alert('Máximo 5 imágenes en la galería');
+            return prev;
+          }
+          return { ...prev, gallery: [...prev.gallery, reader.result] };
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeGalleryImage = (index) => {
+    setPropForm(prev => ({
+      ...prev,
+      gallery: prev.gallery.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleEditPropertyClick = (prop) => {
+    setEditingProp(prop);
+    
+    // Parse currency & numeric value
+    let valStr = '';
+    let curr = 'UF';
+    const disp = prop.price_display || prop.priceDisplay || '';
+    if (disp.includes('$') || disp.includes('CLP')) {
+      curr = 'CLP';
+      valStr = (prop.price_clp || disp.replace(/[^0-9]/g, '')).toString();
+    } else {
+      curr = 'UF';
+      valStr = (prop.price_uf || disp.replace(/[^0-9.]/g, '')).toString();
+    }
+
+    setPropForm({
+      title: prop.title || '',
+      code: prop.code || '',
+      slug: prop.slug || '',
+      operation: prop.operation || 'Venta',
+      type: prop.type || 'Departamento',
+      commune: prop.commune || '',
+      location: prop.location || prop.address || '',
+      value: valStr,
+      currency: curr,
+      bedrooms: (prop.bedrooms !== undefined ? prop.bedrooms : 3).toString(),
+      bathrooms: (prop.bathrooms !== undefined ? prop.bathrooms : 2).toString(),
+      area: prop.area || '',
+      landArea: prop.land_area || prop.landArea || '',
+      image: prop.image || '',
+      gallery: Array.isArray(prop.gallery) ? prop.gallery : [],
+      description: prop.description || '',
+      isFeatured: prop.is_featured ?? true
+    });
+
+    setIsFormOpen(true);
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleResetForm = () => {
+    setEditingProp(null);
+    setPropForm({
+      title: '',
+      code: '',
+      slug: '',
+      operation: 'Venta',
+      type: 'Departamento',
+      commune: '',
+      location: '',
+      value: '',
+      currency: 'UF',
+      bedrooms: '3',
+      bathrooms: '2',
+      area: '',
+      landArea: '',
+      image: '',
+      gallery: [],
+      description: '',
+      isFeatured: true
+    });
+  };
+
   const handleSaveProperty = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
+      const numVal = parseFloat(propForm.value) || 0;
+      let priceDisplay = '';
+      let priceUF = 0;
+      let priceCLP = 0;
+
+      if (propForm.currency === 'UF') {
+        priceDisplay = `UF ${numVal.toLocaleString('es-CL')}`;
+        priceUF = numVal;
+        priceCLP = numVal * 37500; // Valor UF aproximado
+      } else {
+        priceDisplay = `$${numVal.toLocaleString('es-CL')}`;
+        priceCLP = numVal;
+        priceUF = Math.round(numVal / 37500);
+      }
+
+      const generatedCode = propForm.code || `URB-${Math.floor(100 + Math.random() * 900)}`;
+      const generatedSlug = propForm.slug || propForm.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const defaultCommune = propForm.commune || 'Puerto Montt';
+      const defaultLoc = propForm.location || `${defaultCommune}, Región de Los Lagos`;
+
       const payload = {
-        code: propForm.code || `URB-${Date.now().toString().slice(-4)}`,
-        slug: propForm.slug || propForm.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+        code: generatedCode,
+        slug: generatedSlug,
         title: propForm.title,
-        commune: propForm.commune,
-        location: propForm.location,
-        address: propForm.location,
-        price_display: propForm.priceDisplay,
-        price_uf: parseFloat(propForm.priceUF) || 0,
-        price_clp: parseFloat(propForm.priceCLP) || 0,
+        commune: defaultCommune,
+        location: defaultLoc,
+        address: defaultLoc,
+        price_display: priceDisplay,
+        price_uf: priceUF,
+        price_clp: priceCLP,
         bedrooms: parseInt(propForm.bedrooms, 10) || 0,
         bathrooms: parseInt(propForm.bathrooms, 10) || 0,
-        parking: parseInt(propForm.parking, 10) || 0,
-        area: propForm.area,
-        land_area: propForm.landArea,
+        parking: 2,
+        area: propForm.area ? (propForm.area.includes('m²') ? propForm.area : `${propForm.area}m²`) : '120m²',
+        land_area: propForm.landArea ? (propForm.landArea.includes('m²') ? propForm.landArea : `${propForm.landArea}m²`) : '300m²',
         is_featured: propForm.isFeatured,
         operation: propForm.operation,
         type: propForm.type,
-        image: propForm.image || '/images/house_monte_verde.jpg',
+        image: propForm.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80',
+        gallery: propForm.gallery,
         description: propForm.description
       };
 
@@ -138,11 +260,12 @@ export default function AdminPage() {
         await supabase.from('properties').insert([{ id: newId, ...payload }]);
       }
 
-      setShowPropModal(false);
-      setEditingProp(null);
+      handleResetForm();
       fetchAdminData();
+      alert(editingProp ? '¡Propiedad actualizada exitosamente!' : '¡Propiedad publicada exitosamente!');
     } catch (err) {
-      alert('Error guardando propiedad en Supabase');
+      console.error(err);
+      alert('Error al guardar la propiedad en Supabase');
     } finally {
       setLoading(false);
     }
@@ -151,25 +274,36 @@ export default function AdminPage() {
   const handleDeleteProperty = async (id) => {
     if (window.confirm('¿Seguro que deseas eliminar esta propiedad?')) {
       await supabase.from('properties').delete().eq('id', id);
+      // Also update local list if fallback is used
+      setDbProperties(prev => prev.filter(p => p.id !== id));
       fetchAdminData();
     }
   };
 
+  // Filter properties by search query
+  const filteredProperties = dbProperties.filter(p => {
+    const q = searchQuery.toLowerCase();
+    const title = (p.title || '').toLowerCase();
+    const commune = (p.commune || '').toLowerCase();
+    const code = (p.code || '').toLowerCase();
+    return title.includes(q) || commune.includes(q) || code.includes(q);
+  });
+
   // If NOT logged in, show Login Screen
   if (!session) {
     return (
-      <div className="min-h-[80vh] bg-[#080c14] flex items-center justify-center py-12 px-4">
+      <div className="min-h-[85vh] bg-[#080c14] flex items-center justify-center py-12 px-4 selection:bg-orange-500 selection:text-white">
         <div className="max-w-md w-full bg-[#0e1422] border border-slate-800 p-8 rounded-3xl shadow-2xl space-y-6">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/30 text-orange-400 mx-auto flex items-center justify-center">
-              <Lock className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/30 text-orange-400 mx-auto flex items-center justify-center">
+              <Lock className="w-7 h-7" />
             </div>
-            <h1 className="text-2xl font-extrabold text-white">Panel de Administración</h1>
-            <p className="text-xs text-slate-400">Ingresa con tus credenciales de Supabase</p>
+            <h1 className="text-2xl font-extrabold text-white">Panel Administrador</h1>
+            <p className="text-xs text-slate-400">Ingresa tus credenciales para gestionar propiedades</p>
           </div>
 
           {loginError && (
-            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs text-center">
+            <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs text-center font-medium">
               {loginError}
             </div>
           )}
@@ -183,7 +317,7 @@ export default function AdminPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@urbanosgestion.cl"
-                className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
+                className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
 
@@ -195,14 +329,14 @@ export default function AdminPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
+                className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 btn-orange rounded-xl text-xs font-bold shadow-lg"
+              className="w-full py-3.5 btn-orange rounded-xl text-xs font-bold shadow-lg transition-all"
             >
               {loading ? 'Autenticando...' : 'Iniciar Sesión Admin'}
             </button>
@@ -214,176 +348,549 @@ export default function AdminPage() {
 
   // Logged In Dashboard
   return (
-    <div className="min-h-screen bg-[#080c14] text-slate-100 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        
-        {/* Admin Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0e1422] p-6 rounded-2xl border border-slate-800">
-          <div>
-            <span className="text-xs font-bold text-teal-400 uppercase tracking-widest">SISTEMA SUPABASE ACTIVO</span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">Panel Administrador</h1>
-            <p className="text-xs text-slate-400 mt-1">Conectado como: {session.user.email}</p>
+    <div className="min-h-screen bg-[#080c14] text-slate-100 py-8 px-4 sm:px-6 lg:px-8 selection:bg-orange-500 selection:text-white">
+      <div className="max-w-5xl mx-auto space-y-6">
+
+        {/* 1. Header Superior (Barra de Navegación del Admin) */}
+        <header className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#0e1422] p-5 rounded-2xl border border-slate-800 shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-400 flex items-center justify-center font-black text-lg">
+              U
+            </div>
+            <div>
+              <h1 className="text-base sm:text-lg font-black text-white tracking-wide uppercase">
+                URBANOS <span className="text-orange-500 font-light text-xs tracking-normal uppercase">Gestión Inmobiliaria</span>
+              </h1>
+              <p className="text-[11px] text-slate-400">Panel de Administración | {session.user.email}</p>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <button
-              onClick={fetchAdminData}
-              className="p-2.5 rounded-xl border border-slate-700 text-slate-300 hover:text-white bg-[#080c14]"
-              title="Recargar datos"
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#080c14] border border-slate-700 text-slate-300 hover:text-white hover:border-slate-600 text-xs font-semibold transition-all"
             >
-              <RefreshCw className="w-4 h-4 text-teal-400" />
-            </button>
+              <ExternalLink className="w-3.5 h-3.5 text-teal-400" />
+              <span>Ver Sitio Web</span>
+            </a>
 
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-500/40 bg-red-500/10 text-red-300 text-xs font-bold hover:bg-red-500/20"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl border border-red-500/40 bg-red-500/10 text-red-400 hover:bg-red-500/20 text-xs font-bold transition-all"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-3.5 h-3.5" />
               <span>Cerrar Sesión</span>
             </button>
           </div>
-        </div>
+        </header>
 
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
+        {/* 2. Pestanas Principales (Propiedades | Mensajes | Ordenes) */}
+        <div className="bg-[#0e1422] p-1.5 rounded-2xl border border-slate-800 flex items-center gap-2 shadow-lg">
           <button
             onClick={() => setActiveTab('properties')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
               activeTab === 'properties'
                 ? 'bg-orange-500 text-white shadow-lg'
-                : 'bg-[#0e1422] border border-slate-700 text-slate-300'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             }`}
           >
             <Building className="w-4 h-4" />
-            <span>Propiedades ({dbProperties.length})</span>
+            <span>Propiedades</span>
           </button>
 
           <button
             onClick={() => setActiveTab('leads')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
               activeTab === 'leads'
                 ? 'bg-teal-500 text-slate-950 shadow-lg'
-                : 'bg-[#0e1422] border border-slate-700 text-slate-300'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             }`}
           >
             <MessageSquare className="w-4 h-4" />
-            <span>Mensajes / Leads ({dbLeads.length})</span>
+            <span>Mensajes</span>
+            {dbLeads.length > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-slate-950 text-teal-400 text-[10px] font-bold">
+                {dbLeads.length}
+              </span>
+            )}
           </button>
 
           <button
             onClick={() => setActiveTab('orders')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
               activeTab === 'orders'
                 ? 'bg-orange-500 text-white shadow-lg'
-                : 'bg-[#0e1422] border border-slate-700 text-slate-300'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
             }`}
           >
             <FileText className="w-4 h-4" />
-            <span>Órdenes / Ofertas ({dbOrders.length})</span>
+            <span>Órdenes / Ofertas</span>
+            {dbOrders.length > 0 && (
+              <span className="px-1.5 py-0.5 rounded-full bg-slate-900 text-orange-300 text-[10px] font-bold">
+                {dbOrders.length}
+              </span>
+            )}
           </button>
         </div>
 
-        {/* Tab 1: Properties List & Management */}
+        {/* CONTENIDO SEGÚN LA PESTAÑA SELECCIONADA */}
         {activeTab === 'properties' && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-white">Catálogo de Propiedades en Supabase</h2>
-              <button
-                onClick={() => {
-                  setEditingProp(null);
-                  setPropForm({
-                    title: '',
-                    code: '',
-                    slug: '',
-                    operation: 'Venta',
-                    type: 'Casa',
-                    commune: 'Puerto Montt',
-                    location: 'Puerto Montt, Región de Los Lagos',
-                    priceDisplay: 'UF 5.000',
-                    priceUF: 5000,
-                    priceCLP: 187500000,
-                    bedrooms: 3,
-                    bathrooms: 2,
-                    parking: 2,
-                    area: '120m²',
-                    landArea: '300m²',
-                    image: '',
-                    description: '',
-                    isFeatured: false
-                  });
-                  setShowPropModal(true);
-                }}
-                className="flex items-center gap-2 px-4 py-2.5 btn-orange rounded-xl text-xs font-bold shadow-lg"
+
+            {/* 3. SECCIÓN SUPERIOR: FORMULARIO PUBLICAR / EDITAR PROPIEDAD */}
+            <div ref={formRef} className="bg-[#0e1422] border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+              
+              {/* Header del Formulario Desplegable */}
+              <div
+                onClick={() => setIsFormOpen(!isFormOpen)}
+                className="flex items-center justify-between p-5 bg-[#080c14]/60 cursor-pointer border-b border-slate-800/80 hover:bg-slate-900/40 transition-colors"
               >
-                <Plus className="w-4 h-4" />
-                <span>Agregar Propiedad</span>
-              </button>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center">
+                    {editingProp ? <Edit3 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                      {editingProp ? `Modificar Propiedad: ${editingProp.code}` : 'Publicar Nueva Propiedad'}
+                    </h2>
+                    <p className="text-[11px] text-slate-400">Toca para desplegar / contraer formulario</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {editingProp && (
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); handleResetForm(); }}
+                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 font-semibold"
+                    >
+                      Cancelar Edición
+                    </button>
+                  )}
+                  {isFormOpen ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+                </div>
+              </div>
+
+              {/* Cuerpo del Formulario */}
+              {isFormOpen && (
+                <form onSubmit={handleSaveProperty} className="p-6 space-y-5">
+                  
+                  {/* Título del Inmueble */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Título del Inmueble <span className="text-orange-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={propForm.title}
+                      onChange={(e) => setPropForm({ ...propForm, title: e.target.value })}
+                      placeholder="Ej: Espectacular Casa en Condominio con Vista Panorámica"
+                      className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 placeholder:text-slate-600 transition-colors"
+                    />
+                  </div>
+
+                  {/* Código de Referencia + Comuna */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Código de Referencia
+                      </label>
+                      <input
+                        type="text"
+                        value={propForm.code}
+                        onChange={(e) => setPropForm({ ...propForm, code: e.target.value })}
+                        placeholder="Ej: URB-108 (autogenerado si se omite)"
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 placeholder:text-slate-600 transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Comuna <span className="text-orange-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={propForm.commune}
+                        onChange={(e) => setPropForm({ ...propForm, commune: e.target.value })}
+                        placeholder="Ej: Las Condes, Puerto Montt, Puerto Varas..."
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 placeholder:text-slate-600 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Operación + Tipo de Propiedad */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Operación <span className="text-orange-500">*</span>
+                      </label>
+                      <select
+                        value={propForm.operation}
+                        onChange={(e) => setPropForm({ ...propForm, operation: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                      >
+                        <option value="Venta">Venta</option>
+                        <option value="Arriendo">Arriendo</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Tipo de Propiedad <span className="text-orange-500">*</span>
+                      </label>
+                      <select
+                        value={propForm.type}
+                        onChange={(e) => setPropForm({ ...propForm, type: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                      >
+                        <option value="Departamento">Departamento</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Terreno">Terreno / Parcela</option>
+                        <option value="Casa Comercial">Casa Comercial / Oficina</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Valor + Moneda */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Valor <span className="text-orange-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={propForm.value}
+                        onChange={(e) => setPropForm({ ...propForm, value: e.target.value })}
+                        placeholder="Ej: 14500 o 500000"
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 placeholder:text-slate-600 transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Moneda <span className="text-orange-500">*</span>
+                      </label>
+                      <select
+                        value={propForm.currency}
+                        onChange={(e) => setPropForm({ ...propForm, currency: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                      >
+                        <option value="UF">UF (Unidad de Fomento)</option>
+                        <option value="CLP">CLP ($ Pesos Chilenos)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Dormitorios + Baños */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <Building className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Dormitorios</span>
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={propForm.bedrooms}
+                        onChange={(e) => setPropForm({ ...propForm, bedrooms: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <Building className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Baños</span>
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={propForm.bathrooms}
+                        onChange={(e) => setPropForm({ ...propForm, bathrooms: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Superficie Útil + Superficie Terreno */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Superficie Útil (m²)
+                      </label>
+                      <input
+                        type="text"
+                        value={propForm.area}
+                        onChange={(e) => setPropForm({ ...propForm, area: e.target.value })}
+                        placeholder="Ej: 140.5"
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 placeholder:text-slate-600 transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Superficie Terreno / Total (m²)
+                      </label>
+                      <input
+                        type="text"
+                        value={propForm.landArea}
+                        onChange={(e) => setPropForm({ ...propForm, landArea: e.target.value })}
+                        placeholder="Ej: 300"
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 placeholder:text-slate-600 transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Imagen Principal Drag & Drop Dropzone */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Imagen Principal <span className="text-orange-500">*</span>
+                    </label>
+                    
+                    <div className="relative border-2 border-dashed border-slate-700 hover:border-orange-500/60 bg-[#080c14] rounded-2xl p-6 text-center transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleFileUpload(e.target.files[0], true)}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      
+                      {propForm.image ? (
+                        <div className="flex flex-col items-center gap-3">
+                          <img
+                            src={propForm.image}
+                            alt="Vista previa"
+                            className="h-32 w-auto object-cover rounded-xl border border-slate-700 shadow-md"
+                          />
+                          <p className="text-[11px] text-teal-400 font-semibold">✓ Imagen cargada correctamente (Haz clic para cambiar)</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 pointer-events-none">
+                          <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center mx-auto">
+                            <ImageIcon className="w-5 h-5" />
+                          </div>
+                          <p className="text-xs font-semibold text-slate-300">Haz clic o arrastra una foto aquí</p>
+                          <p className="text-[10px] text-slate-500">Formatos soportados: JPG, PNG, WEBP</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* URL Input Fallback */}
+                    <div className="mt-2">
+                      <input
+                        type="url"
+                        value={propForm.image}
+                        onChange={(e) => setPropForm({ ...propForm, image: e.target.value })}
+                        placeholder="O pega una URL directa de la imagen (https://...)"
+                        className="w-full px-3.5 py-2 bg-[#080c14] border border-slate-800 rounded-xl text-slate-300 text-[11px] focus:outline-none focus:border-orange-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Galería de Imágenes Dropzone */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Galería de Imágenes (Máximo 5 imágenes)
+                    </label>
+
+                    <div className="relative border-2 border-dashed border-slate-700 hover:border-teal-500/60 bg-[#080c14] rounded-2xl p-5 text-center transition-colors">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={(e) => {
+                          const files = Array.from(e.target.files);
+                          files.forEach(f => handleFileUpload(f, false));
+                        }}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      />
+                      
+                      <div className="space-y-1 pointer-events-none">
+                        <div className="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center mx-auto">
+                          <UploadCloud className="w-5 h-5" />
+                        </div>
+                        <p className="text-xs font-semibold text-slate-300">Subir imágenes para galería (Máximo 5)</p>
+                        <p className="text-[10px] text-slate-500">Puedes seleccionar hasta 5 fotos adicionales para el slider deslizante.</p>
+                      </div>
+                    </div>
+
+                    {/* Vista Previa de la Galería */}
+                    {propForm.gallery && propForm.gallery.length > 0 && (
+                      <div className="flex flex-wrap gap-3 mt-3">
+                        {propForm.gallery.map((imgUrl, idx) => (
+                          <div key={idx} className="relative group w-20 h-20 rounded-xl overflow-hidden border border-slate-700">
+                            <img src={imgUrl} alt={`Galería ${idx}`} className="w-full h-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => removeGalleryImage(idx)}
+                              className="absolute top-1 right-1 p-1 rounded-full bg-red-600 text-white opacity-90 hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Descripción */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                      Descripción del Inmueble
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={propForm.description}
+                      onChange={(e) => setPropForm({ ...propForm, description: e.target.value })}
+                      placeholder="Describe los aspectos destacados de la propiedad..."
+                      className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                    />
+                  </div>
+
+                  {/* Botón Publicar Propiedad (Estilo Ancho Completo Corporativo) */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-4 btn-orange rounded-xl text-xs font-black uppercase tracking-wider shadow-xl flex items-center justify-center gap-2 transition-all transform active:scale-[0.99]"
+                  >
+                    <Send className="w-4 h-4" />
+                    <span>{loading ? 'Guardando en Supabase...' : (editingProp ? 'Guardar Cambios de Propiedad' : 'Publicar Propiedad')}</span>
+                  </button>
+
+                </form>
+              )}
             </div>
 
-            <div className="bg-[#0e1422] border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="bg-[#080c14] border-b border-slate-800 text-slate-400 uppercase tracking-wider font-bold">
-                    <tr>
-                      <th className="px-4 py-3">Código</th>
-                      <th className="px-4 py-3">Título</th>
-                      <th className="px-4 py-3">Operación</th>
-                      <th className="px-4 py-3">Precio</th>
-                      <th className="px-4 py-3">Comuna</th>
-                      <th className="px-4 py-3 text-right">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800">
-                    {dbProperties.map((p) => (
-                      <tr key={p.id} className="hover:bg-slate-900/50">
-                        <td className="px-4 py-3 font-mono font-bold text-teal-400">{p.code}</td>
-                        <td className="px-4 py-3 font-semibold text-white truncate max-w-xs">{p.title}</td>
-                        <td className="px-4 py-3">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                            p.operation === 'Venta' ? 'bg-orange-500/20 text-orange-400' : 'bg-teal-500/20 text-teal-400'
-                          }`}>
-                            {p.operation}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 font-bold text-white">{p.priceDisplay || p.price_display}</td>
-                        <td className="px-4 py-3">{p.commune}</td>
-                        <td className="px-4 py-3 text-right space-x-2">
+            {/* 4. SECCIÓN INFERIOR: PROPIEDADES PUBLICADAS CON BUSCADOR */}
+            <div className="bg-[#0e1422] border border-slate-800 rounded-2xl p-6 shadow-2xl space-y-4">
+              
+              {/* Header + Buscador */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <Building className="w-4 h-4 text-orange-500" />
+                  <span>Propiedades Publicadas ({filteredProperties.length})</span>
+                </h3>
+
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Buscar por título, comuna o código..."
+                    className="w-full pl-9 pr-4 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-slate-200 text-xs focus:outline-none focus:border-orange-500 placeholder:text-slate-500 transition-colors"
+                  />
+                </div>
+              </div>
+
+              {/* Lista de Propiedades Estilo Card */}
+              {filteredProperties.length === 0 ? (
+                <div className="text-center py-10 text-slate-500 text-xs">
+                  No se encontraron propiedades que coincidan con la búsqueda.
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                  {filteredProperties.map((p) => (
+                    <div
+                      key={p.id}
+                      className="bg-[#080c14] border border-slate-800 hover:border-slate-700 p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all"
+                    >
+                      {/* Izquierda: Imagen + Detalles */}
+                      <div className="flex items-center gap-3 w-full sm:w-auto">
+                        <img
+                          src={p.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80'}
+                          alt={p.title}
+                          className="w-20 h-16 object-cover rounded-lg border border-slate-700 flex-shrink-0"
+                        />
+                        <div className="space-y-1">
+                          {/* Badges row */}
+                          <div className="flex items-center gap-2 text-[10px]">
+                            <span className="font-mono font-extrabold text-teal-400 bg-teal-500/10 px-1.5 py-0.5 rounded border border-teal-500/20">
+                              {p.code}
+                            </span>
+                            <span className={`px-1.5 py-0.5 rounded font-extrabold uppercase ${
+                              p.operation === 'Venta' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'
+                            }`}>
+                              {p.operation}
+                            </span>
+                            <span className="flex items-center gap-1 font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              <span>Activa</span>
+                            </span>
+                          </div>
+
+                          {/* Title */}
+                          <h4 className="text-xs font-bold text-white line-clamp-1 max-w-md">
+                            {p.title}
+                          </h4>
+
+                          {/* Details */}
+                          <p className="text-[11px] text-slate-400 flex items-center gap-3">
+                            <span>📍 {p.commune || 'Puerto Montt'}</span>
+                            <span>🛏️ {p.bedrooms ?? 3} Hab</span>
+                            <span>🚿 {p.bathrooms ?? 2} Baños</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Derecha: Precio + Acciones */}
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2 border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-800">
+                        <span className="text-xs font-black text-white bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">
+                          {p.priceDisplay || p.price_display}
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleEditPropertyClick(p)}
+                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-emerald-500/50 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-[11px] font-bold transition-colors"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>Modificar</span>
+                          </button>
+
                           <button
                             onClick={() => handleDeleteProperty(p.id)}
-                            className="p-1.5 rounded bg-red-500/10 text-red-400 hover:bg-red-500/20"
-                            title="Eliminar"
+                            className="p-1.5 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+                            title="Eliminar Propiedad"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
             </div>
+
           </div>
         )}
 
         {/* Tab 2: Leads */}
         {activeTab === 'leads' && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-white">Mensajes de Contacto Recibidos</h2>
+          <div className="space-y-4">
+            <h2 className="text-base font-bold text-white">Mensajes de Contacto Recibidos ({dbLeads.length})</h2>
             {dbLeads.length === 0 ? (
               <div className="text-center py-12 bg-[#0e1422] rounded-2xl border border-slate-800 text-slate-400 text-xs">
-                No hay consultas de contacto aún.
+                No hay consultas de contacto registradas aún.
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {dbLeads.map((lead) => (
                   <div key={lead.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2">
                     <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <span className="font-bold text-white text-sm">{lead.name}</span>
-                      <span className="text-[10px] text-slate-400">{new Date(lead.created_at).toLocaleDateString()}</span>
+                      <span className="font-bold text-white text-xs">{lead.name}</span>
+                      <span className="text-[10px] text-slate-500">{new Date(lead.created_at).toLocaleDateString()}</span>
                     </div>
                     <p className="text-xs text-teal-400">Email: {lead.email} | Tel: {lead.phone}</p>
                     {lead.property_code && <p className="text-xs text-orange-400">Código Propiedad: {lead.property_code}</p>}
-                    <p className="text-xs text-slate-300 pt-2 italic">"{lead.message}"</p>
+                    <p className="text-xs text-slate-300 pt-1 italic">"{lead.message}"</p>
                   </div>
                 ))}
               </div>
@@ -393,11 +900,11 @@ export default function AdminPage() {
 
         {/* Tab 3: Orders */}
         {activeTab === 'orders' && (
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-white">Órdenes de Venta y Ofertas de Compra</h2>
+          <div className="space-y-4">
+            <h2 className="text-base font-bold text-white">Órdenes de Venta y Ofertas ({dbOrders.length})</h2>
             {dbOrders.length === 0 ? (
               <div className="text-center py-12 bg-[#0e1422] rounded-2xl border border-slate-800 text-slate-400 text-xs">
-                No hay solicitudes de orden aún.
+                No hay órdenes de venta ni ofertas registradas aún.
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -407,14 +914,14 @@ export default function AdminPage() {
                       <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/20 text-orange-400 uppercase">
                         {ord.order_type === 'captacion' ? 'Orden de Venta / Captación' : 'Oferta de Compra'}
                       </span>
-                      <span className="text-[10px] text-slate-400">{new Date(ord.created_at).toLocaleDateString()}</span>
+                      <span className="text-[10px] text-slate-500">{new Date(ord.created_at).toLocaleDateString()}</span>
                     </div>
-                    <p className="font-bold text-white text-sm">{ord.name}</p>
+                    <p className="font-bold text-white text-xs">{ord.name}</p>
                     <p className="text-xs text-teal-400">Email: {ord.email} | Tel: {ord.phone}</p>
                     {ord.commune && <p className="text-xs text-slate-300">Comuna: {ord.commune}</p>}
                     {ord.offer_amount && <p className="text-xs font-bold text-orange-400">Oferta: {ord.offer_amount}</p>}
                     {ord.target_property && <p className="text-xs text-teal-300">Propiedad: {ord.target_property}</p>}
-                    {ord.details && <p className="text-xs text-slate-300 pt-2 italic">"{ord.details}"</p>}
+                    {ord.details && <p className="text-xs text-slate-300 pt-1 italic">"{ord.details}"</p>}
                   </div>
                 ))}
               </div>
@@ -422,117 +929,10 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* Modal for Adding Property */}
-        {showPropModal && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-            <div className="bg-[#0e1422] border border-slate-700 max-w-xl w-full p-6 rounded-3xl space-y-4 shadow-2xl">
-              <h3 className="text-xl font-bold text-white">Agregar Nueva Propiedad a Supabase</h3>
-
-              <form onSubmit={handleSaveProperty} className="space-y-3">
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">Título de la Propiedad *</label>
-                  <input
-                    type="text"
-                    required
-                    value={propForm.title}
-                    onChange={(e) => setPropForm({ ...propForm, title: e.target.value })}
-                    placeholder="Ej: Se Vende Casa en Sector Residencial"
-                    className="w-full px-3 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-slate-300 mb-1">Operación</label>
-                    <select
-                      value={propForm.operation}
-                      onChange={(e) => setPropForm({ ...propForm, operation: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs"
-                    >
-                      <option value="Venta">Venta</option>
-                      <option value="Arriendo">Arriendo</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-slate-300 mb-1">Tipo Inmueble</label>
-                    <select
-                      value={propForm.type}
-                      onChange={(e) => setPropForm({ ...propForm, type: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs"
-                    >
-                      <option value="Casa">Casa</option>
-                      <option value="Departamento">Departamento</option>
-                      <option value="Terreno">Terreno</option>
-                      <option value="Casa Comercial">Casa Comercial</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs text-slate-300 mb-1">Precio Texto (UF / $)</label>
-                    <input
-                      type="text"
-                      required
-                      value={propForm.priceDisplay}
-                      onChange={(e) => setPropForm({ ...propForm, priceDisplay: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs text-slate-300 mb-1">Comuna</label>
-                    <input
-                      type="text"
-                      required
-                      value={propForm.commune}
-                      onChange={(e) => setPropForm({ ...propForm, commune: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">URL Imagen Principal</label>
-                  <input
-                    type="url"
-                    value={propForm.image}
-                    onChange={(e) => setPropForm({ ...propForm, image: e.target.value })}
-                    placeholder="https://..."
-                    className="w-full px-3 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs text-slate-300 mb-1">Descripción</label>
-                  <textarea
-                    rows={3}
-                    value={propForm.description}
-                    onChange={(e) => setPropForm({ ...propForm, description: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs"
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowPropModal(false)}
-                    className="px-4 py-2 rounded-xl border border-slate-700 text-slate-300 text-xs font-semibold"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-5 py-2 btn-orange rounded-xl text-xs font-bold"
-                  >
-                    Guardar Propiedad
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+        {/* Footer */}
+        <footer className="text-center text-[11px] text-slate-500 py-4 border-t border-slate-900">
+          © 2026 Urbanos Gestión Inmobiliaria | Panel de Administración
+        </footer>
 
       </div>
     </div>
