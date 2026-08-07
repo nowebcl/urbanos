@@ -41,7 +41,7 @@ export const STATS = [
     icon: 'Award'
   },
   {
-    number: '98%',
+    number: '100%',
     label: 'Clientes satisfechos',
     icon: 'Smile'
   },
