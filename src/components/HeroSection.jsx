@@ -26,10 +26,10 @@ export default function HeroSection({
         <img
           src="/images/hero_bg.jpg"
           alt="Urbanos Gestión Inmobiliaria"
-          className="w-full h-full object-cover object-center filter brightness-[0.75] sm:brightness-[0.45] contrast-110 scale-105 transition-transform duration-1000"
+          className="w-full h-full object-cover object-center filter brightness-[0.9] sm:brightness-[0.75] contrast-115 saturate-125 scale-105 transition-transform duration-1000"
         />
-        {/* Responsive Dark Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#080c14]/70 via-[#080c14]/35 to-[#080c14] sm:from-[#080c14]/90 sm:via-[#080c14]/60 sm:to-[#080c14]" />
+        {/* Responsive Lightened Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080c14]/50 via-[#080c14]/20 to-[#080c14] sm:from-[#080c14]/65 sm:via-[#080c14]/30 sm:to-[#080c14]" />
       </div>
 
       {/* Main Content Container */}
@@ -44,7 +44,7 @@ export default function HeroSection({
         </div>
 
         {/* Main Title - Proportioned size */}
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.18] mb-5 text-balance">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.18] mb-5 text-balance drop-shadow-md">
           <EditableText
             contentKey="hero_title"
             fallback="Encuentra el hogar ideal para comenzar tu próxima historia"
@@ -53,7 +53,7 @@ export default function HeroSection({
         </h1>
 
         {/* Subtitle / Bajada - Enhanced readable size */}
-        <p className="max-w-3xl text-base sm:text-lg text-slate-200 font-normal leading-relaxed mb-8 text-balance">
+        <p className="max-w-3xl text-base sm:text-lg text-slate-100 font-medium leading-relaxed mb-8 text-balance drop-shadow">
           <EditableText
             contentKey="hero_bajada"
             fallback="Hacemos que cada operación inmobiliaria sea simple, segura y exitosa. Asesoría personalizada en compra, venta, arriendo y administración."
