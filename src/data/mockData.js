@@ -36,7 +36,7 @@ export const STATS = [
     icon: 'Bookmark'
   },
   {
-    number: '12 años',
+    number: '10 años',
     label: 'Experiencia',
     icon: 'Award'
   },
