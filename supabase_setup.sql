@@ -200,3 +200,18 @@ ON CONFLICT (id) DO UPDATE SET
   price_clp = EXCLUDED.price_clp,
   image = EXCLUDED.image,
   gallery = EXCLUDED.gallery;
+
+-- 5. Create Site Content Table (CMS Real-Time Text Editing)
+CREATE TABLE IF NOT EXISTS public.site_content (
+  key VARCHAR(255) PRIMARY KEY,
+  content TEXT NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.site_content ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read access for site_content" ON public.site_content;
+DROP POLICY IF EXISTS "Allow public insert and update for site_content" ON public.site_content;
+
+CREATE POLICY "Allow public read access for site_content" ON public.site_content FOR SELECT USING (true);
+CREATE POLICY "Allow public insert and update for site_content" ON public.site_content FOR ALL USING (true);
+

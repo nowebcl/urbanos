@@ -1,5 +1,6 @@
 import React from 'react';
-import { Home, ArrowRight, ShieldCheck, Megaphone, CheckCircle2 } from 'lucide-react';
+import { Home, ArrowRight, CheckCircle2 } from 'lucide-react';
+import EditableText from './EditableText';
 
 export default function CtaBanner({ onOpenContact }) {
   const highlights = [
@@ -30,7 +31,11 @@ export default function CtaBanner({ onOpenContact }) {
                   ORDEN DE VENTA & ARRIENDO
                 </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-                  ¿Quieres vender o arrendar tu propiedad de forma segura y eficiente?
+                  <EditableText
+                    contentKey="cta_title"
+                    fallback="¿Quieres vender o arrendar tu propiedad de forma segura y eficiente?"
+                    multiline
+                  />
                 </h3>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
-import { MapPin, Search, Home, Building2, Briefcase, Trees, ArrowRight, ShieldCheck, Sparkles, TrendingUp } from 'lucide-react';
+import { MapPin, Search, Home, Building2, Briefcase, Trees, ArrowRight, ShieldCheck, TrendingUp } from 'lucide-react';
+import EditableText from './EditableText';
 
 export default function HeroSection({
   selectedOperation,
@@ -36,18 +37,28 @@ export default function HeroSection({
         
         {/* Top Pill Badge */}
         <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#0c121e]/90 border border-teal-500/40 text-slate-100 text-xs sm:text-sm font-medium mb-6 shadow-xl backdrop-blur-md">
-          <span>Gestión Inmobiliaria Integral & Estrategia Digital</span>
+          <EditableText
+            contentKey="hero_badge"
+            fallback="Gestión Inmobiliaria Integral & Estrategia Digital"
+          />
         </div>
 
         {/* Main Title */}
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-[1.15] mb-5 text-balance">
-          Encuentra el hogar ideal <br className="hidden sm:inline" />
-          para comenzar tu próxima historia
+          <EditableText
+            contentKey="hero_title"
+            fallback="Encuentra el hogar ideal para comenzar tu próxima historia"
+            multiline
+          />
         </h1>
 
         {/* Subtitle / Concise Bajada */}
         <p className="max-w-2xl text-sm sm:text-base text-slate-300 font-normal leading-relaxed mb-8 text-balance">
-          Hacemos que cada operación inmobiliaria sea <strong className="text-teal-400 font-semibold">simple, segura y exitosa</strong>. Asesoría personalizada en compra, venta, arriendo y administración.
+          <EditableText
+            contentKey="hero_bajada"
+            fallback="Hacemos que cada operación inmobiliaria sea simple, segura y exitosa. Asesoría personalizada en compra, venta, arriendo y administración."
+            multiline
+          />
         </p>
 
         {/* Main Search Card Box */}

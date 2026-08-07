@@ -1,29 +1,36 @@
 import React from 'react';
-import { ShieldCheck, Megaphone, Scale, MapPin, CheckCircle, Sparkles } from 'lucide-react';
+import { ShieldCheck, Megaphone, Scale, MapPin } from 'lucide-react';
 import StatsBar from '../components/StatsBar';
 import CtaBanner from '../components/CtaBanner';
+import EditableText from '../components/EditableText';
 import { AGENTS } from '../data/mockData';
 
 export default function AboutPage({ onOpenContact }) {
 
   const pillars = [
     {
-      title: 'Estrategia Publicitaria',
-      description: 'No solo ponemos un letrero. Diseñamos campañas digitales de alto impacto para que tu propiedad sea la protagonista.',
+      keyTitle: 'about_pillar1_title',
+      keyDesc: 'about_pillar1_desc',
+      defaultTitle: 'Estrategia Publicitaria',
+      defaultDesc: 'No solo ponemos un letrero. Diseñamos campañas digitales de alto impacto para que tu propiedad sea la protagonista.',
       icon: Megaphone,
       badge: 'Marketing Digital',
       color: 'text-orange-400'
     },
     {
-      title: 'Gestión Integral',
-      description: 'Expertos en administración, venta y arriendo con filtros de seguridad implacables.',
+      keyTitle: 'about_pillar2_title',
+      keyDesc: 'about_pillar2_desc',
+      defaultTitle: 'Gestión Integral',
+      defaultDesc: 'Expertos en administración, venta y arriendo con filtros de seguridad implacables.',
       icon: ShieldCheck,
       badge: 'Filtros Seguros',
       color: 'text-teal-400'
     },
     {
-      title: 'Asesoría Especializada',
-      description: 'Contamos con abogados y arquitectos para garantizar una operación 100% segura y legal.',
+      keyTitle: 'about_pillar3_title',
+      keyDesc: 'about_pillar3_desc',
+      defaultTitle: 'Asesoría Especializada',
+      defaultDesc: 'Contamos con abogados y arquitectos para garantizar una operación 100% segura y legal.',
       icon: Scale,
       badge: 'Respaldo Legal',
       color: 'text-orange-400'
@@ -56,11 +63,19 @@ export default function AboutPage({ onOpenContact }) {
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            En Urbanos no solo movemos propiedades, cerramos negocios
+            <EditableText
+              contentKey="about_title"
+              fallback="En Urbanos no solo movemos propiedades, cerramos negocios"
+              multiline
+            />
           </h1>
 
           <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-200 leading-relaxed font-medium">
-            Somos un equipo de <strong className="text-white">Publicistas y Corredores de Propiedades</strong> que fusiona la estrategia digital avanzada con un conocimiento técnico profundo del mercado.
+            <EditableText
+              contentKey="about_subtitle"
+              fallback="Somos un equipo de Publicistas y Corredores de Propiedades que fusiona la estrategia digital avanzada con un conocimiento técnico profundo del mercado."
+              multiline
+            />
           </p>
         </div>
       </section>
@@ -95,7 +110,7 @@ export default function AboutPage({ onOpenContact }) {
 
             <div className="pt-2">
               <span className="text-lg font-extrabold text-orange-400 tracking-wide italic">
-                "Hacemos que las cosas pasen….."
+                "<EditableText contentKey="about_motto" fallback="Hacemos que las cosas pasen….." />"
               </span>
             </div>
           </div>
@@ -140,8 +155,12 @@ export default function AboutPage({ onOpenContact }) {
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-bold text-white">{v.title}</h3>
-                    <p className="text-xs text-slate-300 leading-relaxed font-normal">{v.description}</p>
+                    <h3 className="text-xl font-bold text-white">
+                      <EditableText contentKey={v.keyTitle} fallback={v.defaultTitle} />
+                    </h3>
+                    <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                      <EditableText contentKey={v.keyDesc} fallback={v.defaultDesc} multiline />
+                    </p>
                   </div>
                 </div>
               );
