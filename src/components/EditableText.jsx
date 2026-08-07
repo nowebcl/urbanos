@@ -1,85 +1,58 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useContent } from '../context/ContentContext';
-import { Edit3, Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 
-export default function EditableText({ contentKey, fallback, multiline = false, className = "", tag = "span" }) {
+export default function EditableText({
+  contentKey,
+  fallback,
+  multiline = false,
+  className = "",
+  tag = "span"
+}) {
   const { content, updateContentKey, session, isEditMode } = useContent();
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempValue, setTempValue] = useState('');
+  const [savedSuccess, setSavedSuccess] = useState(false);
+  const elRef = useRef(null);
 
   const textValue = content[contentKey] || fallback || '';
-
   const canEdit = session && isEditMode;
 
-  const handleStartEdit = (e) => {
-    if (!canEdit) return;
-    e.stopPropagation();
-    setTempValue(textValue);
-    setIsEditing(true);
+  const handleBlur = async () => {
+    if (!canEdit || !elRef.current) return;
+    const newText = elRef.current.innerText.trim();
+    if (newText && newText !== textValue) {
+      await updateContentKey(contentKey, newText);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 2500);
+    }
   };
 
-  const handleSave = async (e) => {
-    e.stopPropagation();
-    await updateContentKey(contentKey, tempValue);
-    setIsEditing(false);
+  const handleKeyDown = (e) => {
+    if (!multiline && e.key === 'Enter') {
+      e.preventDefault();
+      elRef.current?.blur();
+    }
   };
-
-  const handleCancel = (e) => {
-    e.stopPropagation();
-    setIsEditing(false);
-  };
-
-  if (isEditing) {
-    return (
-      <span className="inline-block relative z-50 bg-[#0e1422] p-2 rounded-xl border border-orange-500 shadow-2xl my-1 w-full max-w-2xl text-left">
-        {multiline ? (
-          <textarea
-            rows={4}
-            value={tempValue}
-            onChange={(e) => setTempValue(e.target.value)}
-            className="w-full p-3 bg-[#080c14] text-white border border-slate-700 rounded-lg text-xs font-sans focus:outline-none focus:border-orange-500"
-          />
-        ) : (
-          <input
-            type="text"
-            value={tempValue}
-            onChange={(e) => setTempValue(e.target.value)}
-            className="w-full p-2 bg-[#080c14] text-white border border-slate-700 rounded-lg text-xs font-sans focus:outline-none focus:border-orange-500"
-          />
-        )}
-
-        <div className="flex items-center justify-end gap-2 mt-2">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="flex items-center gap-1 px-3 py-1 bg-slate-800 text-slate-300 rounded-lg text-[11px] font-bold"
-          >
-            <X className="w-3.5 h-3.5" /> Cancelar
-          </button>
-          <button
-            type="button"
-            onClick={handleSave}
-            className="flex items-center gap-1 px-3.5 py-1 bg-orange-500 text-white rounded-lg text-[11px] font-bold shadow-md hover:bg-orange-600"
-          >
-            <Check className="w-3.5 h-3.5" /> Guardar en Supabase
-          </button>
-        </div>
-      </span>
-    );
-  }
 
   const TagComponent = tag;
 
   return (
     <TagComponent
-      onClick={canEdit ? handleStartEdit : undefined}
-      className={`${className} ${canEdit ? 'cursor-pointer hover:outline-dashed hover:outline-1 hover:outline-orange-400 hover:bg-orange-500/10 p-0.5 rounded transition-all relative group' : ''}`}
-      title={canEdit ? 'Haz clic para editar este texto en tiempo real' : undefined}
+      ref={elRef}
+      contentEditable={canEdit}
+      suppressContentEditableWarning={true}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      className={`${className} ${
+        canEdit
+          ? 'outline-none hover:outline-dashed hover:outline-1 hover:outline-orange-400 focus:outline-solid focus:outline-2 focus:outline-orange-500 focus:bg-orange-500/10 rounded px-1 transition-all'
+          : ''
+      } relative inline-block`}
+      title={canEdit ? 'Haz clic para editar este texto directamente' : undefined}
     >
       {textValue}
-      {canEdit && (
-        <span className="inline-inline-flex ml-1.5 opacity-40 group-hover:opacity-100 text-orange-400 transition-opacity">
-          <Edit3 className="w-3.5 h-3.5 inline align-middle" />
+      {savedSuccess && (
+        <span className="absolute -top-6 right-0 bg-teal-500 text-slate-950 text-[10px] font-bold px-2 py-0.5 rounded shadow-lg flex items-center gap-1 animate-fade-in pointer-events-none">
+          <Check className="w-3 h-3 stroke-[3]" /> Guardado en DB
         </span>
       )}
     </TagComponent>
