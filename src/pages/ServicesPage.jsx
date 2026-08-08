@@ -135,13 +135,12 @@ export default function ServicesPage() {
         </div>
 
         {/* Trust Banner Quote */}
-        <div className="bg-gradient-to-r from-[#0e1422] via-[#141d30] to-[#0e1422] p-8 sm:p-10 rounded-3xl border border-slate-800 text-center space-y-4 shadow-2xl">
-          <Award className="w-10 h-10 text-teal-400 mx-auto" />
-          <h3 className="text-xl sm:text-2xl font-extrabold text-white max-w-3xl mx-auto">
+        <div className="bg-gradient-to-r from-[#0e1422] via-[#141d30] to-[#0e1422] p-6 sm:p-8 rounded-3xl border border-slate-800 text-center space-y-3 shadow-2xl">
+          <Award className="w-8 h-8 text-teal-400 mx-auto" />
+          <h3 className="text-lg sm:text-xl font-extrabold text-white max-w-2xl mx-auto leading-relaxed">
             <EditableText
               contentKey="services_quote_title"
-              fallback='"Con un servicio profesional, transparente y personalizado, te entregamos la tranquilidad de saber que tu inmueble está administrado con altos estándares de gestión, permitiéndote disfrutar de los beneficios de tu inversión sin dedicar tiempo a su administración."'
-              multiline
+              fallback='"Gestión profesional, transparente y personalizada para maximizar tu inversión con total tranquilidad."'
             />
           </h3>
           <span className="text-xs font-bold text-orange-400 uppercase tracking-widest block">
