@@ -28,8 +28,8 @@ export default function StatsBar() {
     {
       keyNum: 'stat4_num',
       keyLabel: 'stat4_label',
-      defaultNum: '32 comunas',
-      defaultLabel: 'Cobertura',
+      defaultNum: 'Los Lagos & RM',
+      defaultLabel: 'Cobertura Regional',
       Icon: MapPin
     }
   ];
@@ -43,18 +43,18 @@ export default function StatsBar() {
             return (
               <div
                 key={stat.keyNum}
-                className={`flex items-center gap-4 ${idx !== 0 ? 'pt-4 sm:pt-0 sm:pl-6' : ''}`}
+                className={`flex items-center gap-3.5 ${idx !== 0 ? 'pt-4 sm:pt-0 sm:pl-5' : ''}`}
               >
                 {/* Circular Icon Badge */}
                 <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center justify-center text-teal-400 shrink-0">
                   <Icon className="w-6 h-6 stroke-[1.75]" />
                 </div>
                 {/* Editable Text */}
-                <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                <div className="min-w-0">
+                  <div className="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-tight truncate">
                     <EditableText contentKey={stat.keyNum} fallback={stat.defaultNum} />
                   </div>
-                  <div className="text-xs sm:text-sm text-slate-400 font-medium mt-0.5">
+                  <div className="text-xs text-slate-400 font-medium mt-0.5 truncate">
                     <EditableText contentKey={stat.keyLabel} fallback={stat.defaultLabel} />
                   </div>
                 </div>
