@@ -104,6 +104,24 @@ export function ContentProvider({ children }) {
     }
   };
 
+  const getDeletedIds = () => {
+    try {
+      const saved = localStorage.getItem('urbanos_deleted_properties');
+      return saved ? new Set(JSON.parse(saved)) : new Set();
+    } catch (e) {
+      return new Set();
+    }
+  };
+
+  const getEditedMap = () => {
+    try {
+      const saved = localStorage.getItem('urbanos_edited_properties');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  };
+
   const fetchPropertiesFromSupabase = async () => {
     try {
       let data = null;
@@ -124,10 +142,13 @@ export function ContentProvider({ children }) {
         const { data: dbData } = await supabase.from('properties').select('*').order('id', { ascending: false });
         data = dbData;
       }
+
+      const deletedIds = getDeletedIds();
+      const editedMap = getEditedMap();
       
+      let dbMapped = [];
       if (data && data.length > 0) {
-        // Map database fields to standard property format used in components
-        const mapped = data.map(p => ({
+        dbMapped = data.map(p => ({
           id: p.id,
           code: p.code,
           slug: p.slug,
@@ -159,15 +180,20 @@ export function ContentProvider({ children }) {
             image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
           }
         }));
-
-        // Merge Supabase properties with default catalog so initial properties are never lost
-        const dbIds = new Set(mapped.map(p => String(p.id)));
-        const fallbackProps = PROPERTIES.filter(p => !dbIds.has(String(p.id)));
-        const combined = [...mapped, ...fallbackProps];
-
-        setProperties(combined);
-        localStorage.setItem('urbanos_custom_properties', JSON.stringify(combined));
       }
+
+      // Merge DB properties + initial catalog properties (applying any local edits)
+      const dbIds = new Set(dbMapped.map(p => String(p.id)));
+      
+      const fallbackProps = PROPERTIES
+        .filter(p => !dbIds.has(String(p.id)))
+        .map(p => editedMap[String(p.id)] ? { ...p, ...editedMap[String(p.id)] } : p);
+
+      const combined = [...dbMapped, ...fallbackProps]
+        .filter(p => !deletedIds.has(String(p.id)));
+
+      setProperties(combined);
+      localStorage.setItem('urbanos_custom_properties', JSON.stringify(combined));
     } catch (err) {
       console.warn('Supabase fetch properties error:', err);
     }
@@ -202,6 +228,22 @@ export function ContentProvider({ children }) {
       isFeatured: propData.is_featured ?? propData.isFeatured ?? true
     };
 
+    // Store in edited properties map
+    try {
+      const editedMap = getEditedMap();
+      editedMap[String(idToUse)] = updatedProp;
+      localStorage.setItem('urbanos_edited_properties', JSON.stringify(editedMap));
+    } catch (e) {}
+
+    // Ensure removed from deleted set if re-saved
+    try {
+      const deletedIds = getDeletedIds();
+      if (deletedIds.has(String(idToUse))) {
+        deletedIds.delete(String(idToUse));
+        localStorage.setItem('urbanos_deleted_properties', JSON.stringify(Array.from(deletedIds)));
+      }
+    } catch (e) {}
+
     // 1. Update React state & localStorage immediately for instant feedback
     setProperties(prev => {
       const exists = prev.some(p => String(p.id) === String(idToUse));
@@ -218,7 +260,7 @@ export function ContentProvider({ children }) {
     // 2. Persist to Supabase Database via API Proxy or Supabase Client
     try {
       const dbPayload = {
-        id: idToUse,
+        id: parseInt(idToUse, 10) || idToUse,
         code: propData.code,
         slug: propData.slug,
         title: propData.title,
@@ -270,9 +312,18 @@ export function ContentProvider({ children }) {
    * Delete a property from state, localStorage, and Supabase DB
    */
   const deleteProperty = async (id) => {
+    const strId = String(id);
+
+    // Save to deleted IDs set so it never reappears
+    try {
+      const deletedIds = getDeletedIds();
+      deletedIds.add(strId);
+      localStorage.setItem('urbanos_deleted_properties', JSON.stringify(Array.from(deletedIds)));
+    } catch (e) {}
+
     // 1. Delete locally immediately
     setProperties(prev => {
-      const newList = prev.filter(p => String(p.id) !== String(id));
+      const newList = prev.filter(p => String(p.id) !== strId);
       localStorage.setItem('urbanos_custom_properties', JSON.stringify(newList));
       return newList;
     });
