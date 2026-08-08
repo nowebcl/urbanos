@@ -208,7 +208,11 @@ export function ContentProvider({ children }) {
         description: propData.description
       };
 
-      await supabase.from('properties').upsert([dbPayload]);
+      const { error } = await supabase.from('properties').upsert([dbPayload]);
+      if (error) {
+        console.error('Error al guardar propiedad en Supabase DB:', error);
+        alert('Aviso Supabase RLS: La propiedad se guardó localmente, pero falta activar las políticas de escritura (INSERT/UPDATE) en la tabla "properties" de Supabase.');
+      }
     } catch (err) {
       console.warn('Supabase upsert property error (saved locally):', err);
     }
@@ -227,7 +231,10 @@ export function ContentProvider({ children }) {
 
     // 2. Delete from Supabase
     try {
-      await supabase.from('properties').delete().eq('id', id);
+      const { error } = await supabase.from('properties').delete().eq('id', id);
+      if (error) {
+        console.error('Error al eliminar propiedad en Supabase:', error);
+      }
     } catch (err) {
       console.warn('Supabase delete property error:', err);
     }

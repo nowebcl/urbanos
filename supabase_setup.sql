@@ -76,6 +76,9 @@ ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow public read access for agents" ON public.agents FOR SELECT USING (true);
 CREATE POLICY "Allow public read access for properties" ON public.properties FOR SELECT USING (true);
+CREATE POLICY "Allow public insert for properties" ON public.properties FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update for properties" ON public.properties FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete for properties" ON public.properties FOR DELETE USING (true);
 CREATE POLICY "Allow public insert for leads" ON public.leads FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow public insert for orders" ON public.orders FOR INSERT WITH CHECK (true);
 
