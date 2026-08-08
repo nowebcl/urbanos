@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, Bed, Bath, Car, Maximize2, ArrowRight, Clock } from 'lucide-react';
+import { formatImageUrl } from '../utils/imageUtils';
 
 export default function PropertiesGrid({
   properties,
