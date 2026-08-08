@@ -146,40 +146,55 @@ export function ContentProvider({ children }) {
       const deletedIds = getDeletedIds();
       const editedMap = getEditedMap();
       
+      const fixUrl = (url) => {
+        if (!url || typeof url !== 'string') return url;
+        if (url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('/api/image-proxy')) return url;
+        if (url.startsWith('http://')) {
+          if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+            return `/api/image-proxy?url=${encodeURIComponent(url)}`;
+          }
+        }
+        return url;
+      };
+
       let dbMapped = [];
       if (data && data.length > 0) {
-        dbMapped = data.map(p => ({
-          id: p.id,
-          code: p.code,
-          slug: p.slug,
-          title: p.title,
-          commune: p.commune,
-          location: p.location || p.address,
-          address: p.address || p.location,
-          priceDisplay: p.price_display,
-          priceUF: parseFloat(p.price_uf || 0),
-          priceCLP: parseFloat(p.price_clp || 0),
-          bedrooms: p.bedrooms || 0,
-          bathrooms: p.bathrooms || 0,
-          parking: p.parking || 0,
-          area: p.area,
-          landArea: p.land_area || p.landArea,
-          isFeatured: p.is_featured ?? true,
-          operation: p.operation || 'Venta',
-          type: p.type || 'Departamento',
-          createdAt: p.created_at ? p.created_at.split('T')[0] : '2026-01-01',
-          image: p.image,
-          gallery: Array.isArray(p.gallery) ? p.gallery : (p.image ? [p.image] : []),
-          description: p.description || '',
-          agent: p.agent || {
-            id: 1,
-            name: 'Cristián Muñoz',
-            role: 'Agente Inmobiliario Senior',
-            phone: '+56 9 6192 4570',
-            email: 'urbanos@urbanosinmobiliaria.cl',
-            image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
-          }
-        }));
+        dbMapped = data.map(p => {
+          const mainImg = fixUrl(p.image);
+          const gal = Array.isArray(p.gallery) ? p.gallery.map(fixUrl) : (mainImg ? [mainImg] : []);
+          return {
+            id: p.id,
+            code: p.code,
+            slug: p.slug,
+            title: p.title,
+            commune: p.commune,
+            location: p.location || p.address,
+            address: p.address || p.location,
+            priceDisplay: p.price_display,
+            priceUF: parseFloat(p.price_uf || 0),
+            priceCLP: parseFloat(p.price_clp || 0),
+            bedrooms: p.bedrooms || 0,
+            bathrooms: p.bathrooms || 0,
+            parking: p.parking || 0,
+            area: p.area,
+            landArea: p.land_area || p.landArea,
+            isFeatured: p.is_featured ?? true,
+            operation: p.operation || 'Venta',
+            type: p.type || 'Departamento',
+            createdAt: p.created_at ? p.created_at.split('T')[0] : '2026-01-01',
+            image: mainImg,
+            gallery: gal,
+            description: p.description || '',
+            agent: p.agent || {
+              id: 1,
+              name: 'Cristián Muñoz',
+              role: 'Agente Inmobiliario Senior',
+              phone: '+56 9 6192 4570',
+              email: 'urbanos@urbanosinmobiliaria.cl',
+              image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
+            }
+          };
+        });
       }
 
       // Merge DB properties + initial catalog properties (applying any local edits)

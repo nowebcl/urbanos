@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, Phone, Mail, MessageSquare, Send, ArrowLeft, Share2, Clock } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, MessageSquare, Send, ArrowLeft, Share2, Clock } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { useContent } from '../context/ContentContext';
 

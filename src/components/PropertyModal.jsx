@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { X, MapPin, Bed, Bath, Car, Maximize2, Phone, Mail, CheckCircle2, Send, Clock } from 'lucide-react';
 
 export default function PropertyModal({ property, onClose, currencyMode }) {
-  if (!property) return null;
-
-  const [activeImage, setActiveImage] = useState(property.image);
+  const [activeImage, setActiveImage] = useState(property?.image);
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  if (!property) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -78,7 +78,7 @@ export default function CatalogPage() {
     }
 
     return result;
-  }, [operation, city, type, query, minBeds, minPriceUF, maxPriceUF, sortBy]);
+  }, [allProperties, operation, city, type, query, minBeds, minPriceUF, maxPriceUF, sortBy]);
 
   const totalPages = Math.ceil(filteredAndSortedProperties.length / ITEMS_PER_PAGE) || 1;
 

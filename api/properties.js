@@ -28,7 +28,24 @@ export default async function handler(req, res) {
         .order('id', { ascending: false });
 
       if (error) throw error;
-      return res.status(200).json(data || []);
+
+      const formatted = (data || []).map(p => {
+        const fix = (url) => {
+          if (!url || typeof url !== 'string') return url;
+          if (url.startsWith('http://')) {
+            return `/api/image-proxy?url=${encodeURIComponent(url)}`;
+          }
+          return url;
+        };
+
+        return {
+          ...p,
+          image: fix(p.image),
+          gallery: Array.isArray(p.gallery) ? p.gallery.map(fix) : p.gallery
+        };
+      });
+
+      return res.status(200).json(formatted);
     } catch (err) {
       console.error('Vercel API GET properties error:', err);
       return res.status(500).json({ error: err.message || 'Error fetching properties' });

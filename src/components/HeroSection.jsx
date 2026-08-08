@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Search, Home, Building2, Briefcase, Trees, ArrowRight, ShieldCheck, TrendingUp } from 'lucide-react';
+import { Search, Home, Building2, Briefcase, Trees, ArrowRight, ShieldCheck, TrendingUp } from 'lucide-react';
 import EditableText from './EditableText';
 
 export default function HeroSection({

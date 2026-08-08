@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building, ShieldCheck, FileText, Wrench, Wallet, CheckCircle2, Send, Phone, MessageSquare, Tag, FileSignature, Calendar, Award, HeartHandshake } from 'lucide-react';
+import { Building, ShieldCheck, FileText, Wrench, Wallet, CheckCircle2, Send, Phone, MessageSquare, Tag, FileSignature, Calendar, Award } from 'lucide-react';
 import EditableText from '../components/EditableText';
 
 export default function ServicesPage() {

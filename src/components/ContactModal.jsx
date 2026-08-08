@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { X, Phone, Mail, MessageSquare, Check, Sparkles } from 'lucide-react';
 
 export default function ContactModal({ isOpen, onClose }) {
-  if (!isOpen) return null;
-
   const [submitted, setSubmitted] = useState(false);
+
+  if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
