@@ -130,28 +130,45 @@ export async function processAndUploadPropertyImage(file, supabase) {
 
   let finalUrl = compressed.dataUrl;
 
-  // 2. Intentar subida a Supabase Storage bucket 'properties'
-  if (supabase && supabase.storage) {
-    try {
-      const fileName = `prop_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.webp`;
-      const { data, error } = await supabase.storage
-        .from('properties')
-        .upload(fileName, compressed.blob, {
-          contentType: 'image/webp',
-          upsert: true
-        });
+  // 2. Subir el archivo .webp directamente a Supabase Storage mediante /api/upload
+  try {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        imageBase64: compressed.dataUrl,
+        fileName: compressed.file?.name
+      })
+    });
 
-      if (!error && data) {
-        const { data: publicData } = supabase.storage
-          .from('properties')
-          .getPublicUrl(fileName);
-
-        if (publicData && publicData.publicUrl) {
-          finalUrl = publicData.publicUrl;
-        }
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.url) {
+        finalUrl = data.url;
       }
-    } catch (e) {
-      console.warn('Supabase storage upload fallback to WebP DataURL:', e);
+    }
+  } catch (e) {
+    console.warn('Vercel API upload fallback to Storage client:', e);
+    if (supabase && supabase.storage) {
+      try {
+        const fileName = `prop_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.webp`;
+        const { data, error } = await supabase.storage
+          .from('properties')
+          .upload(fileName, compressed.blob, {
+            contentType: 'image/webp',
+            upsert: true
+          });
+
+        if (!error && data) {
+          const { data: publicData } = supabase.storage
+            .from('properties')
+            .getPublicUrl(fileName);
+
+          if (publicData && publicData.publicUrl) {
+            finalUrl = publicData.publicUrl;
+          }
+        }
+      } catch (err) {}
     }
   }
 
