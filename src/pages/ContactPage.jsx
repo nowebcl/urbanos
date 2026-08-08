@@ -60,15 +60,17 @@ export default function ContactPage() {
             <h3 className="text-base font-bold text-white">
               <EditableText contentKey="contact_card1_title" fallback="Ubicación & Dirección" />
             </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              <strong className="text-white">
+            <div className="text-xs text-slate-300 leading-relaxed space-y-1">
+              <strong className="text-white block">
                 <EditableText contentKey="contact_address" fallback="Av Austral, Jardín Austral, Puerto Montt" />
-              </strong><br />
-              <EditableText contentKey="contact_card1_detail" fallback="Puerto Montt, Región de Los Lagos, Chile." /><br />
-              <span className="text-slate-400">
+              </strong>
+              <div className="text-slate-300">
+                <EditableText contentKey="contact_card1_detail" fallback="Puerto Montt, Región de Los Lagos, Chile." />
+              </div>
+              <div className="text-slate-400">
                 <EditableText contentKey="contact_card1_sub" fallback="Cobertura en Los Lagos, V Región y Metropolitana." />
-              </span>
-            </p>
+              </div>
+            </div>
           </div>
 
           <div className="bg-[#0e1422] p-6 rounded-2xl border border-slate-800 space-y-3 flex flex-col items-center text-center shadow-xl">
@@ -78,12 +80,16 @@ export default function ContactPage() {
             <h3 className="text-base font-bold text-white">
               <EditableText contentKey="contact_card2_title" fallback="Teléfono & WhatsApp" />
             </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Llamadas & Chat: <span className="text-orange-400 font-bold">
-                <EditableText contentKey="contact_phone" fallback="+56 9 6192 4570" />
-              </span><br />
-              <EditableText contentKey="contact_card2_hours" fallback="Atención Comercial continua de Lunes a Sábado." />
-            </p>
+            <div className="text-xs text-slate-300 leading-relaxed space-y-1">
+              <div className="text-slate-300">
+                Llamadas & Chat: <span className="text-orange-400 font-bold">
+                  <EditableText contentKey="contact_phone" fallback="+56 9 6192 4570" />
+                </span>
+              </div>
+              <div className="text-slate-400">
+                <EditableText contentKey="contact_card2_hours" fallback="Atención Comercial continua de Lunes a Sábado." />
+              </div>
+            </div>
           </div>
 
           <div className="bg-[#0e1422] p-6 rounded-2xl border border-slate-800 space-y-3 flex flex-col items-center text-center shadow-xl">
@@ -93,12 +99,14 @@ export default function ContactPage() {
             <h3 className="text-base font-bold text-white">
               <EditableText contentKey="contact_card3_title" fallback="Correo Electrónico" />
             </h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              <span className="text-teal-300 font-bold">
+            <div className="text-xs text-slate-300 leading-relaxed space-y-1">
+              <div className="text-teal-300 font-bold">
                 <EditableText contentKey="contact_email" fallback="urbanos@urbanosinmobiliaria.cl" />
-              </span><br />
-              <EditableText contentKey="contact_card3_note" fallback="Respuesta oportuna en menos de 24 horas hábiles." />
-            </p>
+              </div>
+              <div className="text-slate-400">
+                <EditableText contentKey="contact_card3_note" fallback="Respuesta oportuna en menos de 24 horas hábiles." />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -207,30 +215,54 @@ export default function ContactPage() {
           <div className="lg:col-span-5 space-y-6">
             
             {/* Map Block */}
-            <div className="bg-[#0e1422] p-6 rounded-3xl border border-slate-800 space-y-4">
+            <div className="bg-[#0e1422] p-6 rounded-3xl border border-slate-800 space-y-4 shadow-xl">
               <h3 className="text-lg font-bold text-white">
                 <EditableText contentKey="contact_map_title" fallback="Dirección & Ubicación Central" />
               </h3>
               
-              <div className="relative h-60 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center">
+              {/* Map Image Preview */}
+              <div className="relative h-48 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md">
                 <img
                   src="/images/puerto_montt.jpg"
-                  alt="Av Austral, Jardín Austral"
-                  className="w-full h-full object-cover filter brightness-[0.5]"
+                  alt="Puerto Montt, Región de Los Lagos"
+                  className="w-full h-full object-cover filter brightness-[0.7] contrast-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0e1422] via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0e1422] via-transparent to-black/20" />
                 
-                <div className="relative z-10 text-center space-y-1 p-4">
-                  <div className="w-10 h-10 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center mx-auto border border-teal-500/50">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-teal-500/30 text-teal-300 flex items-center justify-center border-2 border-teal-400 shadow-[0_0_20px_rgba(45,212,191,0.5)] animate-pulse">
+                    <MapPin className="w-6 h-6" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Clean Location Detail Box */}
+              <div className="bg-[#080c14] p-4 rounded-2xl border border-slate-800/80 space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-400 shrink-0">
                     <MapPin className="w-5 h-5" />
                   </div>
-                  <span className="text-sm font-bold text-white block">
-                    <EditableText contentKey="contact_address" fallback="Av Austral, Jardín Austral, Puerto Montt" />
-                  </span>
-                  <span className="text-xs text-slate-300 block">
-                    <EditableText contentKey="contact_map_sub" fallback="Puerto Montt, Región de Los Lagos" />
-                  </span>
+                  <div className="space-y-1 text-left flex-1 min-w-0">
+                    <h4 className="text-sm font-bold text-white leading-tight">
+                      <EditableText contentKey="contact_address_heading" fallback="Oficina Central Jardín Austral" />
+                    </h4>
+                    <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                      <EditableText contentKey="contact_address" fallback="Av Austral, Jardín Austral, Puerto Montt" />
+                    </p>
+                    <span className="text-[11px] text-slate-400 block">
+                      <EditableText contentKey="contact_map_sub" fallback="Puerto Montt, Región de Los Lagos, Chile" />
+                    </span>
+                  </div>
                 </div>
+
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Av+Austral+Jardin+Austral+Puerto+Montt"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-teal-300 hover:text-white hover:bg-slate-800 text-xs font-bold transition-all mt-1"
+                >
+                  <span>Ver ubicación en Google Maps →</span>
+                </a>
               </div>
             </div>
 
