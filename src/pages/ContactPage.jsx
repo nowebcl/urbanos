@@ -254,15 +254,6 @@ export default function ContactPage() {
                     </span>
                   </div>
                 </div>
-
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=Av+Austral+Jardin+Austral+Puerto+Montt"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-teal-300 hover:text-white hover:bg-slate-800 text-xs font-bold transition-all mt-1"
-                >
-                  <span>Ver ubicación en Google Maps →</span>
-                </a>
               </div>
             </div>
 

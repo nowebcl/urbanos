@@ -219,14 +219,6 @@ export default function PropertyDetailPage() {
                   </div>
                   <span className="text-sm font-bold text-white block">{property.commune}</span>
                   <span className="text-xs text-slate-400 block">{property.address}</span>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.address + ' ' + property.commune)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block px-4 py-1.5 rounded-full bg-slate-800 text-teal-400 text-xs font-semibold hover:bg-slate-700 transition-colors mt-2"
-                  >
-                    Ver en Google Maps →
-                  </a>
                 </div>
               </div>
             </div>
