@@ -51,7 +51,7 @@ export default function PropertiesGrid({
               {/* Photo & Badges Container */}
               <div className="relative h-56 w-full overflow-hidden bg-slate-950">
                 <img
-                  src={prop.image}
+                  src={formatImageUrl(prop.image)}
                   alt={prop.title}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-95"
                 />
