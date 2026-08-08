@@ -215,8 +215,7 @@ export function ContentProvider({ children }) {
 
       const { error } = await supabase.from('properties').upsert([dbPayload]);
       if (error) {
-        console.error('Error al guardar propiedad en Supabase DB:', error);
-        alert('Aviso Supabase RLS: La propiedad se guardó localmente, pero falta activar las políticas de escritura (INSERT/UPDATE) en la tabla "properties" de Supabase.');
+        console.warn('Supabase RLS notice (saved locally, enable RLS write in Supabase):', error);
       }
     } catch (err) {
       console.warn('Supabase upsert property error (saved locally):', err);
