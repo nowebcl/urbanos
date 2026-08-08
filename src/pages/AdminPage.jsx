@@ -600,7 +600,7 @@ export default function AdminPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                        Operación <span className="text-orange-500">*</span>
+                        Estado / Operación <span className="text-orange-500">*</span>
                       </label>
                       <select
                         value={propForm.operation}
@@ -609,6 +609,8 @@ export default function AdminPage() {
                       >
                         <option value="Venta">Venta</option>
                         <option value="Arriendo">Arriendo</option>
+                        <option value="Vendido">Vendido</option>
+                        <option value="Arrendado">Arrendado</option>
                       </select>
                     </div>
 
@@ -627,6 +629,25 @@ export default function AdminPage() {
                         <option value="Casa Comercial">Casa Comercial / Oficina</option>
                       </select>
                     </div>
+                  </div>
+
+                  {/* Toggle Propiedad Destacada */}
+                  <div className="flex items-center gap-3 p-3.5 bg-[#080c14] border border-slate-700 rounded-xl">
+                    <input
+                      type="checkbox"
+                      id="isFeaturedToggle"
+                      checked={propForm.isFeatured}
+                      onChange={(e) => setPropForm({ ...propForm, isFeatured: e.target.checked })}
+                      className="w-4 h-4 text-emerald-500 bg-slate-900 border-slate-700 rounded focus:ring-emerald-500 cursor-pointer"
+                    />
+                    <label htmlFor="isFeaturedToggle" className="text-xs font-bold text-slate-200 cursor-pointer select-none flex items-center gap-2 flex-wrap">
+                      <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] uppercase font-extrabold">
+                        Propiedad Destacada
+                      </span>
+                      <span className="text-slate-400 font-normal text-[11px]">
+                        (Muestra el sello green "DESTACADO" y la fija en la página de inicio)
+                      </span>
+                    </label>
                   </div>
 
                   {/* Valor + Moneda */}
@@ -904,14 +925,18 @@ export default function AdminPage() {
                               {p.code}
                             </span>
                             <span className={`px-1.5 py-0.5 rounded font-extrabold uppercase ${
-                              p.operation === 'Venta' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'
+                              p.operation === 'Vendido' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                              p.operation === 'Arrendado' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
+                              p.operation === 'Arriendo' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                              'bg-orange-500/20 text-orange-400 border border-orange-500/30'
                             }`}>
                               {p.operation}
                             </span>
-                            <span className="flex items-center gap-1 font-semibold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                              <span>Activa</span>
-                            </span>
+                            {p.isFeatured && (
+                              <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded text-[10px] font-extrabold uppercase">
+                                ★ Destacado
+                              </span>
+                            )}
                           </div>
 
                           {/* Title */}

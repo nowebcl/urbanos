@@ -187,6 +187,8 @@ export default function CatalogPage() {
                 <option value="All">Todas</option>
                 <option value="Venta">Venta</option>
                 <option value="Arriendo">Arriendo</option>
+                <option value="Vendido">Vendido</option>
+                <option value="Arrendado">Arrendado</option>
               </select>
             </div>
 
@@ -314,14 +316,19 @@ export default function CatalogPage() {
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-95"
                     />
                     
-                    <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
+                    <div className="absolute top-4 left-4 flex flex-wrap items-center gap-2 z-10">
                       {prop.isFeatured && (
                         <span className="px-2.5 py-1 rounded bg-[#10b981] text-slate-950 font-extrabold text-[10px] tracking-wider uppercase shadow">
                           DESTACADO
                         </span>
                       )}
-                      <span className="px-2.5 py-1 rounded bg-[#f97316] text-white font-extrabold text-[10px] tracking-wider uppercase shadow">
-                        {prop.operation.toUpperCase()}
+                      <span className={`px-2.5 py-1 rounded font-extrabold text-[10px] tracking-wider uppercase shadow ${
+                        prop.operation === 'Vendido' ? 'bg-red-600 text-white' :
+                        prop.operation === 'Arrendado' ? 'bg-purple-600 text-white' :
+                        prop.operation === 'Arriendo' ? 'bg-blue-600 text-white' :
+                        'bg-[#f97316] text-white'
+                      }`}>
+                        {prop.operation ? prop.operation.toUpperCase() : 'VENTA'}
                       </span>
                     </div>
 

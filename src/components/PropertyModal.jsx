@@ -39,7 +39,17 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
             <span className="px-2.5 py-0.5 rounded bg-teal-500/20 text-teal-300 text-xs font-bold uppercase">
               {property.type}
             </span>
-            <span className="px-2.5 py-0.5 rounded bg-orange-500/20 text-orange-300 text-xs font-bold uppercase">
+            {property.isFeatured && (
+              <span className="px-2.5 py-0.5 rounded bg-[#10b981] text-slate-950 text-xs font-extrabold uppercase">
+                DESTACADO
+              </span>
+            )}
+            <span className={`px-2.5 py-0.5 rounded text-xs font-extrabold uppercase ${
+              property.operation === 'Vendido' ? 'bg-red-600 text-white' :
+              property.operation === 'Arrendado' ? 'bg-purple-600 text-white' :
+              property.operation === 'Arriendo' ? 'bg-blue-600 text-white' :
+              'bg-[#f97316] text-white'
+            }`}>
               {property.operation}
             </span>
           </div>

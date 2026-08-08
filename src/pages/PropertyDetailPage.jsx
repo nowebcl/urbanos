@@ -90,7 +90,12 @@ export default function PropertyDetailPage() {
                   DESTACADO
                 </span>
               )}
-              <span className="px-2.5 py-0.5 rounded bg-[#f97316] text-white font-extrabold text-[10px] uppercase">
+              <span className={`px-2.5 py-0.5 rounded font-extrabold text-[10px] uppercase ${
+                property.operation === 'Vendido' ? 'bg-red-600 text-white' :
+                property.operation === 'Arrendado' ? 'bg-purple-600 text-white' :
+                property.operation === 'Arriendo' ? 'bg-blue-600 text-white' :
+                'bg-[#f97316] text-white'
+              }`}>
                 {property.operation}
               </span>
               <span className="px-2.5 py-0.5 rounded bg-slate-800 text-slate-300 font-semibold text-[10px] uppercase">
