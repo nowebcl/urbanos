@@ -155,8 +155,8 @@ export default function AdminPage() {
         setPropForm(prev => ({ ...prev, image: result.url }));
       } else {
         setPropForm(prev => {
-          if (prev.gallery.length >= 5) {
-            alert('Máximo 5 imágenes en la galería');
+          if (prev.gallery.length >= 7) {
+            alert('Máximo 7 imágenes en la galería');
             return prev;
           }
           return { ...prev, gallery: [...prev.gallery, result.url] };
@@ -785,7 +785,7 @@ export default function AdminPage() {
                   {/* Galería de Imágenes Dropzone */}
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Galería de Imágenes (Máximo 5 imágenes)
+                      Galería de Imágenes (Máximo 7 imágenes)
                     </label>
 
                     <div className="relative border-2 border-dashed border-slate-700 hover:border-teal-500/60 bg-[#080c14] rounded-2xl p-5 text-center transition-colors">
@@ -804,8 +804,8 @@ export default function AdminPage() {
                         <div className="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center mx-auto">
                           <UploadCloud className="w-5 h-5" />
                         </div>
-                        <p className="text-xs font-semibold text-slate-300">Subir imágenes para galería (Máximo 5)</p>
-                        <p className="text-[10px] text-slate-500">Puedes seleccionar hasta 5 fotos adicionales para el slider deslizante.</p>
+                        <p className="text-xs font-semibold text-slate-300">Subir imágenes para galería (Máximo 7)</p>
+                        <p className="text-[10px] text-slate-500">Puedes seleccionar hasta 7 fotos adicionales para el slider deslizante.</p>
                       </div>
                     </div>
 
