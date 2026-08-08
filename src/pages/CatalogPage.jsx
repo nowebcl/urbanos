@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, RefreshCw, ArrowUpDown, MapPin, Bed, Bath, Car, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, RefreshCw, ArrowUpDown, MapPin, Bed, Bath, Car, Maximize2, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { PROPERTIES, CITIES } from '../data/mockData';
 import EditableText from '../components/EditableText';
 
@@ -347,7 +347,7 @@ export default function CatalogPage() {
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-800/90 flex items-center gap-4 text-slate-300 text-xs font-semibold">
+                    <div className="pt-3 border-t border-slate-800/90 flex flex-wrap items-center gap-3.5 text-slate-300 text-xs font-semibold">
                       {prop.bedrooms > 0 && (
                         <div className="flex items-center gap-1.5" title="Dormitorios">
                           <Bed className="w-4 h-4 text-slate-400" />
@@ -366,10 +366,16 @@ export default function CatalogPage() {
                           <span>{prop.parking}</span>
                         </div>
                       )}
-                      {prop.area && (
+                      {prop.area && prop.area.trim() !== '' && (
                         <div className="flex items-center gap-1.5" title="Superficie">
                           <Maximize2 className="w-4 h-4 text-slate-400" />
                           <span>{prop.area}</span>
+                        </div>
+                      )}
+                      {(!prop.bedrooms && !prop.bathrooms && !prop.parking && (!prop.area || prop.area.trim() === '')) && (
+                        <div className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/30">
+                          <Clock className="w-3 h-3 text-amber-400 shrink-0" />
+                          <span>Sin información</span>
                         </div>
                       )}
                     </div>

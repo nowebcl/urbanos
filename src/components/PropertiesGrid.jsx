@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Bed, Bath, Car, Maximize2, ArrowRight } from 'lucide-react';
+import { MapPin, Bed, Bath, Car, Maximize2, ArrowRight, Clock } from 'lucide-react';
 
 export default function PropertiesGrid({
   properties,
@@ -91,30 +91,36 @@ export default function PropertiesGrid({
                   </div>
                 </div>
 
-                {/* Specs Bar at Bottom matching Image 1 */}
-                <div className="pt-3 border-t border-slate-800/90 flex items-center gap-4 text-slate-300 text-xs font-semibold">
+                {/* Specs Bar at Bottom */}
+                <div className="pt-3 border-t border-slate-800/90 flex flex-wrap items-center gap-3.5 text-slate-300 text-xs font-semibold">
                   {prop.bedrooms > 0 && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5" title={`${prop.bedrooms} dormitorios`}>
                       <Bed className="w-4 h-4 text-slate-400" />
                       <span>{prop.bedrooms}</span>
                     </div>
                   )}
                   {prop.bathrooms > 0 && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5" title={`${prop.bathrooms} baños`}>
                       <Bath className="w-4 h-4 text-slate-400" />
                       <span>{prop.bathrooms}</span>
                     </div>
                   )}
                   {prop.parking > 0 && (
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5" title={`${prop.parking} estacionamientos`}>
                       <Car className="w-4 h-4 text-slate-400" />
                       <span>{prop.parking}</span>
                     </div>
                   )}
-                  {prop.area && (
-                    <div className="flex items-center gap-1.5">
+                  {prop.area && prop.area.trim() !== '' && (
+                    <div className="flex items-center gap-1.5" title={`Superficie: ${prop.area}`}>
                       <Maximize2 className="w-4 h-4 text-slate-400" />
                       <span>{prop.area}</span>
+                    </div>
+                  )}
+                  {(!prop.bedrooms && !prop.bathrooms && !prop.parking && (!prop.area || prop.area.trim() === '')) && (
+                    <div className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/30">
+                      <Clock className="w-3 h-3 text-amber-400 shrink-0" />
+                      <span>Sin información</span>
                     </div>
                   )}
                 </div>
