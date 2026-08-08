@@ -5,15 +5,18 @@ import StatsBar from '../components/StatsBar';
 import PropertiesGrid from '../components/PropertiesGrid';
 import CtaBanner from '../components/CtaBanner';
 import { PROPERTIES } from '../data/mockData';
+import { useContent } from '../context/ContentContext';
 
 export default function HomePage({ onOpenContact }) {
+  const { properties } = useContent();
+  const allProps = properties && properties.length > 0 ? properties : PROPERTIES;
   const navigate = useNavigate();
   const [selectedOperation, setSelectedOperation] = useState('Venta');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('All');
   const [activeCity, setActiveCity] = useState('');
 
-  const featuredProperties = PROPERTIES.filter(p => p.isFeatured);
+  const featuredProperties = allProps.filter(p => p.isFeatured);
 
   const handleExecuteSearch = () => {
     const params = new URLSearchParams();

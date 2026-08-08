@@ -10,7 +10,7 @@ import { PROPERTIES } from '../data/mockData';
 import { compressAndConvertToWebP, processAndUploadPropertyImage } from '../lib/imageOptimizer';
 
 export default function AdminPage() {
-  const { session, setSession } = useContent();
+  const { session, setSession, properties: dbProperties, saveProperty, deleteProperty, refetchProperties } = useContent();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -20,7 +20,6 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('properties');
 
   // DB Data
-  const [dbProperties, setDbProperties] = useState([]);
   const [dbLeads, setDbLeads] = useState([]);
   const [dbOrders, setDbOrders] = useState([]);
 
@@ -303,19 +302,12 @@ export default function AdminPage() {
         description: propForm.description
       };
 
-      if (editingProp) {
-        await supabase.from('properties').update(payload).eq('id', editingProp.id);
-      } else {
-        const newId = Math.floor(Math.random() * 90000) + 10000;
-        await supabase.from('properties').insert([{ id: newId, ...payload }]);
-      }
-
+      await saveProperty(payload, editingProp ? editingProp.id : null);
       handleResetForm();
-      fetchAdminData();
       alert(editingProp ? '¡Propiedad actualizada exitosamente!' : '¡Propiedad publicada exitosamente!');
     } catch (err) {
       console.error(err);
-      alert('Error al guardar la propiedad en Supabase');
+      alert('Error al guardar la propiedad.');
     } finally {
       setLoading(false);
     }
@@ -323,10 +315,7 @@ export default function AdminPage() {
 
   const handleDeleteProperty = async (id) => {
     if (window.confirm('¿Seguro que deseas eliminar esta propiedad?')) {
-      await supabase.from('properties').delete().eq('id', id);
-      // Also update local list if fallback is used
-      setDbProperties(prev => prev.filter(p => p.id !== id));
-      fetchAdminData();
+      await deleteProperty(id);
     }
   };
 

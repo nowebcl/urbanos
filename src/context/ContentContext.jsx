@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { PROPERTIES } from '../data/mockData';
 
 export const DEFAULT_CONTENT = {
   hero_badge: 'Gestión Inmobiliaria Integral & Estrategia Digital',
@@ -29,6 +30,15 @@ const ContentContext = createContext(null);
 
 export function ContentProvider({ children }) {
   const [content, setContent] = useState(DEFAULT_CONTENT);
+  const [properties, setProperties] = useState(() => {
+    try {
+      const saved = localStorage.getItem('urbanos_custom_properties');
+      return saved ? JSON.parse(saved) : PROPERTIES;
+    } catch (e) {
+      return PROPERTIES;
+    }
+  });
+
   const [session, setSession] = useState(() => {
     try {
       const saved = localStorage.getItem('urbanos_admin_session');
@@ -37,11 +47,13 @@ export function ContentProvider({ children }) {
       return null;
     }
   });
+  
   const [isEditMode, setIsEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchContentFromSupabase();
+    fetchPropertiesFromSupabase();
 
     try {
       supabase.auth.getSession().then(({ data: { session: supSession } }) => {
@@ -66,7 +78,7 @@ export function ContentProvider({ children }) {
 
   const fetchContentFromSupabase = async () => {
     try {
-      const { data, error } = await supabase.from('site_content').select('*');
+      const { data } = await supabase.from('site_content').select('*');
       if (data && data.length > 0) {
         const dbContent = { ...DEFAULT_CONTENT };
         data.forEach(item => {
@@ -81,20 +93,143 @@ export function ContentProvider({ children }) {
     }
   };
 
+  const fetchPropertiesFromSupabase = async () => {
+    try {
+      const { data, error } = await supabase.from('properties').select('*').order('id', { ascending: false });
+      
+      if (data && data.length > 0) {
+        // Map database fields to standard property format used in components
+        const mapped = data.map(p => ({
+          id: p.id,
+          code: p.code,
+          slug: p.slug,
+          title: p.title,
+          commune: p.commune,
+          location: p.location || p.address,
+          address: p.address || p.location,
+          priceDisplay: p.price_display,
+          priceUF: parseFloat(p.price_uf || 0),
+          priceCLP: parseFloat(p.price_clp || 0),
+          bedrooms: p.bedrooms || 0,
+          bathrooms: p.bathrooms || 0,
+          parking: p.parking || 0,
+          area: p.area,
+          landArea: p.land_area || p.landArea,
+          isFeatured: p.is_featured ?? true,
+          operation: p.operation || 'Venta',
+          type: p.type || 'Departamento',
+          createdAt: p.created_at ? p.created_at.split('T')[0] : '2026-01-01',
+          image: p.image,
+          gallery: Array.isArray(p.gallery) ? p.gallery : (p.image ? [p.image] : []),
+          description: p.description || '',
+          agent: p.agent || {
+            id: 1,
+            name: 'Cristián Muñoz',
+            role: 'Agente Inmobiliario Senior',
+            phone: '+56 9 6192 4570',
+            email: 'urbanos@urbanosinmobiliaria.cl',
+            image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
+          }
+        }));
+
+        setProperties(mapped);
+        localStorage.setItem('urbanos_custom_properties', JSON.stringify(mapped));
+      }
+    } catch (err) {
+      console.warn('Supabase fetch properties error:', err);
+    }
+  };
+
   const updateContentKey = async (key, newValue) => {
-    // Optimistic local state update
     setContent(prev => ({ ...prev, [key]: newValue }));
 
     try {
-      const { error } = await supabase
+      await supabase
         .from('site_content')
         .upsert([{ key, content: newValue, updated_at: new Date().toISOString() }], { onConflict: 'key' });
-
-      if (error) {
-        console.error('Error saving to Supabase DB:', error);
-      }
     } catch (err) {
       console.error('Connection error saving site content:', err);
+    }
+  };
+
+  /**
+   * Save (Insert or Update) a property in state, localStorage, and Supabase
+   */
+  const saveProperty = async (propData, editingId = null) => {
+    const idToUse = editingId || propData.id || Math.floor(Math.random() * 90000) + 10000;
+    
+    // Normalized property object for local components
+    const updatedProp = {
+      ...propData,
+      id: idToUse,
+      priceDisplay: propData.price_display || propData.priceDisplay,
+      priceUF: propData.price_uf ?? propData.priceUF ?? 0,
+      priceCLP: propData.price_clp ?? propData.priceCLP ?? 0,
+      landArea: propData.land_area || propData.landArea,
+      isFeatured: propData.is_featured ?? propData.isFeatured ?? true
+    };
+
+    // 1. Update React state & localStorage immediately for instant feedback
+    setProperties(prev => {
+      const exists = prev.some(p => String(p.id) === String(idToUse));
+      let newList;
+      if (exists) {
+        newList = prev.map(p => String(p.id) === String(idToUse) ? { ...p, ...updatedProp } : p);
+      } else {
+        newList = [updatedProp, ...prev];
+      }
+      localStorage.setItem('urbanos_custom_properties', JSON.stringify(newList));
+      return newList;
+    });
+
+    // 2. Persist to Supabase Database via Upsert
+    try {
+      const dbPayload = {
+        id: idToUse,
+        code: propData.code,
+        slug: propData.slug,
+        title: propData.title,
+        commune: propData.commune,
+        location: propData.location || propData.address,
+        address: propData.address || propData.location,
+        price_display: propData.priceDisplay || propData.price_display,
+        price_uf: propData.priceUF ?? propData.price_uf ?? 0,
+        price_clp: propData.priceCLP ?? propData.price_clp ?? 0,
+        bedrooms: parseInt(propData.bedrooms, 10) || 0,
+        bathrooms: parseInt(propData.bathrooms, 10) || 0,
+        parking: parseInt(propData.parking, 10) || 2,
+        area: propData.area,
+        land_area: propData.landArea || propData.land_area,
+        is_featured: propData.isFeatured ?? propData.is_featured ?? true,
+        operation: propData.operation,
+        type: propData.type,
+        image: propData.image,
+        gallery: propData.gallery,
+        description: propData.description
+      };
+
+      await supabase.from('properties').upsert([dbPayload]);
+    } catch (err) {
+      console.warn('Supabase upsert property error (saved locally):', err);
+    }
+  };
+
+  /**
+   * Delete a property from state, localStorage, and Supabase
+   */
+  const deleteProperty = async (id) => {
+    // 1. Delete locally immediately
+    setProperties(prev => {
+      const newList = prev.filter(p => String(p.id) !== String(id));
+      localStorage.setItem('urbanos_custom_properties', JSON.stringify(newList));
+      return newList;
+    });
+
+    // 2. Delete from Supabase
+    try {
+      await supabase.from('properties').delete().eq('id', id);
+    } catch (err) {
+      console.warn('Supabase delete property error:', err);
     }
   };
 
@@ -112,6 +247,10 @@ export function ContentProvider({ children }) {
       value={{
         content,
         updateContentKey,
+        properties,
+        saveProperty,
+        deleteProperty,
+        refetchProperties: fetchPropertiesFromSupabase,
         session,
         setSession: setAdminSession,
         isEditMode,
@@ -131,6 +270,10 @@ export function useContent() {
     return {
       content: DEFAULT_CONTENT,
       updateContentKey: async () => {},
+      properties: PROPERTIES,
+      saveProperty: async () => {},
+      deleteProperty: async () => {},
+      refetchProperties: () => {},
       session: null,
       setSession: () => {},
       isEditMode: false,

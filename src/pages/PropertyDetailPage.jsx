@@ -2,21 +2,24 @@ import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, Phone, Mail, MessageSquare, Send, ArrowLeft, Share2, Clock } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
+import { useContent } from '../context/ContentContext';
 
 export default function PropertyDetailPage() {
+  const { properties } = useContent();
+  const allProps = properties && properties.length > 0 ? properties : PROPERTIES;
   const { slug } = useParams();
   const navigate = useNavigate();
 
   // Find property by slug or ID
-  const property = PROPERTIES.find(p => p.slug === slug || p.id.toString() === slug) || PROPERTIES[0];
+  const property = allProps.find(p => p.slug === slug || String(p.id) === String(slug)) || allProps[0];
 
-  const [activeImage, setActiveImage] = useState(property.image);
+  const [activeImage, setActiveImage] = useState(property?.image);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Related properties (same commune or operation)
-  const relatedProperties = PROPERTIES.filter(
-    p => p.id !== property.id && (p.commune === property.commune || p.type === property.type)
+  const relatedProperties = allProps.filter(
+    p => p.id !== property?.id && (p.commune === property?.commune || p.type === property?.type)
   ).slice(0, 3);
 
   const handleShare = () => {

@@ -2,11 +2,14 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, RefreshCw, ArrowUpDown, MapPin, Bed, Bath, Car, Maximize2, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { PROPERTIES, CITIES } from '../data/mockData';
+import { useContent } from '../context/ContentContext';
 import EditableText from '../components/EditableText';
 
 const ITEMS_PER_PAGE = 12;
 
 export default function CatalogPage() {
+  const { properties: contextProps } = useContent();
+  const allProperties = contextProps && contextProps.length > 0 ? contextProps : PROPERTIES;
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -33,7 +36,7 @@ export default function CatalogPage() {
 
   // Filter & sort logic
   const filteredAndSortedProperties = useMemo(() => {
-    let result = PROPERTIES.filter(item => {
+    let result = allProperties.filter(item => {
       // Operation
       if (operation !== 'All' && item.operation !== operation) return false;
 
