@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual de Usuario - Carga de Propiedades | URBANOS Inmobiliaria</title>
+
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #0f172a;
+      --secondary: #0284c7;
+      --accent: #10b981;
+      --bg-light: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #334155;
+      --text-dark: #0f172a;
+      --border-color: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      padding: 3rem 2.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .logo-img {
+      max-height: 50px;
+      object-fit: contain;
+    }
+
+    .btn-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--secondary);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background-color: #0369a1;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--primary);
+      border: 1px solid var(--border-color);
+    }
+    .btn-outline:hover {
+      background-color: var(--bg-light);
+    }
+
+    h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--secondary);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .welcome-box {
+      background-color: #f0f9ff;
+      border-left: 4px solid var(--secondary);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 2rem;
+    }
+
+    .welcome-box p {
+      color: #0369a1;
+      font-weight: 500;
+      font-size: 0.98rem;
+    }
+
+    .step-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-number {
+      background: var(--primary);
+      color: #ffffff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .step-title {
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+
+    th {
+      background-color: var(--bg-light);
+      color: var(--primary);
+      text-align: left;
+      padding: 0.75rem;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+    }
+
+    tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .tip-box {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      color: #166534;
+      font-size: 0.92rem;
+    }
+
+    .warn-box {
+      background-color: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+      color: #92400e;
+      font-size: 0.92rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+
+    /* Print styles for easy save to PDF */
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .container {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      .btn-actions {
+        display: none;
+      }
+      .step-card {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Top Bar with Logo & Download Actions -->
+    <div class="header-bar">
+      <img src="/logo.png" alt="URBANOS Inmobiliaria" class="logo-img" onerror="this.style.display='none'">
+      <div class="btn-actions">
+        <button onclick="window.print()" class="btn btn-outline">
+          🖨️ Imprimir / Guardar en PDF
+        </button>
+        <a href="/Manual_Usuario_Publicar_Propiedades_Urbanos.pdf" download class="btn btn-primary">
+          📥 Descargar PDF Directo
+        </a>
+      </div>
+    </div>
+
+    <!-- Title Header -->
+    <h1>Manual de Usuario: Carga de Propiedades</h1>
+    <p class="subtitle">Guía paso a paso, clara y sin tecnicismos para publicar inmuebles en URBANOS</p>
+
+    <!-- Welcome Message -->
+    <div class="welcome-box">
+      <p>
+        <strong>¡Bienvenido/a a tu plataforma URBANOS!</strong><br>
+        Este manual ha sido redactado de forma directa y sencilla para que cualquier miembro del equipo o propietario pueda subir sus inmuebles a la web de forma rápida, impecable y profesional.
+      </p>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title">Acceder al Panel de Administración</div>
+      </div>
+      <ol>
+        <li>Abre tu navegador de preferencia (Google Chrome, Edge, Safari).</li>
+        <li>Ingresa a la sección de administración agregando <code>/admin</code> al enlace de la web.</li>
+        <li>Completa tu <strong>Correo Electrónico</strong> y tu <strong>Contraseña</strong>.</li>
+        <li>Haz clic en el botón <strong>"Iniciar Sesión"</strong>.</li>
+      </ol>
+      <div class="tip-box">
+        💡 <strong>Tip de Seguridad:</strong> Siempre recuerda cerrar tu sesión al finalizar si estás usando una computadora compartida.
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title">Ingresar al Formulario de Carga</div>
+      </div>
+      <p>Al iniciar sesión verás el Panel de Control. Mantente en la pestaña <strong>"Propiedades"</strong>. En la parte superior verás el formulario titulado <strong>"Agregar Nueva Propiedad"</strong>.</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title">Completar los Campos de la Propiedad</div>
+      </div>
+      <p>Llena cada recuadro con la información de tu propiedad según esta tabla explicativa:</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Campo del Formulario</th>
+            <th>¿Qué ingresar?</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Título</strong></td>
+            <td>Un título atractivo con los atributos principales.</td>
+            <td><i>Departamento Moderno con Vista al Parque</i></td>
+          </tr>
+          <tr>
+            <td><strong>Código / Ref.</strong></td>
+            <td>Código interno de tu oficina o correlativo.</td>
+            <td><i>URB-101</i></td>
+          </tr>
+          <tr>
+            <td><strong>Operación</strong></td>
+            <td>Selecciona si la propiedad está en Venta o Arriendo.</td>
+            <td><span class="badge badge-info">Venta</span> o <span class="badge badge-success">Arriendo</span></td>
+          </tr>
+          <tr>
+            <td><strong>Tipo de Propiedad</strong></td>
+            <td>Categoría del inmueble.</td>
+            <td><i>Casa, Departamento, Oficina, Terreno</i></td>
+          </tr>
+          <tr>
+            <td><strong>Comuna y Ubicación</strong></td>
+            <td>Comuna y sector/barrio descriptivo.</td>
+            <td><i>Las Condes / Sector El Golf</i></td>
+          </tr>
+          <tr>
+            <td><strong>Precio y Moneda</strong></td>
+            <td>Valor numérico y si es UF o CLP.</td>
+            <td><i>8.200 UF</i> o <i>$550.000 CLP</i></td>
+          </tr>
+          <tr>
+            <td><strong>Dormitorios / Baños</strong></td>
+            <td>N° de habitaciones y N° de baños.</td>
+            <td><i>3 Dormitorios / 2 Baños</i></td>
+          </tr>
+          <tr>
+            <td><strong>Superficie (m²)</strong></td>
+            <td>Metros útiles y superficie total.</td>
+            <td><i>90 m² útiles / 105 m² total</i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">4</div>
+        <div class="step-title">Subir las Fotografías (¡El secreto para vender más!)</div>
+      </div>
+      <ul>
+        <li><strong>Imagen Principal:</strong> Enlace de la fotografía de portada. Será la cara de la propiedad en las búsquedas.</li>
+        <li><strong>Galería de Fotos:</strong> Enlaces o archivos adicionales del interior, terraza, cocina y condominio.</li>
+      </ul>
+      
+      <div class="warn-box">
+        📸 <strong>Recomendaciones para las Fotos:</strong>
+        <br>• Usa fotos horizontales (apaisadas) y bien iluminadas.
+        <br>• Elige como primera foto la más impactante (ejemplo: la vista o el living).
+        <br>• Mantén los espacios ordenados antes de fotografiar.
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">5</div>
+        <div class="step-title">Escribir la Descripción y Destacar</div>
+      </div>
+      <ul>
+        <li><strong>Descripción:</strong> Escribe detalles clave como cercanía a transporte público, centros comerciales, colegios, orientación, bodega o estacionamientos.</li>
+        <li><strong>Propiedad Destacada:</strong> Marca esta casilla si deseas que la propiedad aparezca en la portada principal del sitio web.</li>
+      </ul>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">6</div>
+        <div class="step-title">Guardar y Publicar</div>
+      </div>
+      <p>Revisa que la información sea correcta y presiona el botón verde <strong>"Guardar Propiedad"</strong>. ¡Listo! En segundos estará disponible para todos los clientes en el catálogo web.</p>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">7</div>
+        <div class="step-title">Editar o Dar de Baja una Propiedad</div>
+      </div>
+      <p>En el listado de propiedades publicadas abajo en el panel:</p>
+      <ul>
+        <li>✏️ <strong>Editar:</strong> Presiona el lápiz azul para modificar precios, fotos o textos en cualquier momento.</li>
+        <li>🗑️ <strong>Eliminar:</strong> Presiona el basurero rojo cuando una propiedad ya haya sido vendida o arrendada.</li>
+      </ul>
+    </div>
+
+    <footer>
+      <p><strong>URBANOS Inmobiliaria & Gestión</strong> © 2026 — Manual de Capacitación para Usuarios</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">Soporte Técnico: <code>contacto@urbanosinmobiliaria.cl</code></p>
+    </footer>
+
+  </div>
+
+</body>
+</html>

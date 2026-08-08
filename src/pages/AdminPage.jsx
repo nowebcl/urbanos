@@ -7,6 +7,7 @@ import {
   UploadCloud, Image as ImageIcon, Search, ChevronDown, ChevronUp, X, Send
 } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
+import { compressAndConvertToWebP, processAndUploadPropertyImage } from '../lib/imageOptimizer';
 
 export default function AdminPage() {
   const { session, setSession } = useContent();
@@ -141,24 +142,46 @@ export default function AdminPage() {
     setSession(null);
   };
 
-  // Image Upload helper (Converts File to Base64 Data URL)
-  const handleFileUpload = (file, isMain = true) => {
+  const [compressNotice, setCompressNotice] = useState(null);
+
+  // Image Upload helper (Compresses & Converts File to WebP and uploads)
+  const handleFileUpload = async (file, isMain = true) => {
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
+    try {
+      setCompressNotice({ type: 'loading', message: 'Comprimiendo y convirtiendo imagen a .WebP...' });
+      
+      const result = await processAndUploadPropertyImage(file, supabase);
+
       if (isMain) {
-        setPropForm(prev => ({ ...prev, image: reader.result }));
+        setPropForm(prev => ({ ...prev, image: result.url }));
       } else {
         setPropForm(prev => {
           if (prev.gallery.length >= 5) {
             alert('Máximo 5 imágenes en la galería');
             return prev;
           }
-          return { ...prev, gallery: [...prev.gallery, reader.result] };
+          return { ...prev, gallery: [...prev.gallery, result.url] };
         });
       }
-    };
-    reader.readAsDataURL(file);
+
+      setCompressNotice({
+        type: 'success',
+        message: `✨ Imagen optimizada a .WebP | Peso reducido un ${result.savedPercent}% (de ${result.originalSizeKB} KB a ${result.compressedSizeKB} KB)`
+      });
+
+      setTimeout(() => setCompressNotice(null), 6000);
+    } catch (err) {
+      console.error('Error optimizando imagen:', err);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (isMain) {
+          setPropForm(prev => ({ ...prev, image: reader.result }));
+        } else {
+          setPropForm(prev => ({ ...prev, gallery: [...prev.gallery, reader.result] }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const removeGalleryImage = (index) => {
@@ -405,12 +428,33 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <a
+              href="/Manual_Usuario_Publicar_Propiedades_Urbanos.pdf"
+              download
+              title="Descargar Manual de Usuario en PDF"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-orange-500/10 border border-orange-500/30 text-orange-400 hover:bg-orange-500/20 text-xs font-bold transition-all"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Manual PDF</span>
+            </a>
+
+            <a
+              href="/manual_usuario.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Ver Manual de Usuario en pantalla"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-teal-500/10 border border-teal-500/30 text-teal-400 hover:bg-teal-500/20 text-xs font-bold transition-all"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Guía Web</span>
+            </a>
+
             <a
               href="/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#080c14] border border-slate-700 text-slate-300 hover:text-white hover:border-slate-600 text-xs font-semibold transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#080c14] border border-slate-700 text-slate-300 hover:text-white hover:border-slate-600 text-xs font-semibold transition-all"
             >
               <ExternalLink className="w-3.5 h-3.5 text-teal-400" />
               <span>Ver Sitio Web</span>
@@ -685,6 +729,22 @@ export default function AdminPage() {
                       />
                     </div>
                   </div>
+
+                  {/* Notification banner for image compression */}
+                  {compressNotice && (
+                    <div className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 border ${
+                      compressNotice.type === 'loading' 
+                        ? 'bg-blue-500/10 border-blue-500/30 text-blue-300' 
+                        : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                    }`}>
+                      {compressNotice.type === 'loading' ? (
+                        <RefreshCw className="w-4 h-4 animate-spin text-blue-400" />
+                      ) : (
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      )}
+                      <span>{compressNotice.message}</span>
+                    </div>
+                  )}
 
                   {/* Imagen Principal Drag & Drop Dropzone */}
                   <div>
