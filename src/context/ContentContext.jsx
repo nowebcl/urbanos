@@ -132,8 +132,13 @@ export function ContentProvider({ children }) {
           }
         }));
 
-        setProperties(mapped);
-        localStorage.setItem('urbanos_custom_properties', JSON.stringify(mapped));
+        // Merge Supabase properties with default catalog so initial properties are never lost
+        const dbIds = new Set(mapped.map(p => String(p.id)));
+        const fallbackProps = PROPERTIES.filter(p => !dbIds.has(String(p.id)));
+        const combined = [...mapped, ...fallbackProps];
+
+        setProperties(combined);
+        localStorage.setItem('urbanos_custom_properties', JSON.stringify(combined));
       }
     } catch (err) {
       console.warn('Supabase fetch properties error:', err);
