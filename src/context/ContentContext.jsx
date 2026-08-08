@@ -70,7 +70,18 @@ export function ContentProvider({ children }) {
         }
       });
 
-      return () => subscription.unsubscribe();
+      // Realtime listener for properties table changes across all clients
+      const propertiesChannel = supabase
+        .channel('public:properties')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'properties' }, () => {
+          fetchPropertiesFromSupabase();
+        })
+        .subscribe();
+
+      return () => {
+        subscription.unsubscribe();
+        supabase.removeChannel(propertiesChannel);
+      };
     } catch (e) {
       console.warn('Auth subscription notice:', e);
     }
@@ -215,10 +226,15 @@ export function ContentProvider({ children }) {
 
       const { error } = await supabase.from('properties').upsert([dbPayload]);
       if (error) {
-        console.warn('Supabase RLS notice (saved locally, enable RLS write in Supabase):', error);
+        console.error('Error guardando en Supabase DB:', error);
+        alert(`Aviso Supabase: ${error.message || 'No se pudo guardar en Supabase. Verifica la conexión o permisos RLS.'}`);
+        throw error;
       }
+
+      await fetchPropertiesFromSupabase();
     } catch (err) {
-      console.warn('Supabase upsert property error (saved locally):', err);
+      console.warn('Supabase upsert property error:', err);
+      throw err;
     }
   };
 

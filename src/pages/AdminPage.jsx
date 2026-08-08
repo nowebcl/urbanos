@@ -275,7 +275,8 @@ export default function AdminPage() {
       }
 
       const generatedCode = propForm.code || `URB-${Math.floor(100 + Math.random() * 900)}`;
-      const generatedSlug = propForm.slug || propForm.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const baseSlug = (propForm.title || 'propiedad').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'propiedad';
+      const generatedSlug = propForm.slug || (editingProp ? baseSlug : `${baseSlug}-${Math.floor(Math.random() * 8999 + 1000)}`);
       const defaultCommune = propForm.commune || 'Puerto Montt';
       const defaultLoc = propForm.location || `${defaultCommune}, Región de Los Lagos`;
 
