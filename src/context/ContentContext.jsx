@@ -106,7 +106,24 @@ export function ContentProvider({ children }) {
 
   const fetchPropertiesFromSupabase = async () => {
     try {
-      const { data, error } = await supabase.from('properties').select('*').order('id', { ascending: false });
+      let data = null;
+
+      // Try Vercel Serverless API Proxy first (Avoids browser Mixed Content & SSL handshake blocks)
+      try {
+        const res = await fetch('/api/properties');
+        if (res.ok) {
+          const apiData = await res.json();
+          if (Array.isArray(apiData) && apiData.length > 0) {
+            data = apiData;
+          }
+        }
+      } catch (e) {}
+
+      // Fallback to Supabase JS Client
+      if (!data) {
+        const { data: dbData } = await supabase.from('properties').select('*').order('id', { ascending: false });
+        data = dbData;
+      }
       
       if (data && data.length > 0) {
         // Map database fields to standard property format used in components
@@ -169,7 +186,7 @@ export function ContentProvider({ children }) {
   };
 
   /**
-   * Save (Insert or Update) a property in state, localStorage, and Supabase
+   * Save (Insert or Update) a property in state, localStorage, and Supabase DB
    */
   const saveProperty = async (propData, editingId = null) => {
     const idToUse = editingId || propData.id || Math.floor(Math.random() * 90000) + 10000;
@@ -198,7 +215,7 @@ export function ContentProvider({ children }) {
       return newList;
     });
 
-    // 2. Persist to Supabase Database via Upsert
+    // 2. Persist to Supabase Database via API Proxy or Supabase Client
     try {
       const dbPayload = {
         id: idToUse,
@@ -224,21 +241,33 @@ export function ContentProvider({ children }) {
         description: propData.description
       };
 
-      const { error } = await supabase.from('properties').upsert([dbPayload]);
-      if (error) {
-        console.warn('Supabase DB notice (Property saved locally):', error);
+      let savedOk = false;
+
+      // Try Vercel Serverless API proxy first
+      try {
+        const res = await fetch('/api/properties', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dbPayload)
+        });
+        if (res.ok) {
+          savedOk = true;
+        }
+      } catch (e) {}
+
+      // Fallback to Supabase client
+      if (!savedOk) {
+        await supabase.from('properties').upsert([dbPayload]);
       }
 
-      try {
-        await fetchPropertiesFromSupabase();
-      } catch (e) {}
+      await fetchPropertiesFromSupabase();
     } catch (err) {
-      console.warn('Supabase network connection notice (Property saved in local state):', err);
+      console.warn('Persist property error notice:', err);
     }
   };
 
   /**
-   * Delete a property from state, localStorage, and Supabase
+   * Delete a property from state, localStorage, and Supabase DB
    */
   const deleteProperty = async (id) => {
     // 1. Delete locally immediately
@@ -248,11 +277,16 @@ export function ContentProvider({ children }) {
       return newList;
     });
 
-    // 2. Delete from Supabase
+    // 2. Delete from Supabase DB
     try {
-      const { error } = await supabase.from('properties').delete().eq('id', id);
-      if (error) {
-        console.error('Error al eliminar propiedad en Supabase:', error);
+      let deletedOk = false;
+      try {
+        const res = await fetch(`/api/properties?id=${id}`, { method: 'DELETE' });
+        if (res.ok) deletedOk = true;
+      } catch (e) {}
+
+      if (!deletedOk) {
+        await supabase.from('properties').delete().eq('id', id);
       }
     } catch (err) {
       console.warn('Supabase delete property error:', err);
