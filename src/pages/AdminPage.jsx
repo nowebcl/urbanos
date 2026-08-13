@@ -63,8 +63,7 @@ export default function AdminPage() {
     setLoading(true);
     try {
       // Fetch Properties
-      const { data: props } = await supabase.from('properties').select('*').order('id', { ascending: false });
-      setDbProperties(props && props.length > 0 ? props : PROPERTIES);
+      if (refetchProperties) await refetchProperties();
 
       // Fetch Leads
       const { data: leads } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
