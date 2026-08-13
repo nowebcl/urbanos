@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, RefreshCw, ArrowUpDown, MapPin, Bed, Bath, Car, Maximize2, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
 import { PROPERTIES, CITIES } from '../data/mockData';
 import { useContent } from '../context/ContentContext';
-import { formatImageUrl } from '../utils/imageUtils';
+import { formatImageUrl, handleImageError } from '../utils/imageUtils';
 import EditableText from '../components/EditableText';
 
 const ITEMS_PER_PAGE = 12;
@@ -313,6 +313,7 @@ export default function CatalogPage() {
                     <img
                       src={formatImageUrl(prop.image)}
                       alt={prop.title}
+                      onError={handleImageError}
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-95"
                     />
                     

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, MessageSquare, Send, ArrowLeft, Share2, Clock } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { useContent } from '../context/ContentContext';
+import { handleImageError } from '../utils/imageUtils';
 
 export default function PropertyDetailPage() {
   const { properties } = useContent();
@@ -130,6 +131,7 @@ export default function PropertyDetailPage() {
             <img
               src={activeImage}
               alt={property.title}
+              onError={handleImageError}
               className="w-full h-full object-cover object-center transition-all duration-300"
             />
           </div>
@@ -145,7 +147,7 @@ export default function PropertyDetailPage() {
                     activeImage === imgUrl ? 'border-orange-500 scale-105 shadow-lg' : 'border-slate-800 opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={imgUrl} alt={`Vista ${i}`} className="w-full h-full object-cover" />
+                  <img src={imgUrl} alt={`Vista ${i}`} onError={handleImageError} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapPin, Bed, Bath, Car, Maximize2, ArrowRight, Clock } from 'lucide-react';
-import { formatImageUrl } from '../utils/imageUtils';
+import { formatImageUrl, handleImageError } from '../utils/imageUtils';
 
 export default function PropertiesGrid({
   properties,
@@ -54,6 +54,7 @@ export default function PropertiesGrid({
                 <img
                   src={formatImageUrl(prop.image)}
                   alt={prop.title}
+                  onError={handleImageError}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-95"
                 />
                 

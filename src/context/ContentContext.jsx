@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { PROPERTIES } from '../data/mockData';
+import { formatImageUrl, cleanImageUrl } from '../utils/imageUtils';
 
 export const DEFAULT_CONTENT = {
   hero_badge: 'Gestión Inmobiliaria Integral & Estrategia Digital',
@@ -146,16 +147,7 @@ export function ContentProvider({ children }) {
       const deletedIds = getDeletedIds();
       const editedMap = getEditedMap();
       
-      const fixUrl = (url) => {
-        if (!url || typeof url !== 'string') return url;
-        if (url.startsWith('data:') || url.startsWith('blob:') || url.startsWith('/api/image-proxy')) return url;
-        if (url.startsWith('http://')) {
-          if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
-            return `/api/image-proxy?url=${encodeURIComponent(url)}`;
-          }
-        }
-        return url;
-      };
+      const fixUrl = (url) => formatImageUrl(url);
 
       let dbMapped = [];
       if (data && data.length > 0) {
@@ -293,8 +285,8 @@ export function ContentProvider({ children }) {
         is_featured: propData.isFeatured ?? propData.is_featured ?? true,
         operation: propData.operation,
         type: propData.type,
-        image: propData.image,
-        gallery: propData.gallery,
+        image: cleanImageUrl(propData.image),
+        gallery: Array.isArray(propData.gallery) ? propData.gallery.map(cleanImageUrl) : propData.gallery,
         description: propData.description
       };
 

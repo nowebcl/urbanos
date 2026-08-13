@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, MapPin, Bed, Bath, Car, Maximize2, Phone, Mail, CheckCircle2, Send, Clock } from 'lucide-react';
+import { handleImageError } from '../utils/imageUtils';
 
 export default function PropertyModal({ property, onClose, currencyMode }) {
   const [activeImage, setActiveImage] = useState(property?.image);
@@ -71,6 +72,7 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
               <img
                 src={activeImage}
                 alt={property.title}
+                onError={handleImageError}
                 className="w-full h-full object-cover object-center transition-all duration-300"
               />
             </div>
@@ -86,7 +88,7 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
                       activeImage === imgUrl ? 'border-orange-500 scale-105' : 'border-slate-800 opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={imgUrl} alt={`Vista ${i}`} className="w-full h-full object-cover" />
+                    <img src={imgUrl} alt={`Vista ${i}`} onError={handleImageError} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
