@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { compressAndConvertToWebP, processAndUploadPropertyImage } from '../lib/imageOptimizer';
-import { handleImageError } from '../utils/imageUtils';
+import { handleImageError, formatImageUrl } from '../utils/imageUtils';
 
 export default function AdminPage() {
   const { session, setSession, properties: dbProperties, saveProperty, deleteProperty, refetchProperties } = useContent();
@@ -774,7 +774,7 @@ export default function AdminPage() {
                       {propForm.image ? (
                         <div className="flex flex-col items-center gap-3">
                           <img
-                            src={propForm.image}
+                            src={formatImageUrl(propForm.image)}
                             alt="Vista previa"
                             onError={handleImageError}
                             className="h-32 w-auto object-cover rounded-xl border border-slate-700 shadow-md"
@@ -836,7 +836,7 @@ export default function AdminPage() {
                       <div className="flex flex-wrap gap-3 mt-3">
                         {propForm.gallery.map((imgUrl, idx) => (
                           <div key={idx} className="relative group w-20 h-20 rounded-xl overflow-hidden border border-slate-700">
-                            <img src={imgUrl} alt={`Galería ${idx}`} onError={handleImageError} className="w-full h-full object-cover" />
+                            <img src={formatImageUrl(imgUrl)} alt={`Galería ${idx}`} onError={handleImageError} className="w-full h-full object-cover" />
                             <button
                               type="button"
                               onClick={() => removeGalleryImage(idx)}
