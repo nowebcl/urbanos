@@ -59,7 +59,7 @@ export const AGENTS = [
     role: 'Agente Inmobiliario Senior',
     phone: '+56 9 6192 4570',
     email: 'urbanos@urbanosinmobiliaria.cl',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
+    image: '/images/agent_cristian.webp'
   },
   {
     id: 2,
@@ -106,7 +106,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¡Espectacular Casa totalmente Amoblada, dos casas para 7 personas 5 dormitorios y 2 dormitorios Ideal para familias numerosas, profesionales o empresas. Disfruta de una propiedad amplia, totalmente equipada y lista para habitar, ubicada en uno de los sectores más cotizados del sur de Chile. Caracter",
     "features": [
@@ -149,7 +149,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🔧 ¡Se Arrienda Propiedad Habilitada para Taller Mecánico! 💰 Arriendo: $500.000 mensuales, mes de garantía, comision única vez 50% +iva Excelente oportunidad para establecer o potenciar tu negocio en un sector estratégico de Puerto Montt , ubicado a pasos del Regimiento , en una zona de alto flujo ",
     "features": [
@@ -196,7 +196,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE ARRIENDA&nbsp; Hermosa y amplia casa en Parcelación Playa Chamiza – a solo 15 minutos de Puerto Montt &nbsp;Precio arriendo: &nbsp;$580.000, incluye agua, gastos comunes e Internet Fibra óptica, mes garantía, 50% comisión +IVA &nbsp;Características de la casa: 2 dormitorios 2 baños 80 m² construi",
     "features": [
@@ -243,7 +243,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "“Arriendo Mensual” Loft en Isla Puluqui &#8211; Calbuco&nbsp; Se arrienda acogedora propiedad, ideal para extranjeros o personas que se trasladen a la zona por motivos laborales o nuevos proyectos.&nbsp; 🛳️ Conectividad mediante transbordador con frecuencia diaria. Características: ✅ Acceso directo",
     "features": [
@@ -290,7 +290,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Casa en venta en Valle Volcanes &#8211; Puerto Montt – Lista para llegar y vivir Esta casa ubicada en Valle Volcanes invita a sentirse en casa desde el primer momento. Recién remodelada , con pisos nuevos y pintura completa, está lista para que llegues a vivir sin preocupaciones. Ubicada en un barri",
     "features": [
@@ -337,7 +337,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "‼️‼️SE ARRIENDA ‼️‼️ 🔥🏡 ¡VIVE EN VALLE VOLCANES! CASA EN ARRIENDO EN UNO DE LOS MEJORES SECTORES DE PUERTO MONTT 🏡🔥 ¿Buscas espacio, comodidad y una ubicación privilegiada? Esta excelente propiedad reúne todo lo que tu familia necesita para disfrutar de una vida tranquila, segura y con acceso in",
     "features": [
@@ -384,7 +384,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "‼️ ¡OPORTUNIDAD DE INVERSIÓN! ‼️ 🏡 SE VENDE DEPARTAMENTO AMOBLADO A PUERTAS CERRADAS 📍 Condominio Plaza Pelluco I – Puerto Montt 💰 Valor de Venta: $88.000.000, comisión 2% mas impuestos Construída 42 m2 / año 2022 ✨ ¡Se vende completamente amoblado y equipado! Solo debes firmar y comenzar a disfr",
     "features": [
@@ -431,7 +431,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡✨ CASA EN VENTA – PUERTA SUR&nbsp; PARA VIVIR O INVERSION ✨🏡 📍 Cercana a Colegio Creación 💰 VALOR: $80.000.000 ¿Sueñas con una casa cómoda, segura y con espacios para disfrutar en familia? Esta propiedad reúne todo lo que necesitas en un sector residencial tranquilo y con excelente conectividad",
     "features": [
@@ -478,7 +478,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🚨 SE ARRIENDA AMOBLADA CASA ESQUINA EN VALLE VOLCANES: LLEGAR Y HABITAR Mobiliario Nuevo | Climatización Dual | Quincho de Alto Nivel ¿Buscas espacio, seguridad y cero preocupaciones? Esta propiedad esquina en el mejor sector de Valle Volcanes redefine la comodidad. Olvídate de mudanzas eternas y g",
     "features": [
@@ -525,7 +525,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏢 ¡Se Arrienda Amplia Oficina en Valle Volcanes! Instala tu oficina o emprendimiento en un espacio cómodo, independiente y con excelente ubicación en el consolidado sector residencial de Valle Volcanes . Características: ✅ Segundo piso con acceso independiente. ✅ Recepción para atención de clientes",
     "features": [
@@ -572,7 +572,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 SE ARRIENDA DEPARTAMENTO AMOBLADO – 2º PISO Frente a Jumbo Puerto Montt. Disponibilidad contar del 1º de mayo 📍 Edificio Avangarden, frente a Jumbo, a pocas cuadras del centro ✨ Características del departamento: * 2 dormitorios * 2 baños * Living-comedor con cocina integrada * Amoblado completo ",
     "features": [
@@ -619,7 +619,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡✨ ¡Tu nuevo hogar te espera en Valle Volcanes! ✨🏡 Descubre este hermoso departamento ubicado en uno de los sectores residenciales más valorados de Puerto Montt. Un espacio pensado para disfrutar la comodidad, tranquilidad y calidad de vida que tú y tu familia merecen. Ubicado en Primer piso. ✅ 2 ",
     "features": [
@@ -666,7 +666,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "‼️‼️SE ARRIENDA ‼️‼️PROPIEDAD COMERCIAL &#8211; HABITACIONAL EN AVENIDA LOS NOTROS &nbsp; 🔥🏢 📍 Estratégicamente ubicada en la intersección de Avenida Los Notros con Los Robles, en un sector de alto flujo vehicular y excelente visibilidad comercial. Una excelente oportunidad para empresas, oficina",
     "features": [
@@ -713,7 +713,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡✨ EN ARRIENDO | DEPARTAMENTO AMOBLADO ESTILO MARIPOSA EN EDIFICIO PUERTO SOÑADO – PUERTO MONTT ✨🏡 Lindo&nbsp; departamento ubicado en el 3° piso del Edificio Puerto Soñado , en Buin 356, Puerto Montt , en excelente estado de conservación y con una ubicación privilegiada que combina comodidad, con",
     "features": [
@@ -760,7 +760,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 ¡Oportunidad! Departamento en Valle Volcanes – en condominio, para inversión o vivir. Si buscas comodidad, seguridad y plusvalía, esta es tu opción 👇 ✨ Lo que diferencia esta propiedad: 🏡 ¡Oportunidad! Departamento en Valle Volcanes – en condominio, para inversión o vivir. Si buscas comodidad, ",
     "features": [
@@ -807,7 +807,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¡OPORTUNIDAD EN VALLE VOLCANES! 🏡🌲 Disponible esta increíble casa en el exclusivo Condominio Altos del Bosque . Un entorno seguro, familiar y rodeado de naturaleza en el sector de mayor demanda en Puerto Montt. ✨ Características destacadas: 📐 Espacios amplios y luminosos. 🛋 Living y comedor inde",
     "features": [
@@ -854,7 +854,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¡HERMOSA CASA EN VALLE VOLCANES – PUERTO MONTT! ✨🏡 Ubicación privilegiada, barrio residencial y consolidado con alta plusvalía. ¡Perfecta para familias que buscan comodidad, espacio y un entorno seguro! 🔹 Características de la propiedad: • 5 dormitorios • 2 baños • Excelente ubicación (cerca de se",
     "features": [
@@ -901,7 +901,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se arriendan&nbsp; cabañas&nbsp; para estudiantes , a pasos de USS– Puerto Montt 📍 Ubicadas a solo 5 minutos caminando de la Universidad San Sebastián, con excelente conectividad mediante locomoción colectiva hacia la Universidad Santo Tomás y el centro de Puerto Montt. El recinto se encuentra en s",
     "features": [
@@ -948,7 +948,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "📈 ¡Oportunidad de inversión! SE&nbsp; VENDE DEPARTAMENTO CONDOMINIO VALLE VOLCANES 2&nbsp;con estacionamiento con estacionamiento , Puerto Montt&nbsp; Valor $95.000.000&nbsp;Valor conversable Valos Gasto Común 60.000 aprox. Departamento en excelente ubicación, dentro de condominio con seguridad 24/",
     "features": [
@@ -995,7 +995,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE ARRIENDA 🌊 VIVE EN PLAZA PELLUCO: ¡TODO INCLUIDO Y LISTO PARA HABITAR! ¿Buscas la tranquilidad de Pelluco con la seguridad de un condominio privado? Este departamento en el 3er piso es la combinación perfecta de confort y ubicación estratégica. Ideal para profesionales o parejas que buscan un ho",
     "features": [
@@ -1042,7 +1042,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Amplia Casa de 3 Pisos en Pelluco Alto – Dos Esteros Excelente Ubicación Hermosa propiedad de arquitectura moderna ubicada en Puerto Montt, a pasos del Colegio San Javier y a minutos de Playa Pelluco. 📐 Especificaciones Superficie construida: 250 m² Superficie terreno: 435 m² 4 dormitorios (prin",
     "features": [
@@ -1089,7 +1089,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏛️ SE VENDE PROPIEDAD EN ÁGUILA SUR: 305 m² DE SOLIDEZ Y DISTINCIÓN ¿Busca una construcción definitiva? Esta no es solo una parcela; es una obra de ingeniería residencial de 305 m² construidos en ladrillo reforzado, emplazada en un terreno de 5.012 m² . Una propiedad diseñada para impactar visualme",
     "features": [
@@ -1136,7 +1136,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🔹 SE ARRIENDA PROPIEDAD COMERCIAL – PRESIDENTE IBÁÑEZ 🔹 📍 Excelente ubicación en avenida principal, ideal para oficina, empresa familiar o emprendimiento. ✅ 2 pisos amplios con espacios abiertos ✅ Cocina y baño equipados ✅ Estacionamiento para 4 vehículos interior mas exteriores ✅ Gran acceso fro",
     "features": [
@@ -1183,7 +1183,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Casa en Venta Puerta Sur, Puerto Montt Se Arrienda&nbsp; casa ubicada en sector Puerta Sur , barrio residencial con buena conectividad y cercano a comercio y servicios. Características: • 3 dormitorios • 2 baño • Living – comedor • Cocina • Logia cerrada • Patio 💰 Excelente oportunidad para vivi",
     "features": [
@@ -1230,7 +1230,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 ¡Espectacular casa amplia y moderna en parcelación Lomas Ranchos Verdes – Puerto Varas! 🌿✨ Hermosa propiedad de concepto amplio y moderno, ubicada en un entorno natural privilegiado, ideal para quienes buscan comodidad, diseño y contacto con la naturaleza. 🔹 210 m² construidos�🔹 5.000 m² de te",
     "features": [
@@ -1277,7 +1277,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "‼️🏢 SE ARRIENDAN OFICINAS Y BODEGAS en Excelente sector!!!!&nbsp; ‼️ &nbsp; a minutos&nbsp; del centro de PUERTO MONTT y muy buena conectividad!! 📍 Excelente ubicación – Emiliano Figueroa con Germán Oelckers lugar con fácil acceso y estacionamientos ✅ Oficinas y valores : 2 oficinas de 36 m² → $45",
     "features": [
@@ -1324,7 +1324,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Excelente oportunidad para vivir en uno de los sectores más cotizados de Puerto Montt. Ubicada en Valle Volcanes, con excelente conectividad y cercana a supermercados, colegios, centros comerciales, farmacias, locomoción y todo tipo de servicios. El sector destaca por su entorno residencial consolid",
     "features": [
@@ -1371,7 +1371,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 VENDO Excelente y amplia propiedad en esquina en el corazón de Valle Volcanes Les presentamos esta hermosa casa en esquina, regularizada . En el corazón de Valle Volcanes , se alza esta encantadora casa en esquina , un lugar donde la luz entra por cada ventana y transforma cada espacio en un rinc",
     "features": [
@@ -1418,7 +1418,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Hermosa casa en condominio – Valle Volcanes, Puerto Montt Casa en excelente estado únicos dueños, ubicada en el consolidado Condominio Alto del Bosque , en un entorno seguro, tranquilo y familiar, cercano a colegios, supermercados y comercio en general. 📍 Excelente conectividad por Av. Cuarta Te",
     "features": [
@@ -1465,7 +1465,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "📍 TU HOGAR EN JARDÍN AUSTRAL: ESPACIO, COMODIDAD Y CONECTIVIDAD TOTAL ¿Buscas una casa que se adapte al ritmo de tu familia? Ubicada a pasos de Av. Austral , esta propiedad es el punto de equilibrio perfecto entre amplitud y ubicación estratégica. Cerca de todo lo que necesitas: colegios, supermerc",
     "features": [
@@ -1512,7 +1512,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se Arrienda&nbsp; Departamento en Condominio Vista Sol Descubre este acogedor y funcional departamento, ideal para quienes buscan tranquilidad sin perder conectividad. Ubicado en un condominio seguro y bien equipado, con acceso rápido a Viña del Mar, Reñaca, Concón, Valparaíso, Limache y principales",
     "features": [
@@ -1559,7 +1559,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🚨 CASA ESQUINA EN VALLE VOLCANES: LLEGAR Y HABITAR Mobiliario Nuevo | Climatización Dual | Quincho de Alto Nivel ¿Buscas espacio, seguridad y cero preocupaciones? Esta propiedad esquina en el mejor sector de Valle Volcanes redefine la comodidad. Olvídate de mudanzas eternas y gastos extra: está 100",
     "features": [
@@ -1606,7 +1606,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Casa en venta en Valle Volcanes &#8211; Puerto Montt – Lista para llegar y vivir Esta casa ubicada en Valle Volcanes invita a sentirse en casa desde el primer momento. Recién remodelada , con pisos nuevos y pintura completa, está lista para que llegues a vivir sin preocupaciones. Ubicada en un barri",
     "features": [
@@ -1653,7 +1653,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Se arrienda espectacular casa en Dos Esteros – Amplia, exclusiva y full equipada 📍 Sector Dos Esteros – entorno residencial consolidado y excelente conectividad 💰 Valor arriendo: $1.250.000 + comisión 50% IVA 💼 Comisión de corretaje: 50% + IVA (pago único) ✨ Propiedad de alto estándar – 4 dorm",
     "features": [
@@ -1700,7 +1700,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Se arrienda cómodo departamento en 3º piso, 2 dormitorios / 2 baños – Amoblado Valos inlcuye gastos comunes estacionamiento. Departamento funcional y bien equipado, ideal para quienes buscan comodidad y buena distribución: ✨ Características: 2 dormitorios (Matrimonial amoblado &#8211; dormotorio ",
     "features": [
@@ -1747,7 +1747,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se arrienda excelente oficina de 46 m² , ubicada en pleno centro de Puerto Montt, en el reconocido Edificio Los Héroes . ✔ 2 ambientes (ideal recepción + privado) ✔ 1 baño ✔ Piso 7 (buena luz y privacidad) ✔ Sin estacionamiento ✔ Edificio con conserjería y ascensores 📍 Ubicación estratégica, a paso",
     "features": [
@@ -1794,7 +1794,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 CASA EN VENTA – CONDOMINIO ALTO DEL BOSQUE | VALLE VOLCANES Hermosa y amplia casa ubicada en un exclusivo condominio con bosque para realizar trekking,&nbsp; ideal para familias que buscan tranquilidad, seguridad y calidad de vida 🌳👨‍👩‍👧‍👦 Casa emplazada en condominio incomparable ubicación ",
     "features": [
@@ -1841,7 +1841,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏢 SE VENDE Departamento&nbsp; – Villa Alemana 📍 Carlos Grunner 820, Block D – Condominio Cerrado 💰 Valor: $61.000.000 , + comisión 2% + IVA Se vende moderno departamento de 55 m², ubicado en piso alto con vista panorámica, dentro de un condominio seguro con acceso controlado. ✨ Características: •",
     "features": [
@@ -1888,7 +1888,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¡Increíble oportunidad de adquirir esta amplia y acogedora casa en un entorno natural, ideal para disfrutar en familia! 📍 Ubicación: Sargento Silva, Parcelación Los Ulmos, Puerto Montt 📏 Superficie construida: 200 m² 🌳 Terreno: 5.000 m² ✨ Características principales: • 4 dormitorios • 3 baños • C",
     "features": [
@@ -1935,7 +1935,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 ¡Se Vende acogedora Casa de un piso en Valle Volcanes! ¿Buscas tranquilidad y una excelente ubicación? Esta hermosa casa de un solo piso en Valle Volcanes ofrece confort, funcionalidad y calidad de vida en un entorno seguro y tranquilo ,&nbsp; se encuentra en un sector residencial muy tranquilo ,",
     "features": [
@@ -1982,7 +1982,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 SE ARRIENDA Hermosa Casa en Exclusivo Condominio – Valle Volcanes, Puerto Montt Casa con amplios espacios, para disfrutar en familia y amigos, ubicada en el consolidado Condominio Alto del Bosque , en un entorno seguro, tranquilo y familiar , cercana a colegios, universidad supermercados y a 10 m",
     "features": [
@@ -2029,7 +2029,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE ARRIENDA Casa en Parcela Los Troncos Milenarios Puerto Montt Cercano a Mall Alerce Pueto Montt 🏡✨ Vive donde otros sueñan descansar… ¡Casa en parcela en arriendo! Si buscas tranquilidad, naturaleza y seguridad, esta propiedad es perfecta para ti. Disfruta de la vida de campo sin alejarte de la c",
     "features": [
@@ -2076,7 +2076,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE ARRIENDA Casa en Parcela Los Troncos Milenarios&nbsp; Disfruta de la vida de campo sin alejarte de la ciudad , en un entorno privilegiado y seguro. 🌿 La propiedad ofrece: • 3 cómodos dormitorios con clóset • 2 baños • Parcela de 5.000 m² , ideal para disfrutar del aire libre • Estacionamiento te",
     "features": [
@@ -2123,7 +2123,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¿Buscas ubicación, comodidad y un precio real? Este departamento en Calle Regimiento es la oportunidad que esperabas. Ideal para profesionales o estudiantes que buscan conectividad total. 💥 Lo que tiene par tí: 100% Amoblado: Olvídate de mudanzas pesadas. Entra a vivir hoy mismo. Espacios Inteligen",
     "features": [
@@ -2170,7 +2170,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Se Arrienda Casa Esquina – Valle Volcanes | Puerto Montt Se arrienda amplia casa ubicada en esquina , Sin amoblar, en consolidado sector residencial Valle Volcanes , en un entorno tranquilo y seguro , frente a plaza y con excelente conectividad. 📍 Ubicación destacada Frente a plaza A solo 10 min",
     "features": [
@@ -2217,7 +2217,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "✨ SE ARRIENDA – DEPARTAMENTO CON VISTA PANORÁMICA ✨ 📍 Edificio Avant Garden – Puerto Montt Ubicado en una de las avenidas principales de la ciudad, con excelente conectividad y todo a la mano: supermercado Jumbo, centro de Puerto Montt, colegios, universidades y locomoción a la puerta. 🏡 Caracterí",
     "features": [
@@ -2264,7 +2264,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "QUIERES UNA PARCELA A BAJO COSTO,&nbsp; CON ALTA PLUSVALIA Y EN CONDOMINIO?&nbsp; REBAJADA!! OPORTUNIDAD !&nbsp; 54121381948 Parcela Hacienda Chamiza seguda etapa , semi plana, cercada 💰 Precio: $39.990000. 🌿 OPORTUNIDAD EN HACIENDA CHAMIZA 🌿 Parcela Terreno plano 5.000 m² Ubicada en Camino princ",
     "features": [
@@ -2311,7 +2311,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Se Arrienda Casa de 1 Piso – Semi Amoblada Jardín Austral 💰 Valor arriendo: $600.000 Se arrienda cómoda casa de un piso, semi amoblada , ubicada en el sector Jardín Austral , a pasos de Avenida Austral , en un entorno residencial, familiar y tranquilo . La casa cuenta con Cocina-Refrigerador-lav",
     "features": [
@@ -2358,7 +2358,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🌟🏡 SE VENDE AMPLIA CASA &nbsp; EN PUERTA SUR! 🏡🌟 ¡La casa que estabas esperando… y al mejor precio! 🚨 OPORTUNIDAD REAL – LISTA PARA LLEGAR Y VIVIR 🚨 ✨ CARACTERÍSTICAS : 💥 3 dormitorios 💥 1 baño 💥 Casa 100% individual 💥 Estacionamiento 💥 107,32 m² construidos Y REGULARIZADOS 💥 Terreno tot",
     "features": [
@@ -2405,7 +2405,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se arrienda casa amoblada de un piso en Jardín Oriente, ubicada en barrio residencial, tranquilo y seguro . Se encuentra Disponible La propiedad se encuentra totalmente equipada para 4 personas . Características: 2 dormitorios , ambos con cama de 2 plazas 1 baño Living Comedor amplio y equipado Tv c",
     "features": [
@@ -2452,7 +2452,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE VENDE – Propiedad Comercial en Esquina de Alta Proyección , Ubicada en calle José Miguel Carrera, a una cuadra del Parque Industrial – Puerto Montt Propiedad comercial con excelente visibilidad , ubicada en una calle principal de alto flujo vehicular . Emplazada en esquina , lo que permite una óp",
     "features": [
@@ -2499,7 +2499,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE VENDE!! Hermosa Casa con Amplio Quincho para disfrutar con tu familia y amigos!! UF 6200 Ubicada en Condominio Alto del Bosque – Valle Volcanes, Puerto Montt Disfruta de la comodidad y seguridad en uno de los barrios más cotizados de Puerto Montt.Esta hermosa casa de dos pisos se encuentra en el ",
     "features": [
@@ -2546,7 +2546,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🔥 Se Arrienda Townhouse familiar en Dos Esteros – a pasos del Colegio San Javier &#8211; Puerto Montt. Si buscas una propiedad moderna, amplia, gran luminosidad, con&nbsp; muy buena conectividad&nbsp; y con una ubicación privilegiada en Puerto Montt, este townhouse es la opción ideal para tu famili",
     "features": [
@@ -2593,7 +2593,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Excelente oportunidad de vivir o invertir en un condominio consolidado, ubicado en sector tranquilo y seguro, con acceso controlado 24/7. ✨ Características del departamento: • 3 dormitorios • 2 baños (uno dormitorio principal ) • Living comedor amplio&nbsp; • Logia • Estacionamiento 🏡 Ideal para fa",
     "features": [
@@ -2640,7 +2640,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Casa de 2 pisos Jardín Austral Independiente en Excelente Ubicación – A minutos de jardines infantiles y colegios : Santo Tomás, Pumahue, British College Se Arrienda amplia casa de dos pisos en consolidado y cotizado barrio residencial. Plena avenida principal. Valor $740.000&nbsp; Dos meses de g",
     "features": [
@@ -2687,7 +2687,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 SE ARRIENDA AMPLIA CASA – JARDÍN AUSTRAL 📍 Sector residencial tranquilo y seguro – Puerto Montt 📅 Disponible en agosto de 2025 ✨ Características del inmueble: • 4 habitaciones amplias • 2 baños • Cocina independiente • Living-comedor • Quincho trasero techado y completamente equipado • Ingreso ",
     "features": [
@@ -2734,7 +2734,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Atención inversionistas!!! . Se vende amplia y hermosa propiedad de 6,85 hectáreas, en la comuna de Calbuco , sector Huayún , ubicada en un entorno natural, tranquilo y frente al mar , con fácil acceso desde la Ruta V-891 . Tiene un Con un diseño estilo chalet y una excelente orientación sur , esta ",
     "features": [
@@ -2781,7 +2781,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "‼️💼 OPORTUNIDAD PARA INVERSIONISTAS –&nbsp; A SÓLO DOS CUADRAS DE UNIVERSIDAD SAN SEBASTIAN&nbsp; SE VENDE SITIO EN ZONA ESTRATÉGICA EN PICHI PELLUCO&nbsp; TERRENO 162M2 ‼️ 📍 Puerto Montt – Entorno Universitario y Residencial Valor $130.000.000 🚀 Puntos Clave para tu inversión: • Ubicación privil",
     "features": [
@@ -2828,7 +2828,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 ¡Imperdible! Departamento 3D+2B en Condominio Bellavista&nbsp; &nbsp;Puerto Montt 🔑 ¡Tu nuevo hogar te espera! Excelente departamento en muy buen estado de conserbacion, en condominio consolidado , a solo 2 cuadras de Líder Cardonal , con locomoción a la puerta (Av. Presidente Ibáñez- Cardonal) ",
     "features": [
@@ -2875,7 +2875,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 SE ARRIENDA CÓMODO DEPARTAMENTO – CONDOMINIO ALTO LA PALOMA PRIMER PISO 🏡 💡 Gastos comunes incluidos en el valor del arriendo 📍 Excelente ubicación, cercano a locomoción , buena conectividad, entorno tranquilo y seguro. Valor Arriendo $420.000 incluido los gastos comunes. Características 🛏️ 2",
     "features": [
@@ -2922,7 +2922,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 ¡ESPECTACULAR CASA EN VENTA – AV. CERRO TRONADOR VALLE VOLCANES! PTO. MONTT 📍 Ubicación Incomparable Ideal para vivienda o negocio, ubicada frente a supermercado y en plena Avenida Cerro Tronador. Excelente conectividad, alto flujo vehicular y cercanía a todos los servicios. ✨ Características de",
     "features": [
@@ -2969,7 +2969,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se vende casa de 2 pisos en zona residencial Jardín Oriente, Puerto Montt. Ubicada en un sector tranquilo y seguro, frente a plaza y juegos, esta acogedora propiedad ofrece todo lo que tu familia necesita. Cercana a colegios, supermercados, farmacias y con excelente conexión a la avenida principal. ",
     "features": [
@@ -3016,7 +3016,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE VENDE CASA EN PARQUE FUNDADORES Excelente ubicación, sector residencial tranquilo y bien conectado. Características de la propiedad: • 3 dormitorios • 2 baños • Cocina • Living-comedor • Estacionamiento techado (30 m²) Superficies: • Terreno: 188,6 m² • Construcción: 120 m² Año 2013 Valor: $98.00",
     "features": [
@@ -3063,7 +3063,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "‼️🏠 SE VENDE Excelente Casa ubicada en Valle Volcanes‼️ 150 m² terreno | 69 m² construidos 🛏 3 dormitorios (principal con walk-in closet) 🛁 2 baños + baño de visitas 🍽 Cocina americana equipada 🔥 Calefacción a Combustión&nbsp; 🚗 Estacionamiento para 2 autos 🌳 Amplio jardín y patio trasero 🔒 ",
     "features": [
@@ -3110,7 +3110,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Se vende acogedora y cómoda casa en Puerta Sur,&nbsp; a solo dos cuadras de&nbsp; Unimarc Tepual 🌿 Ubicada en un sector residencial tranquilo y cerrado , con portón eléctrico y sistema de cámaras de seguridad , esta propiedad ofrece la tranquilidad y seguridad que tu familia busca. Si estás busc",
     "features": [
@@ -3157,7 +3157,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 ¡Oportunidad de inversión en Pichipelluco! Si buscas una propiedad con excelente ubicación , en un sector residencial y de alta demanda , esta casa con terreno es perfecta para ti. Ubicada en Pichipelluco , a pasos de la Universidad San Sebastián , Clínica y con excelente conectividad , ofrece un",
     "features": [
@@ -3204,7 +3204,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se Vende amplia casa en Valle Volcanes, cerca de supermercado, centro comercial, Colegios, Farmacia, Estación de Servicio Copec, etc Casa a pasos de Av Cuarta Terraza / Marcelo Fourcade ✅ 4 Dormitorios ✅ 4 Baños ✅ Cocina Amoblada ✅ Sala Estar Primer piso ✅ Estacionamiento ✅ Bodega 👤Cristian Muñoz +",
     "features": [
@@ -3251,7 +3251,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏢 SE ARRIENDA PROPIEDAD PARA USO&nbsp; COMERCIAL&nbsp; 140 m² / 2 PISOS 📍 Excelente Ubicación&nbsp; en Avenida Principal , con excelente conectividad&nbsp; por&nbsp; Viaducto , este local ofrece gran visibilidad, accesibilidad y comodidad para clientes y colaboradores. Características principales ",
     "features": [
@@ -3298,7 +3298,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 SE ARRIENDA AMPLIA Y ACOGEDORA CASA EN VALLE VOLCANES (RECIÉN PINTADA) 📍 Ubicación privilegiada: En plena avenida principal , a pasos de Supermercado Santa Isabel , colegios y diversos comercios. Excelente visibilidad, conectividad y alto flujo peatonal y vehicular . 🔹 Características de la pro",
     "features": [
@@ -3345,7 +3345,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Cómoda casa ubicada en el sector&nbsp; Jardín Austral , en un entorno residencial tranquilo y familiar, frente a una plaza perfecta para el disfrute de niños y adultos. Excelente conectividad y calidad de vida. 3 dormitorios 3 baños Quincho para reuniones Bodega para leña y sala de lavado Comedor de",
     "features": [
@@ -3392,7 +3392,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "✨ SE ARRIENDA&nbsp; – DEPARTAMENTO FRENTE A JUMBO CON VISTA PANORÁMICA ✨ 📍 Edificio Avant Garden – Puerto Montt 💰 Valor mensual: $420.000 GGCC $80.000 aprox Ubicado en una de las avenidas principales de la ciudad, con excelente conectividad y todo a la mano: supermercado Jumbo, centro de Puerto Mo",
     "features": [
@@ -3439,7 +3439,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "📍 Jardín Oriente, Puerto Montt Se arrienda casa a pasos de Volcán Pichimavida y Av. Austral ¡Ideal para comenzar una nueva etapa en familia! Ubicada en un sector tranquilo y con excelente conectividad, perfecta para quienes valoran la comodidad, seguridad y cercanía a colegios, supermercado y locom",
     "features": [
@@ -3486,7 +3486,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡✨ El hogar que tu familia merece, en Valle Volcanes , Se vende excelente propiedad emplazada en el corazón de Valle Volcanes , un sector consolidado, residencial y con alta demanda , ideal para quienes buscan invertir con rentabilidad y proyección . ✨ Características de la propiedad: ✅ 3 dormitori",
     "features": [
@@ -3533,7 +3533,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡💛 ¡Se vende hermosa casa en Lampa Villa Los Silos (Parque Lampa II) ! 💛🏡 Tu nuevo hogar te está esperando 😍 Cómoda, luminosa y con todo lo que tu familia necesita. ✨ Características: 52 mt construidos / 72 mt de terreno 🛏️ 3 dormitorios 🛁 2 baños 🚗 Entrada para 1 auto 💰 $78.000.000 &nbsp; ",
     "features": [
@@ -3580,7 +3580,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "📢 ¡Se Arrienda Casa Uso Comercial en Av. Los Notros! Ubicación estratégica&nbsp; , zona de alto flujo vehicular, ideal para iniciar o expandir tu negocio. Gran visibilidad y excelente conectividad. 🏠 Casa de 2 pisos ✅ Primer piso habilitado para uso comercial ✅ Estacionamiento con cerámica ✅ 3 dor",
     "features": [
@@ -3627,7 +3627,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Amplia Casa en Excelente Ubicación en Santuario de la Laguna, Valle Volcanes 110 m² construidos / 170 m² de terreno Te presentamos una hermosa y espaciosa casa ubicada en un lugar consolidado y tranquilo, ideal para vivir y disfrutar momentos inolvidables con tu familia. Este inmueble está situado e",
     "features": [
@@ -3674,7 +3674,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Cabaña totalmente equipada en Valle Volcanes – Puerto Montt ¡Tu nuevo espacio te espera! Ideal para profesionales , estudiantes , personas solas o quienes están recién independizándose .&nbsp; Esta acogedora cabaña combina comodidad, privacidad y excelente conectividad. ✨ Características: 2 dormitor",
     "features": [
@@ -3721,7 +3721,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 SE ARRIENDA DEPARTAMENTO NUEVO – 3º PISO 📍 Edificio Vista de Reloncaví Ubicación privilegiada, cercano a Instituto Profesional y Universidad Santo Tomás ✨ Características del departamento: 2 dormitorios 1 baño Living-comedor con cocina integrada Sin bodega Sin estacionamiento Areas de juego y Qu",
     "features": [
@@ -3768,7 +3768,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Departamento en arriendo en Condominio Valle Volcanes 2 Disfruta de vivir en un entorno seguro y tranquilo con vigilancia 24/7 y conserjería, en un condominio que cuenta con amplios espacios comunes para tu comodidad. Características del departamento: 2 dormitorios 1 baño completo Living comedor Coc",
     "features": [
@@ -3815,7 +3815,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏢 SE ARRIENDA DEPARTAMENTO AMOBLADO – 2° PISO 📍 Puerto Varas , Sector Residencial 🔹 Ubicación estratégica : en tranquilo barrio residencial, principales vías de acceso. Ideal para alojamiento ejecutivo. ✨ Características: • 2 dormitorios | 1 baños • Amoblado y equipado • Balcón privado • WiFi + T",
     "features": [
@@ -3862,7 +3862,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¡Gran Oportunidad! Casa Ampliada y Regularizada en Venta – Puerto Montt Tasación bancaria disponible &nbsp; Terreno 215 m2 / Construídos 100 m2 Se vende cómoda propiedad , sector Cardonal, en una zona tranquila, familiar y con excelente conectividad. A pasos de locomoción, supermercados y todo tipo ",
     "features": [
@@ -3909,7 +3909,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Casa en Mirasol, sector Cumbre Alta, Puerto Montt. 80 m² construidos. Acogedora casa nueva de un piso, ubicada en un sector residencial tranquilo, con excelente conectividad. A solo 10 minutos del centro de Puerto Montt, cercana a Av. Los Notros y Crucero, y con acceso a colegios, supermercados, far",
     "features": [
@@ -3956,7 +3956,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "‼️💼 OPORTUNIDAD PARA INVERSIONISTAS – CASA EN ZONA ESTRATÉGICA ‼️ 📍 Pichi Pelluco, Puerto Montt – Terreno 181 m² / Construcción 80 m² 💰 Valor: $95.000.000 + comisión 2% +IVA Actualmente se está retirando lo que no está regularizado, dejando el terreno listo para proyecto. 🏠 Características de la",
     "features": [
@@ -4003,7 +4003,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "💼 OPORTUNIDAD PARA INVERSIONISTAS – SE VENDE SITIO EN ZONA ESTRATÉGICA EN PICHI PELLUCO&nbsp; TERRENO 181 M2 📍 Puerto Montt – Entorno Universitario y Residencial 🚀 Puntos Clave para tu inversión: • Ubicación privilegiada: junto a Universidad San Sebastián (sede Patagonia) y Clínica Los Andes. • A",
     "features": [
@@ -4050,7 +4050,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Excelente departamento ubicado en Condominio Valle Volcanes 4, con estacionamiento. Valor $480.000 , incluye GGCC y estacionamiento. Sector residencial, espacios comunes. Cercano a Supermercados, Colegios, Restaurantes, Farmacias, Strip center etc. Características : Segundo piso Piso Flotante Aire a",
     "features": [
@@ -4097,7 +4097,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 SE ARRIENDA DEPARTAMENTO AMOBLADO – 2º PISO 📍 Edificio Abangarden , frente a Jumbo, a pocas cuadras del centro ✨ Características del departamento: 2 dormitorios 2 baños Living-comedor con cocina integrada Amoblado completo Bodega Estacionamiento 📅 Valor mensual arriendo : $490.000 💰 Gastos com",
     "features": [
@@ -4144,7 +4144,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏡 Se arrienda casa en Valle Volcanes – Puerto Montt Casa ubicada en plena avenida principal , dentro de un sector residencial tranquilo, con excelente conectividad . A pasos de colegios, supermercados, supermercados locales comerciales. ✨ Características: 🏠 Casa de dos pisos 🛏️ 3 dormitorios (pri",
     "features": [
@@ -4191,7 +4191,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE ARRIENDA CASA EN VALLE VOLCANES – USO COMERCIAL O HABITACIONAL Valor Comercial $1.000.000 Valor Residencial $800.000 Ubicada en plena&nbsp; Avenida Principal , a pasos de supermercado Santa Isabel y diversos comercios. Excelente visibilidad y conectividad. Características de la propiedad: • 3 dor",
     "features": [
@@ -4238,7 +4238,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se arrienda hermosa propiedad ubicada en Condominio Altos del Bosque, sector residencial Valle Volcanes, Puerto Montt. El condominio cuenta con conserjería y vigilancia 24/7, espacios comunes y áreas verdes. Cercana a Supermercados, Colegios, Restaurantes, Farmacias, Comercio menor etc. GGCC $100.00",
     "features": [
@@ -4285,7 +4285,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¡EXCELENTE OPORTUNIDAD DE INVERSIÓN! – DPTO. EN VENTA (1° PISO) 🛋 Amoblado Condominio Plaza del Valle, Calle Regimiento – Puerto Montt 📍Ubicado en un sector altamente cotizado, con alta demanda de arriendo, ideal para quienes buscan invertir o vivir cerca de todo. ✨ Características: Departamento e",
     "features": [
@@ -4332,7 +4332,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🏠 ¡Atención Inversionistas!&nbsp; Se Vende en Pichi Pelluco Propiedad&nbsp; &nbsp;2 Departamentos Independientes a Bajo Costo El Valor te sorprenderá , sólo $65.000.000 ¿Buscas una excelente oportunidad para invertir? Esta propiedad es ideal para arriendo anual a estudiantes , ya que se encuentra m",
     "features": [
@@ -4379,7 +4379,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE VENDE DEPARTAMENTO &#8211; CONDOMINIO ALTA VISTA, PUERTO MONTT 55 m² | 2° piso 2 dormitorios 1 b año Cocina equipada con muebles Estacionamiento incluido Loggia Acceso controlado 24/7 Gastos comunes: aprox. 1 UF Exento de contribuciones Excelente ubicación: 5 minutos del centro A pasos de superme",
     "features": [
@@ -4426,7 +4426,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "SE ARRIENDA AMPLIA Y HERMOSA CASA EN VALLE VOLCANES Valor de Arriendo $900.000 📍 Ubicación: Valle Volcanes, cercano a colegios, supermercados y locomoción, sector tranquilo y residencial. Características destacadas: 84 M2 Construcción / 178 m2 Terreno&nbsp; Año construcción 2008&nbsp; •⁠ ⁠4 dormito",
     "features": [
@@ -4472,7 +4472,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Casa en venta en sector Pichi Pelluco, Puerto Montt, ideal para inversión, ubicación privilegiada a pasos de Universidad San Sebastián. A pasos de a cuadras de Universidad San Sebastián (USS) Cercana a farmacias A pocos minutos del centro de Puerto Montt Excelente locomoción y conectividad Caracterí",
     "features": [
@@ -4518,7 +4518,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "En Ciudad de Puerto Montt Atención Inversionistas!, Excelente Oportunidad !! Se Vende Excelente sitio Frente Mall Costanera Ubicación inigualable. $265.000.000 &#8211; 225 m2 rectificados por plano (15,22&#215;15 mt) Contáctanos y agenda tu visita! Cristián M. Agente Inmobiliario +56 9 6192 4570 [ w",
     "features": [
@@ -4565,7 +4565,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "371 m² de terreno | 140 m² aprox construidos | Espectacular sitio con casa amoblada, a pasos de Mall Costanera, en el centro de Puerto Montt&nbsp; &nbsp;Ideal&nbsp; para negocio para&nbsp; todo el año y época estival. Características de la propiedad: 140 m² aprox construidos | 600 m² de terreno 8 do",
     "features": [
@@ -4612,7 +4612,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "EN VENTA – Hermosa Parcela de 5.000 m² 📍 Exclusivo Condominio Rancho Lomas Verdes – Puerto Varas Valor: $190.000.000 ✨ ¡Invierte en calidad de vida y plusvalía! Ubicada a solo 1,7 km del acceso norte de Puerto Varas y a 100 metros de la entrada del condominio , esta parcela con suave lomaje ofrece ",
     "features": [
@@ -4659,7 +4659,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🌿 ESPECTACULAR PARCELA PLANA EN HACIENDA CHAMIZA 🌿 Parcela Terreno plano 5.000 m² Ubicada en Camino principal a pocos metros de acceso principal. ROL PROPIO- URBANIZADA (Agua y luz disponibles) HAY OTRAS PARCELAS Y VALORES DENTRO DEL MISMO CONDOMINIO Condominio cuenta con : Quincho Zona de pesca Z",
     "features": [
@@ -4706,7 +4706,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "¡Haz Realidad Tu Proyecto Familiar! Parcela de 5.000 m² con ROL PROPIO en Senda Sur Si sueñas con tener un espacio propio en un lugar tranquilo, rodeado de naturaleza y con excelente conectividad&#8230; ¡esta parcela es para ti y tu familia! Ubicación: Sector Senda Sur, acceso por Santa María – Puer",
     "features": [
@@ -4753,7 +4753,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "GRAN OPORTUNIDAD &#8211; PARCELA EN COLONIA HUEMPELEO (COMUNA FRESIA) CON TINY HOUSE NUEVA Casa Tiny House : 40 m² construidos, en 2 niveles Terreno : 5.000 m², plano y no inundable Construcción en panel SIP Piso flotante Ventanas termopanel Se vende amoblada y equipada Servicios : Sistema de recole",
     "features": [
@@ -4800,7 +4800,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "🌿 OPORTUNIDAD EN HACIENDA CHAMIZA 🌿 Parcela Terreno plano 5.000 m² Ubicada en Camino principal ROL PROPIO- URBANIZADA (Agua y luz disponibles) Condominio cuenta con : Quincho Zona de pesca Zona de Treking Acceso controlado 24/7 Entorno seguro natural y con espacios comunes 💰 Precio: $65.000.000 (",
     "features": [
@@ -4847,7 +4847,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se Vende parcela en Condominio Privado Mañíos Altos de Pelluco, situada en el sector de Valle Volcanes, Puerto Montt. Precio: $45.000.000. Superficie : 5.008 m2 Factibilidad Luz y Agua Excelente ubicación Ideal para vivir y disfrutar con tu familia, situada en el sector Valle Volcanes, perfecto para",
     "features": [
@@ -4893,7 +4893,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "OFERTA Se Vende parcela 5000 m2 !!!! Raleada y delimitada Cierre Perimetral completo LLEGAR Y CONSTRUIR 📍Excelente ubicación Condominio Hacienda Chamiza Acceso controlado Rodeado de Naturaleza y Bosque ROL propio Características A 15 min del Mall Costanera A 9,5 min de Clínica Los Andes &nbsp;A 6 m",
     "features": [
@@ -4940,7 +4940,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se Vende parcela en Hacienda Chamiza ubicado en condominio privado, rodeado de naturaleza a minutos de Puerto Montt. Valor: $45.000.000 Excelente ubicación Condominio privado con acceso controlado Rodeado de Naturaleza 5.000 m² con lomaje suave ROL propio + servicios básicos Llegar y construir A 15 ",
     "features": [
@@ -4987,7 +4987,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se vende excelente parcela ubicada en Condominio Hacienda Chamiza, con una excelente ubicación en orilla de camino principal en unaa esquina, hace que quede independiente y orilla de camino, con lomaje y precioso bosque en su interior acompañado de un pequeño arroyo que aporta elemento más natural a",
     "features": [
@@ -5034,7 +5034,7 @@ export const PROPERTIES = [
       "role": "Agente Inmobiliario",
       "phone": "+56 9 6192 4570",
       "email": "urbanos@urbanosinmobiliaria.cl",
-      "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80"
+      "image": "/images/agent_cristian.webp"
     },
     "description": "Se Vende parcela con Bosque y arbustos en Condominio Hacienda Chamiza, Puerto Montt. 5.000 m² Excelente ubicación con lomaje suave, bosque y helechos para disfrutar la naturaleza. Condominio privado con acceso controlado Rodeado de Naturaleza ROL propio Con Luz y Agua A 15 min del Mall Costanera A 9",
     "features": [
