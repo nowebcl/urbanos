@@ -67,7 +67,7 @@ export const AGENTS = [
     role: 'Director Comercial & Broker',
     phone: '+56 9 9593 0321',
     email: 'contacto@urbanosgestion.cl',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80'
+    image: '/images/agent_felipe.webp'
   }
 ];
 
