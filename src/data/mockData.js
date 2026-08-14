@@ -60,14 +60,6 @@ export const AGENTS = [
     phone: '+56 9 6192 4570',
     email: 'urbanos@urbanosinmobiliaria.cl',
     image: '/images/agent_cristian.webp'
-  },
-  {
-    id: 2,
-    name: 'Felipe Loyola',
-    role: 'Director Comercial & Broker',
-    phone: '+56 9 9593 0321',
-    email: 'contacto@urbanosgestion.cl',
-    image: '/images/agent_felipe.webp'
   }
 ];
 
