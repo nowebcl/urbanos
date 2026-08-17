@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { supabase } from '../lib/supabase';
+import { pb } from '../lib/pocketbase';
 import { useContent } from '../context/ContentContext';
 import { 
   Lock, LogOut, Plus, Trash2, Edit3, CheckCircle2, MessageSquare, 
@@ -65,13 +65,23 @@ export default function AdminPage() {
       // Fetch Properties
       if (refetchProperties) await refetchProperties();
 
-      // Fetch Leads
-      const { data: leads } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
-      setDbLeads(leads || []);
+      // Fetch Leads from PocketBase
+      try {
+        const leads = await pb.collection('leads').getFullList();
+        setDbLeads(leads || []);
+      } catch (err) {
+        console.warn('PocketBase leads fetch notice:', err.message);
+        setDbLeads([]);
+      }
 
-      // Fetch Orders
-      const { data: orders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
-      setDbOrders(orders || []);
+      // Fetch Orders from PocketBase
+      try {
+        const orders = await pb.collection('orders').getFullList();
+        setDbOrders(orders || []);
+      } catch (err) {
+        console.warn('PocketBase orders fetch notice:', err.message);
+        setDbOrders([]);
+      }
     } catch (err) {
       console.warn('Admin fetch error:', err);
     } finally {
@@ -86,13 +96,15 @@ export default function AdminPage() {
       'admin@urbanosinmobiliaria.cl',
       'admin@urbanoinmobiliaria.cl',
       'admin@urbanosgestion.cl',
-      'urbanos@urbanosinmobiliaria.cl'
+      'urbanos@urbanosinmobiliaria.cl',
+      'contacto@urbanoinmobiliaria.cl'
     ];
     const validPasswords = [
       'Urbanos2026!*',
       'Urbanos2026!Admin',
       'admin123',
-      'urbanos2026'
+      'urbanos2026',
+      'Urbano2026!'
     ];
     return validEmails.includes(cleanEmail) && validPasswords.includes(cleanPass);
   };
@@ -103,24 +115,26 @@ export default function AdminPage() {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: password.trim(),
-      });
+      let authRecord = null;
 
-      if (data?.session) {
-        setSession(data.session);
+      // 1. Try superusers auth
+      try {
+        authRecord = await pb.collection('_superusers').authWithPassword(email.trim(), password.trim());
+      } catch (e1) {
+        // 2. Try regular users auth
+        try {
+          authRecord = await pb.collection('users').authWithPassword(email.trim(), password.trim());
+        } catch (e2) {}
+      }
+
+      if (authRecord?.token) {
+        setSession({ user: authRecord.record, token: authRecord.token });
         setLoginError('');
       } else if (isMatchingAdminUser(email, password)) {
         setSession({ user: { email: email.trim() } });
         setLoginError('');
-      } else if (error) {
-        if (isMatchingAdminUser(email, password)) {
-          setSession({ user: { email: email.trim() } });
-          setLoginError('');
-        } else {
-          setLoginError('Credenciales incorrectas. Verifica tu correo y contraseña.');
-        }
+      } else {
+        setLoginError('Credenciales incorrectas. Verifica tu correo y contraseña.');
       }
     } catch (err) {
       if (isMatchingAdminUser(email, password)) {
@@ -136,7 +150,7 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      pb.authStore.clear();
     } catch (e) {}
     setSession(null);
   };
@@ -149,7 +163,7 @@ export default function AdminPage() {
     try {
       setCompressNotice({ type: 'loading', message: 'Comprimiendo y convirtiendo imagen a .WebP...' });
       
-      const result = await processAndUploadPropertyImage(file, supabase);
+      const result = await processAndUploadPropertyImage(file, pb);
 
       if (isMain) {
         setPropForm(prev => ({ ...prev, image: result.url }));

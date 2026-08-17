@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
-import { sendSupabaseLead } from '../lib/supabaseServices';
+import { sendPocketBaseLead } from '../lib/pocketbaseServices';
 import EditableText from '../components/EditableText';
 
 export default function ContactPage() {
@@ -18,7 +18,7 @@ export default function ContactPage() {
     e.preventDefault();
     setLoading(true);
 
-    await sendSupabaseLead({
+    await sendPocketBaseLead({
       name: formData.name,
       phone: formData.phone,
       email: formData.email,

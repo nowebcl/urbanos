@@ -2,7 +2,7 @@ import React from 'react';
 import { useContent } from '../context/ContentContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Edit3, Lock, LogOut } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { pb } from '../lib/pocketbase';
 
 export default function AdminBar() {
   const { session, setSession, isEditMode, setIsEditMode } = useContent();
@@ -13,7 +13,7 @@ export default function AdminBar() {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      pb.authStore.clear();
     } catch (e) {}
     setIsEditMode(false);
     setSession(null);

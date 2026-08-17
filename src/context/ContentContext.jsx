@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { pb } from '../lib/pocketbase';
 import { PROPERTIES } from '../data/mockData';
 import { formatImageUrl, cleanImageUrl } from '../utils/imageUtils';
 
@@ -42,6 +42,9 @@ export function ContentProvider({ children }) {
 
   const [session, setSession] = useState(() => {
     try {
+      if (pb.authStore.isValid) {
+        return { user: pb.authStore.model, token: pb.authStore.token };
+      }
       const saved = localStorage.getItem('urbanos_admin_session');
       return saved ? JSON.parse(saved) : null;
     } catch (e) {
@@ -53,53 +56,54 @@ export function ContentProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchContentFromSupabase();
-    fetchPropertiesFromSupabase();
+    fetchContentFromPocketBase();
+    fetchPropertiesFromPocketBase();
 
+    // Listen to PocketBase auth state changes
+    const unsubscribeAuth = pb.authStore.onChange((token, model) => {
+      if (token && model) {
+        const newSession = { user: model, token };
+        setSession(newSession);
+        localStorage.setItem('urbanos_admin_session', JSON.stringify(newSession));
+      } else {
+        setSession(null);
+        localStorage.removeItem('urbanos_admin_session');
+      }
+    });
+
+    // Realtime subscription for properties collection
+    let unsubscribeProps = null;
     try {
-      supabase.auth.getSession().then(({ data: { session: supSession } }) => {
-        if (supSession) {
-          setSession(supSession);
-          localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
-        }
+      pb.collection('properties').subscribe('*', () => {
+        fetchPropertiesFromPocketBase();
+      }).then(unsub => {
+        unsubscribeProps = unsub;
+      }).catch(e => {
+        console.warn('Realtime PocketBase subscribe notice:', e);
       });
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, supSession) => {
-        if (supSession) {
-          setSession(supSession);
-          localStorage.setItem('urbanos_admin_session', JSON.stringify(supSession));
-        }
-      });
-
-      // Realtime listener for properties table changes across all clients
-      const propertiesChannel = supabase
-        .channel('public:properties')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'properties' }, () => {
-          fetchPropertiesFromSupabase();
-        })
-        .subscribe();
-
-      return () => {
-        subscription.unsubscribe();
-        supabase.removeChannel(propertiesChannel);
-      };
     } catch (e) {
-      console.warn('Auth subscription notice:', e);
+      console.warn('PocketBase realtime error:', e);
     }
+
+    return () => {
+      if (typeof unsubscribeAuth === 'function') unsubscribeAuth();
+      if (typeof unsubscribeProps === 'function') unsubscribeProps();
+      else if (unsubscribeProps) pb.collection('properties').unsubscribe('*').catch(() => {});
+    };
   }, []);
 
-  const fetchContentFromSupabase = async () => {
+  const fetchContentFromPocketBase = async () => {
     try {
-      const { data } = await supabase.from('site_content').select('*');
-      if (data && data.length > 0) {
+      const records = await pb.collection('site_content').getFullList();
+      if (records && records.length > 0) {
         const dbContent = { ...DEFAULT_CONTENT };
-        data.forEach(item => {
+        records.forEach(item => {
           dbContent[item.key] = item.content;
         });
         setContent(dbContent);
       }
     } catch (err) {
-      console.warn('Supabase site_content query notice:', err);
+      console.warn('PocketBase site_content notice:', err.message);
     } finally {
       setLoading(false);
     }
@@ -123,39 +127,29 @@ export function ContentProvider({ children }) {
     }
   };
 
-  const fetchPropertiesFromSupabase = async () => {
+  const fetchPropertiesFromPocketBase = async () => {
     try {
-      let data = null;
-
-      // Try Vercel Serverless API Proxy first (Avoids browser Mixed Content & SSL handshake blocks)
+      let records = [];
       try {
-        const res = await fetch('/api/properties');
-        if (res.ok) {
-          const apiData = await res.json();
-          if (Array.isArray(apiData) && apiData.length > 0) {
-            data = apiData;
-          }
-        }
-      } catch (e) {}
-
-      // Fallback to Supabase JS Client
-      if (!data) {
-        const { data: dbData } = await supabase.from('properties').select('*').order('id', { ascending: false });
-        data = dbData;
+        records = await pb.collection('properties').getFullList({
+          sort: '-legacy_id'
+        });
+      } catch (e) {
+        console.warn('Error fetching from PocketBase:', e.message);
       }
 
       const deletedIds = getDeletedIds();
       const editedMap = getEditedMap();
-      
       const fixUrl = (url) => formatImageUrl(url);
 
       let dbMapped = [];
-      if (data && data.length > 0) {
-        dbMapped = data.map(p => {
+      if (records && records.length > 0) {
+        dbMapped = records.map(p => {
           const mainImg = fixUrl(p.image);
           const gal = Array.isArray(p.gallery) ? p.gallery.map(fixUrl) : (mainImg ? [mainImg] : []);
           return {
-            id: p.id,
+            id: p.legacy_id || p.id,
+            pb_id: p.id,
             code: p.code,
             slug: p.slug,
             title: p.title,
@@ -173,36 +167,37 @@ export function ContentProvider({ children }) {
             isFeatured: p.is_featured ?? true,
             operation: p.operation || 'Venta',
             type: p.type || 'Departamento',
-            createdAt: p.created_at ? p.created_at.split('T')[0] : '2026-01-01',
+            createdAt: p.created ? p.created.split(' ')[0] : '2026-01-01',
             image: mainImg,
             gallery: gal,
             description: p.description || '',
-            agent: p.agent || {
+            features: Array.isArray(p.features) ? p.features : [],
+            mapCoords: p.map_coords || { lat: -41.4693, lng: -72.9424 },
+            agent: {
               id: 1,
               name: 'Cristián Muñoz',
               role: 'Agente Inmobiliario Senior',
               phone: '+56 9 6192 4570',
               email: 'urbanos@urbanosinmobiliaria.cl',
-              image: '/images/agent_cristian.webp'
+              image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
             }
           };
         });
       }
 
-      // Merge DB properties + initial catalog properties (applying any local edits)
-      const dbIds = new Set(dbMapped.map(p => String(p.id)));
-      
-      const fallbackProps = PROPERTIES
-        .filter(p => !dbIds.has(String(p.id)))
-        .map(p => editedMap[String(p.id)] ? { ...p, ...editedMap[String(p.id)] } : p);
-
-      const combined = [...dbMapped, ...fallbackProps]
-        .filter(p => !deletedIds.has(String(p.id)));
-
-      setProperties(combined);
-      localStorage.setItem('urbanos_custom_properties', JSON.stringify(combined));
+      if (dbMapped.length > 0) {
+        const filtered = dbMapped.filter(p => !deletedIds.has(String(p.id)) && !deletedIds.has(String(p.pb_id)));
+        setProperties(filtered);
+        localStorage.setItem('urbanos_custom_properties', JSON.stringify(filtered));
+      } else {
+        // Fallback to local properties if offline
+        const fallbackProps = PROPERTIES
+          .map(p => editedMap[String(p.id)] ? { ...p, ...editedMap[String(p.id)] } : p)
+          .filter(p => !deletedIds.has(String(p.id)));
+        setProperties(fallbackProps);
+      }
     } catch (err) {
-      console.warn('Supabase fetch properties error:', err);
+      console.warn('PocketBase fetch properties error:', err);
     }
   };
 
@@ -210,16 +205,19 @@ export function ContentProvider({ children }) {
     setContent(prev => ({ ...prev, [key]: newValue }));
 
     try {
-      await supabase
-        .from('site_content')
-        .upsert([{ key, content: newValue, updated_at: new Date().toISOString() }], { onConflict: 'key' });
+      const existing = await pb.collection('site_content').getFirstListItem(`key="${key}"`).catch(() => null);
+      if (existing) {
+        await pb.collection('site_content').update(existing.id, { content: newValue });
+      } else {
+        await pb.collection('site_content').create({ key, content: newValue });
+      }
     } catch (err) {
-      console.error('Connection error saving site content:', err);
+      console.error('Error saving site content to PocketBase:', err);
     }
   };
 
   /**
-   * Save (Insert or Update) a property in state, localStorage, and Supabase DB
+   * Save (Insert or Update) a property in state, localStorage, and PocketBase DB
    */
   const saveProperty = async (propData, editingId = null) => {
     const idToUse = editingId || propData.id || Math.floor(Math.random() * 90000) + 10000;
@@ -253,10 +251,10 @@ export function ContentProvider({ children }) {
 
     // 1. Update React state & localStorage immediately for instant feedback
     setProperties(prev => {
-      const exists = prev.some(p => String(p.id) === String(idToUse));
+      const exists = prev.some(p => String(p.id) === String(idToUse) || String(p.pb_id) === String(idToUse));
       let newList;
       if (exists) {
-        newList = prev.map(p => String(p.id) === String(idToUse) ? { ...p, ...updatedProp } : p);
+        newList = prev.map(p => (String(p.id) === String(idToUse) || String(p.pb_id) === String(idToUse)) ? { ...p, ...updatedProp } : p);
       } else {
         newList = [updatedProp, ...prev];
       }
@@ -264,59 +262,63 @@ export function ContentProvider({ children }) {
       return newList;
     });
 
-    // 2. Persist to Supabase Database via API Proxy or Supabase Client
+    // 2. Persist to PocketBase DB
     try {
-      const dbPayload = {
-        id: parseInt(idToUse, 10) || idToUse,
-        code: propData.code,
-        slug: propData.slug,
+      const pbPayload = {
+        legacy_id: parseInt(idToUse, 10) || 0,
+        code: propData.code || '',
+        slug: propData.slug || '',
         title: propData.title,
-        commune: propData.commune,
-        location: propData.location || propData.address,
-        address: propData.address || propData.location,
-        price_display: propData.priceDisplay || propData.price_display,
+        commune: propData.commune || '',
+        location: propData.location || propData.address || '',
+        address: propData.address || propData.location || '',
+        price_display: propData.priceDisplay || propData.price_display || '',
         price_uf: propData.priceUF ?? propData.price_uf ?? 0,
         price_clp: propData.priceCLP ?? propData.price_clp ?? 0,
         bedrooms: parseInt(propData.bedrooms, 10) || 0,
         bathrooms: parseInt(propData.bathrooms, 10) || 0,
         parking: parseInt(propData.parking, 10) || 2,
-        area: propData.area,
-        land_area: propData.landArea || propData.land_area,
+        area: String(propData.area || ''),
+        land_area: String(propData.landArea || propData.land_area || ''),
         is_featured: propData.isFeatured ?? propData.is_featured ?? true,
-        operation: propData.operation,
-        type: propData.type,
+        operation: propData.operation || 'Venta',
+        type: propData.type || 'Casa',
         image: cleanImageUrl(propData.image),
         gallery: Array.isArray(propData.gallery) ? propData.gallery.map(cleanImageUrl) : propData.gallery,
-        description: propData.description
+        description: propData.description || '',
+        features: Array.isArray(propData.features) ? propData.features : [],
+        map_coords: propData.map_coords || propData.mapCoords || { lat: -41.4693, lng: -72.9424 }
       };
 
-      let savedOk = false;
-
-      // Try Vercel Serverless API proxy first
-      try {
-        const res = await fetch('/api/properties', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(dbPayload)
-        });
-        if (res.ok) {
-          savedOk = true;
-        }
-      } catch (e) {}
-
-      // Fallback to Supabase client
-      if (!savedOk) {
-        await supabase.from('properties').upsert([dbPayload]);
+      // Search if record already exists in PocketBase
+      let existingRecord = null;
+      if (propData.pb_id) {
+        existingRecord = await pb.collection('properties').getOne(propData.pb_id).catch(() => null);
+      }
+      if (!existingRecord && propData.code) {
+        existingRecord = await pb.collection('properties').getFirstListItem(`code="${propData.code}"`).catch(() => null);
+      }
+      if (!existingRecord && propData.slug) {
+        existingRecord = await pb.collection('properties').getFirstListItem(`slug="${propData.slug}"`).catch(() => null);
+      }
+      if (!existingRecord && parseInt(idToUse, 10)) {
+        existingRecord = await pb.collection('properties').getFirstListItem(`legacy_id=${parseInt(idToUse, 10)}`).catch(() => null);
       }
 
-      await fetchPropertiesFromSupabase();
+      if (existingRecord) {
+        await pb.collection('properties').update(existingRecord.id, pbPayload);
+      } else {
+        await pb.collection('properties').create(pbPayload);
+      }
+
+      await fetchPropertiesFromPocketBase();
     } catch (err) {
-      console.warn('Persist property error notice:', err);
+      console.warn('Persist property PocketBase error notice:', err);
     }
   };
 
   /**
-   * Delete a property from state, localStorage, and Supabase DB
+   * Delete a property from state, localStorage, and PocketBase DB
    */
   const deleteProperty = async (id) => {
     const strId = String(id);
@@ -330,24 +332,27 @@ export function ContentProvider({ children }) {
 
     // 1. Delete locally immediately
     setProperties(prev => {
-      const newList = prev.filter(p => String(p.id) !== strId);
+      const newList = prev.filter(p => String(p.id) !== strId && String(p.pb_id) !== strId);
       localStorage.setItem('urbanos_custom_properties', JSON.stringify(newList));
       return newList;
     });
 
-    // 2. Delete from Supabase DB
+    // 2. Delete from PocketBase DB
     try {
-      let deletedOk = false;
+      let recordToDelete = null;
       try {
-        const res = await fetch(`/api/properties?id=${id}`, { method: 'DELETE' });
-        if (res.ok) deletedOk = true;
-      } catch (e) {}
+        recordToDelete = await pb.collection('properties').getOne(id);
+      } catch (e) {
+        if (parseInt(id, 10)) {
+          recordToDelete = await pb.collection('properties').getFirstListItem(`legacy_id=${parseInt(id, 10)}`).catch(() => null);
+        }
+      }
 
-      if (!deletedOk) {
-        await supabase.from('properties').delete().eq('id', id);
+      if (recordToDelete) {
+        await pb.collection('properties').delete(recordToDelete.id);
       }
     } catch (err) {
-      console.warn('Supabase delete property error:', err);
+      console.warn('PocketBase delete property error:', err);
     }
   };
 
@@ -357,6 +362,7 @@ export function ContentProvider({ children }) {
       localStorage.setItem('urbanos_admin_session', JSON.stringify(newSession));
     } else {
       localStorage.removeItem('urbanos_admin_session');
+      pb.authStore.clear();
     }
   };
 
@@ -368,13 +374,13 @@ export function ContentProvider({ children }) {
         properties,
         saveProperty,
         deleteProperty,
-        refetchProperties: fetchPropertiesFromSupabase,
+        refetchProperties: fetchPropertiesFromPocketBase,
         session,
         setSession: setAdminSession,
         isEditMode,
         setIsEditMode,
         loading,
-        refetchContent: fetchContentFromSupabase
+        refetchContent: fetchContentFromPocketBase
       }}
     >
       {children}
