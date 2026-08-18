@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import ContactModal from './components/ContactModal';
 import AdminBar from './components/AdminBar';
+import WhatsAppButton from './components/WhatsAppButton';
 
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
@@ -52,6 +53,9 @@ function AppContent() {
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
       />
+
+      {/* Floating WhatsApp Button (Bottom-Left) */}
+      <WhatsAppButton />
 
     </div>
   );
