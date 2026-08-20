@@ -113,14 +113,14 @@ export function compressAndConvertToWebP(file, options = {}) {
 }
 
 /**
- * Procesa la imagen subida, la comprime a WebP e intenta subirla a Supabase Storage (bucket 'properties').
- * Si Supabase Storage falla o no está configurado, retorna la imagen WebP optimizada en formato Data URL.
+ * Procesa la imagen subida, la comprime a WebP y retorna el archivo optimizado
+ * junto con la URL de vista previa y metadatos de compresión.
  * 
  * @param {File} file Archivo seleccionado
- * @param {Object} supabase Instancia del cliente de Supabase
- * @returns {Promise<{ url: string, savedPercent: number, originalSizeKB: string, compressedSizeKB: string }>}
+ * @param {Object} [pbClient] Instancia de PocketBase
+ * @returns {Promise<{ url: string, file: File, blob: Blob, savedPercent: number, originalSizeKB: string, compressedSizeKB: string }>}
  */
-export async function processAndUploadPropertyImage(file, supabase) {
+export async function processAndUploadPropertyImage(file, pbClient = null) {
   // 1. Comprimir y convertir a WebP localmente
   const compressed = await compressAndConvertToWebP(file, {
     maxWidth: 1600,
@@ -128,54 +128,13 @@ export async function processAndUploadPropertyImage(file, supabase) {
     quality: 0.80
   });
 
-  let finalUrl = compressed.dataUrl;
-
-  // 2. Subir el archivo .webp directamente a Supabase Storage mediante /api/upload
-  try {
-    const res = await fetch('/api/upload', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        imageBase64: compressed.dataUrl,
-        fileName: compressed.file?.name
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.url) {
-        finalUrl = data.url;
-      }
-    }
-  } catch (e) {
-    console.warn('Vercel API upload fallback to Storage client:', e);
-    if (supabase && supabase.storage) {
-      try {
-        const fileName = `prop_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.webp`;
-        const { data, error } = await supabase.storage
-          .from('properties')
-          .upload(fileName, compressed.blob, {
-            contentType: 'image/webp',
-            upsert: true
-          });
-
-        if (!error && data) {
-          const { data: publicData } = supabase.storage
-            .from('properties')
-            .getPublicUrl(fileName);
-
-          if (publicData && publicData.publicUrl) {
-            finalUrl = publicData.publicUrl;
-          }
-        }
-      } catch (err) {}
-    }
-  }
-
   return {
-    url: finalUrl,
+    url: compressed.dataUrl,
+    file: compressed.file,
+    blob: compressed.blob,
     savedPercent: compressed.savedPercent,
     originalSizeKB: compressed.originalSizeKB,
     compressedSizeKB: compressed.compressedSizeKB
   };
 }
+

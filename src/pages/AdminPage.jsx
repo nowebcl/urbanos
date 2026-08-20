@@ -14,8 +14,21 @@ export default function AdminPage() {
   const { session, setSession, properties: dbProperties, saveProperty, deleteProperty, refetchProperties } = useContent();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [loginError, setLoginError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      const savedCreds = localStorage.getItem('urbanos_remembered_admin');
+      if (savedCreds) {
+        const parsed = JSON.parse(savedCreds);
+        if (parsed.email) setEmail(parsed.email);
+        if (parsed.password) setPassword(parsed.password);
+        setRememberMe(true);
+      }
+    } catch (e) {}
+  }, []);
 
   // Admin active tab: 'properties' | 'leads' | 'orders'
   const [activeTab, setActiveTab] = useState('properties');
@@ -33,6 +46,8 @@ export default function AdminPage() {
 
   // Form state for property add/edit
   const [editingProp, setEditingProp] = useState(null);
+  const [mainImageFile, setMainImageFile] = useState(null);
+  const [galleryFiles, setGalleryFiles] = useState([]);
   const [propForm, setPropForm] = useState({
     title: '',
     code: '',
@@ -130,9 +145,19 @@ export default function AdminPage() {
       if (authRecord?.token) {
         setSession({ user: authRecord.record, token: authRecord.token });
         setLoginError('');
+        if (rememberMe) {
+          localStorage.setItem('urbanos_remembered_admin', JSON.stringify({ email: email.trim(), password: password.trim() }));
+        } else {
+          localStorage.removeItem('urbanos_remembered_admin');
+        }
       } else if (isMatchingAdminUser(email, password)) {
         setSession({ user: { email: email.trim() } });
         setLoginError('');
+        if (rememberMe) {
+          localStorage.setItem('urbanos_remembered_admin', JSON.stringify({ email: email.trim(), password: password.trim() }));
+        } else {
+          localStorage.removeItem('urbanos_remembered_admin');
+        }
       } else {
         setLoginError('Credenciales incorrectas. Verifica tu correo y contraseña.');
       }
@@ -140,6 +165,11 @@ export default function AdminPage() {
       if (isMatchingAdminUser(email, password)) {
         setSession({ user: { email: email.trim() } });
         setLoginError('');
+        if (rememberMe) {
+          localStorage.setItem('urbanos_remembered_admin', JSON.stringify({ email: email.trim(), password: password.trim() }));
+        } else {
+          localStorage.removeItem('urbanos_remembered_admin');
+        }
       } else {
         setLoginError('Error de autenticación. Verifica tu conexión o credenciales.');
       }
@@ -157,17 +187,22 @@ export default function AdminPage() {
 
   const [compressNotice, setCompressNotice] = useState(null);
 
-  // Image Upload helper (Compresses & Converts File to WebP and uploads)
+  // Image Upload helper (Compresses & Converts File to WebP and prepares for PocketBase upload)
   const handleFileUpload = async (file, isMain = true) => {
     if (!file) return;
     try {
-      setCompressNotice({ type: 'loading', message: 'Comprimiendo y convirtiendo imagen a .WebP...' });
+      setCompressNotice({ type: 'loading', message: 'Comprimiendo y preparando imagen .WebP...' });
       
       const result = await processAndUploadPropertyImage(file, pb);
 
       if (isMain) {
+        setMainImageFile(result.file || file);
         setPropForm(prev => ({ ...prev, image: result.url }));
       } else {
+        setGalleryFiles(prev => {
+          if (prev.length >= 7) return prev;
+          return [...prev, result.file || file];
+        });
         setPropForm(prev => {
           if (prev.gallery.length >= 7) {
             alert('Máximo 7 imágenes en la galería');
@@ -184,12 +219,14 @@ export default function AdminPage() {
 
       setTimeout(() => setCompressNotice(null), 6000);
     } catch (err) {
-      console.error('Error optimizando imagen:', err);
+      console.error('Error procesando imagen:', err);
       const reader = new FileReader();
       reader.onloadend = () => {
         if (isMain) {
+          setMainImageFile(file);
           setPropForm(prev => ({ ...prev, image: reader.result }));
         } else {
+          setGalleryFiles(prev => [...prev, file]);
           setPropForm(prev => ({ ...prev, gallery: [...prev.gallery, reader.result] }));
         }
       };
@@ -198,6 +235,7 @@ export default function AdminPage() {
   };
 
   const removeGalleryImage = (index) => {
+    setGalleryFiles(prev => prev.filter((_, i) => i !== index));
     setPropForm(prev => ({
       ...prev,
       gallery: prev.gallery.filter((_, i) => i !== index)
@@ -206,6 +244,8 @@ export default function AdminPage() {
 
   const handleEditPropertyClick = (prop) => {
     setEditingProp(prop);
+    setMainImageFile(null);
+    setGalleryFiles([]);
     
     // Parse currency & numeric value
     let valStr = '';
@@ -247,6 +287,8 @@ export default function AdminPage() {
 
   const handleResetForm = () => {
     setEditingProp(null);
+    setMainImageFile(null);
+    setGalleryFiles([]);
     setPropForm({
       title: '',
       code: '',
@@ -317,12 +359,20 @@ export default function AdminPage() {
         description: propForm.description
       };
 
-      await saveProperty(payload, editingProp ? editingProp.id : null);
+      await saveProperty(
+        payload, 
+        editingProp ? (editingProp.pb_id || editingProp.id) : null,
+        {
+          mainFile: mainImageFile,
+          galleryFiles: galleryFiles
+        }
+      );
+
       handleResetForm();
-      alert(editingProp ? '¡Propiedad actualizada exitosamente!' : '¡Propiedad publicada exitosamente!');
+      alert(editingProp ? '¡Propiedad actualizada exitosamente en la base de datos!' : '¡Propiedad publicada exitosamente en la base de datos!');
     } catch (err) {
       console.error(err);
-      alert('Error al guardar la propiedad.');
+      alert(err.message || 'Error al guardar la propiedad en la base de datos.');
     } finally {
       setLoading(false);
     }
@@ -330,7 +380,12 @@ export default function AdminPage() {
 
   const handleDeleteProperty = async (id) => {
     if (window.confirm('¿Seguro que deseas eliminar esta propiedad?')) {
-      await deleteProperty(id);
+      try {
+        await deleteProperty(id);
+        alert('Propiedad eliminada correctamente.');
+      } catch (err) {
+        alert(err.message || 'Error al eliminar la propiedad.');
+      }
     }
   };
 
@@ -366,29 +421,47 @@ export default function AdminPage() {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4 relative z-10">
+          <form onSubmit={handleLogin} className="space-y-4 relative z-10" autoComplete="on">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Correo Electrónico</label>
+              <label htmlFor="admin_email" className="block text-xs font-semibold text-slate-300 mb-1.5">Correo Electrónico</label>
               <input
+                id="admin_email"
+                name="username"
                 type="email"
                 required
+                autoComplete="username email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Correo electrónico"
+                placeholder="admin@urbanosinmobiliaria.cl"
                 className="w-full px-4 py-3 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Contraseña</label>
+              <label htmlFor="admin_password" className="block text-xs font-semibold text-slate-300 mb-1.5">Contraseña</label>
               <input
+                id="admin_password"
+                name="password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Contraseña"
                 className="w-full px-4 py-3 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
               />
+            </div>
+
+            <div className="flex items-center justify-between py-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 text-orange-500 bg-[#080c14] border-slate-700 rounded focus:ring-orange-500 cursor-pointer"
+                />
+                <span className="text-xs text-slate-300">Recordar usuario y contraseña</span>
+              </label>
             </div>
 
             <button
@@ -885,7 +958,7 @@ export default function AdminPage() {
                     className="w-full py-4 btn-orange rounded-xl text-xs font-black uppercase tracking-wider shadow-xl flex items-center justify-center gap-2 transition-all transform active:scale-[0.99]"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{loading ? 'Guardando en Supabase...' : (editingProp ? 'Guardar Cambios de Propiedad' : 'Publicar Propiedad')}</span>
+                    <span>{loading ? 'Guardando en Base de Datos...' : (editingProp ? 'Guardar Cambios de Propiedad' : 'Publicar Propiedad')}</span>
                   </button>
 
                 </form>

@@ -145,8 +145,18 @@ export function ContentProvider({ children }) {
       let dbMapped = [];
       if (records && records.length > 0) {
         dbMapped = records.map(p => {
-          const mainImg = fixUrl(p.image);
-          const gal = Array.isArray(p.gallery) ? p.gallery.map(fixUrl) : (mainImg ? [mainImg] : []);
+          let mainImg = fixUrl(p.image);
+          if ((!mainImg || mainImg.startsWith('data:')) && Array.isArray(p.photos) && p.photos.length > 0) {
+            mainImg = pb.files.getURL(p, p.photos[0]);
+          }
+          
+          let gal = Array.isArray(p.gallery) ? p.gallery.filter(Boolean).map(fixUrl) : [];
+          if ((!gal || gal.length === 0) && Array.isArray(p.photos) && p.photos.length > 0) {
+            gal = p.photos.map(ph => pb.files.getURL(p, ph));
+          } else if (gal.length === 0 && mainImg) {
+            gal = [mainImg];
+          }
+
           return {
             id: p.legacy_id || p.id,
             pb_id: p.id,
@@ -217,127 +227,127 @@ export function ContentProvider({ children }) {
   };
 
   /**
-   * Save (Insert or Update) a property in state, localStorage, and PocketBase DB
+   * Save (Insert or Update) a property in PocketBase DB and local state
    */
-  const saveProperty = async (propData, editingId = null) => {
+  const saveProperty = async (propData, editingId = null, imageFiles = {}) => {
     const idToUse = editingId || propData.id || Math.floor(Math.random() * 90000) + 10000;
     
-    // Normalized property object for local components
-    const updatedProp = {
-      ...propData,
-      id: idToUse,
-      priceDisplay: propData.price_display || propData.priceDisplay,
-      priceUF: propData.price_uf ?? propData.priceUF ?? 0,
-      priceCLP: propData.price_clp ?? propData.priceCLP ?? 0,
-      landArea: propData.land_area || propData.landArea,
-      isFeatured: propData.is_featured ?? propData.isFeatured ?? true
-    };
-
-    // Store in edited properties map
-    try {
-      const editedMap = getEditedMap();
-      editedMap[String(idToUse)] = updatedProp;
-      localStorage.setItem('urbanos_edited_properties', JSON.stringify(editedMap));
-    } catch (e) {}
-
-    // Ensure removed from deleted set if re-saved
-    try {
-      const deletedIds = getDeletedIds();
-      if (deletedIds.has(String(idToUse))) {
-        deletedIds.delete(String(idToUse));
-        localStorage.setItem('urbanos_deleted_properties', JSON.stringify(Array.from(deletedIds)));
-      }
-    } catch (e) {}
-
-    // 1. Update React state & localStorage immediately for instant feedback
-    setProperties(prev => {
-      const exists = prev.some(p => String(p.id) === String(idToUse) || String(p.pb_id) === String(idToUse));
-      let newList;
-      if (exists) {
-        newList = prev.map(p => (String(p.id) === String(idToUse) || String(p.pb_id) === String(idToUse)) ? { ...p, ...updatedProp } : p);
-      } else {
-        newList = [updatedProp, ...prev];
-      }
-      localStorage.setItem('urbanos_custom_properties', JSON.stringify(newList));
-      return newList;
-    });
-
-    // 2. Persist to PocketBase DB
-    try {
-      const pbPayload = {
-        legacy_id: parseInt(idToUse, 10) || 0,
-        code: propData.code || '',
-        slug: propData.slug || '',
-        title: propData.title,
-        commune: propData.commune || '',
-        location: propData.location || propData.address || '',
-        address: propData.address || propData.location || '',
-        price_display: propData.priceDisplay || propData.price_display || '',
-        price_uf: propData.priceUF ?? propData.price_uf ?? 0,
-        price_clp: propData.priceCLP ?? propData.price_clp ?? 0,
-        bedrooms: parseInt(propData.bedrooms, 10) || 0,
-        bathrooms: parseInt(propData.bathrooms, 10) || 0,
-        parking: parseInt(propData.parking, 10) || 2,
-        area: String(propData.area || ''),
-        land_area: String(propData.landArea || propData.land_area || ''),
-        is_featured: propData.isFeatured ?? propData.is_featured ?? true,
-        operation: propData.operation || 'Venta',
-        type: propData.type || 'Casa',
-        image: cleanImageUrl(propData.image),
-        gallery: Array.isArray(propData.gallery) ? propData.gallery.map(cleanImageUrl) : propData.gallery,
-        description: propData.description || '',
-        features: Array.isArray(propData.features) ? propData.features : [],
-        map_coords: propData.map_coords || propData.mapCoords || { lat: -41.4693, lng: -72.9424 }
-      };
-
-      // Search if record already exists in PocketBase
-      let existingRecord = null;
-      if (propData.pb_id) {
-        existingRecord = await pb.collection('properties').getOne(propData.pb_id).catch(() => null);
-      }
-      if (!existingRecord && propData.code) {
-        existingRecord = await pb.collection('properties').getFirstListItem(`code="${propData.code}"`).catch(() => null);
-      }
-      if (!existingRecord && propData.slug) {
-        existingRecord = await pb.collection('properties').getFirstListItem(`slug="${propData.slug}"`).catch(() => null);
-      }
-      if (!existingRecord && parseInt(idToUse, 10)) {
-        existingRecord = await pb.collection('properties').getFirstListItem(`legacy_id=${parseInt(idToUse, 10)}`).catch(() => null);
-      }
-
-      if (existingRecord) {
-        await pb.collection('properties').update(existingRecord.id, pbPayload);
-      } else {
-        await pb.collection('properties').create(pbPayload);
-      }
-
-      await fetchPropertiesFromPocketBase();
-    } catch (err) {
-      console.warn('Persist property PocketBase error notice:', err);
+    // Search if record already exists in PocketBase
+    let existingRecord = null;
+    if (propData.pb_id) {
+      existingRecord = await pb.collection('properties').getOne(propData.pb_id).catch(() => null);
     }
+    if (!existingRecord && propData.code) {
+      existingRecord = await pb.collection('properties').getFirstListItem(`code="${propData.code}"`).catch(() => null);
+    }
+    if (!existingRecord && propData.slug) {
+      existingRecord = await pb.collection('properties').getFirstListItem(`slug="${propData.slug}"`).catch(() => null);
+    }
+    if (!existingRecord && parseInt(idToUse, 10)) {
+      existingRecord = await pb.collection('properties').getFirstListItem(`legacy_id=${parseInt(idToUse, 10)}`).catch(() => null);
+    }
+
+    const formData = new FormData();
+    formData.append('legacy_id', parseInt(idToUse, 10) || 0);
+    formData.append('code', propData.code || '');
+    formData.append('slug', propData.slug || '');
+    formData.append('title', propData.title || '');
+    formData.append('commune', propData.commune || '');
+    formData.append('location', propData.location || propData.address || '');
+    formData.append('address', propData.address || propData.location || '');
+    formData.append('price_display', propData.priceDisplay || propData.price_display || '');
+    formData.append('price_uf', propData.priceUF ?? propData.price_uf ?? 0);
+    formData.append('price_clp', propData.priceCLP ?? propData.price_clp ?? 0);
+    formData.append('bedrooms', parseInt(propData.bedrooms, 10) || 0);
+    formData.append('bathrooms', parseInt(propData.bathrooms, 10) || 0);
+    formData.append('parking', parseInt(propData.parking, 10) || 2);
+    formData.append('area', String(propData.area || ''));
+    formData.append('land_area', String(propData.landArea || propData.land_area || ''));
+    formData.append('is_featured', propData.isFeatured ?? propData.is_featured ?? true);
+    formData.append('operation', propData.operation || 'Venta');
+    formData.append('type', propData.type || 'Casa');
+    formData.append('description', propData.description || '');
+
+    // Handle files: append any new WebP files/blobs to 'photos' field
+    const { mainFile, galleryFiles } = imageFiles;
+
+    if (mainFile instanceof Blob || mainFile instanceof File) {
+      const fileName = mainFile.name || `photo_main_${Date.now()}.webp`;
+      formData.append('photos', mainFile, fileName);
+    }
+
+    if (Array.isArray(galleryFiles)) {
+      galleryFiles.forEach((gFile, idx) => {
+        if (gFile instanceof Blob || gFile instanceof File) {
+          const gName = gFile.name || `photo_gal_${idx}_${Date.now()}.webp`;
+          formData.append('photos', gFile, gName);
+        }
+      });
+    }
+
+    // Only save string image/gallery if it's a real HTTP/HTTPS URL (NOT data: base64!)
+    const cleanMainImg = cleanImageUrl(propData.image);
+    if (cleanMainImg && !cleanMainImg.startsWith('data:') && !cleanMainImg.startsWith('blob:')) {
+      formData.append('image', cleanMainImg);
+    }
+    if (Array.isArray(propData.gallery)) {
+      const cleanGallery = propData.gallery
+        .map(cleanImageUrl)
+        .filter(url => url && !url.startsWith('data:') && !url.startsWith('blob:'));
+      if (cleanGallery.length > 0) {
+        formData.append('gallery', JSON.stringify(cleanGallery));
+      }
+    }
+
+    let savedRecord;
+    try {
+      if (existingRecord) {
+        savedRecord = await pb.collection('properties').update(existingRecord.id, formData);
+      } else {
+        savedRecord = await pb.collection('properties').create(formData);
+      }
+    } catch (err) {
+      console.error('PocketBase save error details:', err.data || err);
+      const detailMsg = err.data?.message || err.message || 'Error de conexión con la base de datos.';
+      throw new Error(`Fallo al guardar en la base de datos: ${detailMsg}`);
+    }
+
+    // If new photos were attached, obtain their public URLs and update image/gallery fields in PB
+    if (savedRecord && Array.isArray(savedRecord.photos) && savedRecord.photos.length > 0) {
+      try {
+        const photoUrls = savedRecord.photos.map(pName => pb.files.getURL(savedRecord, pName));
+        const mainUrl = photoUrls[0];
+        
+        let existingGallery = [];
+        if (Array.isArray(savedRecord.gallery)) {
+          existingGallery = savedRecord.gallery.filter(u => u && !u.startsWith('data:'));
+        }
+        const combinedGallery = Array.from(new Set([...photoUrls, ...existingGallery]));
+
+        await pb.collection('properties').update(savedRecord.id, {
+          image: mainUrl,
+          gallery: combinedGallery
+        });
+        
+        savedRecord.image = mainUrl;
+        savedRecord.gallery = combinedGallery;
+      } catch (err) {
+        console.warn('Notice updating resolved photo URLs:', err);
+      }
+    }
+
+    // Refresh properties from remote DB to keep state perfectly synchronized
+    await fetchPropertiesFromPocketBase();
+    return savedRecord;
   };
 
   /**
-   * Delete a property from state, localStorage, and PocketBase DB
+   * Delete a property from PocketBase DB and state
    */
   const deleteProperty = async (id) => {
     const strId = String(id);
 
-    // Save to deleted IDs set so it never reappears
-    try {
-      const deletedIds = getDeletedIds();
-      deletedIds.add(strId);
-      localStorage.setItem('urbanos_deleted_properties', JSON.stringify(Array.from(deletedIds)));
-    } catch (e) {}
-
-    // 1. Delete locally immediately
-    setProperties(prev => {
-      const newList = prev.filter(p => String(p.id) !== strId && String(p.pb_id) !== strId);
-      localStorage.setItem('urbanos_custom_properties', JSON.stringify(newList));
-      return newList;
-    });
-
-    // 2. Delete from PocketBase DB
+    // 1. Delete from PocketBase DB
     try {
       let recordToDelete = null;
       try {
@@ -352,8 +362,24 @@ export function ContentProvider({ children }) {
         await pb.collection('properties').delete(recordToDelete.id);
       }
     } catch (err) {
-      console.warn('PocketBase delete property error:', err);
+      console.error('PocketBase delete property error:', err);
+      throw new Error(`Error al eliminar propiedad de la base de datos: ${err.message}`);
     }
+
+    // 2. Save to deleted IDs set & update local state
+    try {
+      const deletedIds = getDeletedIds();
+      deletedIds.add(strId);
+      localStorage.setItem('urbanos_deleted_properties', JSON.stringify(Array.from(deletedIds)));
+    } catch (e) {}
+
+    setProperties(prev => {
+      const newList = prev.filter(p => String(p.id) !== strId && String(p.pb_id) !== strId);
+      localStorage.setItem('urbanos_custom_properties', JSON.stringify(newList));
+      return newList;
+    });
+
+    await fetchPropertiesFromPocketBase();
   };
 
   const setAdminSession = (newSession) => {

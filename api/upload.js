@@ -1,9 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
+import PocketBase from 'pocketbase';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || 'http://supabasekong-k8uxuxm98fmrtwpwpum8j0ju.2.25.98.151.sslip.io';
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc4NjA2NzA0MCwiZXhwIjo0OTQxNzQwNjQwLCJyb2xlIjoiYW5vbiJ9.j0axRrrcuCa4NzkFCM_XcRSHHn_nsDoNyDbEg7Nv7iQ';
-
-const supabase = createClient(supabaseUrl, supabaseKey);
+const pbUrl = process.env.VITE_POCKETBASE_URL || 'https://urbano.noweb.tech';
 
 export default async function handler(req, res) {
   // CORS Headers
@@ -24,6 +21,9 @@ export default async function handler(req, res) {
   }
 
   try {
+    const pb = new PocketBase(pbUrl);
+    pb.autoCancellation(false);
+
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
     const { imageBase64, fileName: customName } = body || {};
 
@@ -34,48 +34,32 @@ export default async function handler(req, res) {
     // Extract raw base64 data
     const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, '');
     const buffer = Buffer.from(base64Data, 'base64');
+    const fileName = customName || `upload_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.webp`;
 
-    // Generate unique filename in properties bucket
-    const fileName = customName || `prop_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.webp`;
+    const blob = new Blob([buffer], { type: 'image/webp' });
+    const formData = new FormData();
+    formData.append('title', `Upload ${Date.now()}`);
+    formData.append('photos', blob, fileName);
 
-    // 1. Ensure bucket 'properties' exists
-    try {
-      await supabase.storage.createBucket('properties', { public: true });
-    } catch (e) {}
-
-    // 2. Upload file buffer to Supabase Storage bucket 'properties'
-    const { data, error } = await supabase.storage
-      .from('properties')
-      .upload(fileName, buffer, {
-        contentType: 'image/webp',
-        upsert: true
-      });
-
-    if (error) {
-      console.error('Supabase Storage Upload Error:', error);
-      // Fallback: return dataUrl if bucket upload is restricted
-      return res.status(200).json({ 
-        url: imageBase64, 
-        storageFileName: fileName,
-        notice: 'Guardado como DataURL por política de storage' 
+    const record = await pb.collection('properties').create(formData);
+    if (record && record.photos && record.photos.length > 0) {
+      const publicUrl = pb.files.getURL(record, record.photos[0]);
+      return res.status(200).json({
+        success: true,
+        url: publicUrl,
+        fileName,
+        recordId: record.id
       });
     }
 
-    // 3. Obtain public URL from Supabase Storage
-    const { data: publicData } = supabase.storage
-      .from('properties')
-      .getPublicUrl(fileName);
-
-    const publicUrl = publicData?.publicUrl || `${supabaseUrl}/storage/v1/object/public/properties/${fileName}`;
-
-    return res.status(200).json({ 
-      success: true, 
-      url: publicUrl, 
-      fileName 
+    return res.status(200).json({
+      success: true,
+      url: imageBase64,
+      fileName
     });
-
   } catch (err) {
-    console.error('Vercel API Upload Error:', err);
+    console.error('API Upload Error:', err);
     return res.status(500).json({ error: err.message || 'Error al subir imagen' });
   }
 }
+
