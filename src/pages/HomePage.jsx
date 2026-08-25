@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HeroSection from '../components/HeroSection';
+import CityExplorer from '../components/CityExplorer';
 import StatsBar from '../components/StatsBar';
 import PropertiesGrid from '../components/PropertiesGrid';
 import CtaBanner from '../components/CtaBanner';

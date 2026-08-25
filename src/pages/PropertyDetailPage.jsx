@@ -315,16 +315,26 @@ export default function PropertyDetailPage() {
 
               {/* Agent Card */}
               {property.agent && (
-                <div className="pt-4 border-t border-slate-800 flex items-center gap-3">
+                <div className="pt-4 border-t border-slate-800 flex items-center gap-3.5">
                   <img
-                    src={property.agent.image}
-                    alt={property.agent.name}
-                    className="w-12 h-12 rounded-full object-cover border border-slate-700 shrink-0"
+                    src={
+                      property.agent.image && !property.agent.image.includes('unsplash')
+                        ? property.agent.image
+                        : '/images/agent_cristian.webp'
+                    }
+                    alt={property.agent.name || 'Cristián Muñoz'}
+                    className="w-14 h-14 rounded-2xl object-cover border-2 border-orange-500/70 shadow-md shrink-0"
                   />
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Agente a cargo</span>
-                    <span className="text-xs font-bold text-white block">{property.agent.name}</span>
-                    <span className="text-[11px] text-teal-400 block">{property.agent.phone}</span>
+                  <div className="space-y-0.5">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Agente a cargo</span>
+                    <span className="text-xs font-bold text-white block">{property.agent.name || 'Cristián Muñoz'}</span>
+                    <span className="text-[11px] text-teal-400 font-semibold block">{property.agent.role || 'Agente Inmobiliario Senior'}</span>
+                    <a
+                      href={`tel:${(property.agent.phone || '+56961924570').replace(/\s+/g, '')}`}
+                      className="text-[11px] text-slate-300 hover:text-white block"
+                    >
+                      {property.agent.phone || '+56 9 6192 4570'}
+                    </a>
                   </div>
                 </div>
               )}

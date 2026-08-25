@@ -34,7 +34,23 @@ export function ContentProvider({ children }) {
   const [properties, setProperties] = useState(() => {
     try {
       const saved = localStorage.getItem('urbanos_custom_properties');
-      return saved ? JSON.parse(saved) : PROPERTIES;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed.map(p => {
+          if (p.agent && (!p.agent.image || p.agent.image.includes('unsplash'))) {
+            return {
+              ...p,
+              agent: {
+                ...p.agent,
+                image: '/images/agent_cristian.webp',
+                role: 'Agente Inmobiliario Senior'
+              }
+            };
+          }
+          return p;
+        });
+      }
+      return PROPERTIES;
     } catch (e) {
       return PROPERTIES;
     }
@@ -189,7 +205,7 @@ export function ContentProvider({ children }) {
               role: 'Agente Inmobiliario Senior',
               phone: '+56 9 6192 4570',
               email: 'urbanos@urbanosinmobiliaria.cl',
-              image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
+              image: '/images/agent_cristian.webp'
             }
           };
         });
@@ -260,7 +276,7 @@ export function ContentProvider({ children }) {
     formData.append('price_clp', propData.priceCLP ?? propData.price_clp ?? 0);
     formData.append('bedrooms', parseInt(propData.bedrooms, 10) || 0);
     formData.append('bathrooms', parseInt(propData.bathrooms, 10) || 0);
-    formData.append('parking', parseInt(propData.parking, 10) || 2);
+    formData.append('parking', propData.parking !== undefined && !isNaN(parseInt(propData.parking, 10)) ? parseInt(propData.parking, 10) : 0);
     formData.append('area', String(propData.area || ''));
     formData.append('land_area', String(propData.landArea || propData.land_area || ''));
     formData.append('is_featured', propData.isFeatured ?? propData.is_featured ?? true);

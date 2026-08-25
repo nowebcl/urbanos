@@ -16,7 +16,7 @@ export const CITIES = [
   {
     id: 'frutillar',
     name: 'Frutillar',
-    subtitle: 'Tradición Alemana',
+    subtitle: 'Tradición & Lago Llanquihue',
     image: '/images/frutillar.jpg',
     count: 32
   },
@@ -26,6 +26,27 @@ export const CITIES = [
     subtitle: 'Región de Los Lagos',
     image: '/images/osorno.jpg',
     count: 45
+  },
+  {
+    id: 'chiloe',
+    name: 'Chiloé',
+    subtitle: 'Castro, Ancud & Alrededores',
+    image: 'https://images.unsplash.com/photo-1578852612716-854e527abf2e?auto=format&fit=crop&w=800&q=80',
+    count: 24
+  },
+  {
+    id: 'v-region',
+    name: 'V Región',
+    subtitle: 'Viña del Mar, Quilpué & Costa',
+    image: 'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?auto=format&fit=crop&w=800&q=80',
+    count: 38
+  },
+  {
+    id: 'region-metropolitana',
+    name: 'Región Metropolitana',
+    subtitle: 'Santiago & Zona Central',
+    image: 'https://images.unsplash.com/photo-1589802829985-817e51171b92?auto=format&fit=crop&w=800&q=80',
+    count: 52
   }
 ];
 
@@ -46,8 +67,8 @@ export const STATS = [
     icon: 'Smile'
   },
   {
-    number: '32 comunas',
-    label: 'Cobertura',
+    number: 'Los Lagos, V Región & RM',
+    label: 'Osorno, Chiloé, V Región & RM',
     icon: 'MapPin'
   }
 ];

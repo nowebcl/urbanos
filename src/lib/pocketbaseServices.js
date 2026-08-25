@@ -43,7 +43,7 @@ export async function getPocketBaseProperties() {
         role: 'Agente Inmobiliario Senior',
         phone: '+56 9 6192 4570',
         email: 'urbanos@urbanosinmobiliaria.cl',
-        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80'
+        image: '/images/agent_cristian.webp'
       },
       description: p.description,
       features: Array.isArray(p.features) ? p.features : [],

@@ -41,8 +41,27 @@ export default function CatalogPage() {
       // Operation
       if (operation !== 'All' && item.operation !== operation) return false;
 
-      // City / Commune
-      if (city !== 'All' && !item.commune.toLowerCase().includes(city.toLowerCase())) return false;
+      // City / Commune / Region
+      if (city !== 'All') {
+        const cLower = city.toLowerCase();
+        const propCommune = (item.commune || '').toLowerCase();
+        const propLocation = (item.location || '').toLowerCase();
+        const propAddress = (item.address || '').toLowerCase();
+
+        let matches = propCommune.includes(cLower) || propLocation.includes(cLower) || propAddress.includes(cLower);
+
+        if (!matches) {
+          if (cLower.includes('metropolitana') || cLower.includes('santiago')) {
+            matches = propCommune.includes('santiago') || propLocation.includes('metropolitana') || propLocation.includes('santiago') || propCommune.includes('las condes') || propCommune.includes('providencia') || propCommune.includes('ñuñoa') || propCommune.includes('lo barnechea') || propCommune.includes('vitacura') || propCommune.includes('la florida') || propCommune.includes('maipú') || propCommune.includes('colina') || propCommune.includes('chicureo');
+          } else if (cLower.includes('v región') || cLower.includes('valparaíso') || cLower.includes('valparaiso') || cLower.includes('viña')) {
+            matches = propCommune.includes('valparaíso') || propCommune.includes('valparaiso') || propCommune.includes('viña') || propCommune.includes('quilpué') || propCommune.includes('quilpue') || propCommune.includes('villa alemana') || propCommune.includes('concón') || propCommune.includes('concon') || propLocation.includes('v región') || propLocation.includes('valparaíso');
+          } else if (cLower.includes('chiloé') || cLower.includes('chiloe')) {
+            matches = propCommune.includes('castro') || propCommune.includes('ancud') || propCommune.includes('chiloé') || propCommune.includes('chiloe') || propCommune.includes('quellón') || propCommune.includes('quellon') || propCommune.includes('dalcahue') || propLocation.includes('chiloé') || propLocation.includes('chiloe');
+          }
+        }
+
+        if (!matches) return false;
+      }
 
       // Type
       if (type !== 'All' && item.type !== type) return false;

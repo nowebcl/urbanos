@@ -28,8 +28,8 @@ export default function StatsBar() {
     {
       keyNum: 'stat4_num',
       keyLabel: 'stat4_label',
-      defaultNum: 'Los Lagos & RM',
-      defaultLabel: 'Cobertura Regional',
+      defaultNum: 'Los Lagos, V Región & RM',
+      defaultLabel: 'Osorno, Chiloé, V Región & RM',
       Icon: MapPin
     }
   ];
@@ -51,10 +51,10 @@ export default function StatsBar() {
                 </div>
                 {/* Editable Text */}
                 <div className="min-w-0">
-                  <div className="text-lg sm:text-2xl font-extrabold text-white tracking-tight leading-tight truncate">
+                  <div className="text-base sm:text-lg md:text-xl font-extrabold text-white tracking-tight leading-tight">
                     <EditableText contentKey={stat.keyNum} fallback={stat.defaultNum} />
                   </div>
-                  <div className="text-xs text-slate-400 font-medium mt-0.5 truncate">
+                  <div className="text-xs text-slate-400 font-medium mt-0.5 leading-snug">
                     <EditableText contentKey={stat.keyLabel} fallback={stat.defaultLabel} />
                   </div>
                 </div>

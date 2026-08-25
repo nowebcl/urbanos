@@ -4,7 +4,8 @@ import { useContent } from '../context/ContentContext';
 import { 
   Lock, LogOut, Plus, Trash2, Edit3, CheckCircle2, MessageSquare, 
   FileText, Building, Tag, ShieldCheck, RefreshCw, ExternalLink, 
-  UploadCloud, Image as ImageIcon, Search, ChevronDown, ChevronUp, X, Send
+  UploadCloud, Image as ImageIcon, Search, ChevronDown, ChevronUp, X, Send,
+  Car, Bed, Bath
 } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { compressAndConvertToWebP, processAndUploadPropertyImage } from '../lib/imageOptimizer';
@@ -271,6 +272,7 @@ export default function AdminPage() {
       currency: curr,
       bedrooms: (prop.bedrooms !== undefined ? prop.bedrooms : 3).toString(),
       bathrooms: (prop.bathrooms !== undefined ? prop.bathrooms : 2).toString(),
+      parking: (prop.parking !== undefined ? prop.parking : 1).toString(),
       area: prop.area || '',
       landArea: prop.land_area || prop.landArea || '',
       image: prop.image || '',
@@ -301,6 +303,7 @@ export default function AdminPage() {
       currency: 'UF',
       bedrooms: '3',
       bathrooms: '2',
+      parking: '1',
       area: '',
       landArea: '',
       image: '',
@@ -348,7 +351,7 @@ export default function AdminPage() {
         price_clp: priceCLP,
         bedrooms: parseInt(propForm.bedrooms, 10) || 0,
         bathrooms: parseInt(propForm.bathrooms, 10) || 0,
-        parking: 2,
+        parking: parseInt(propForm.parking, 10) || 0,
         area: propForm.area ? (propForm.area.includes('m²') ? propForm.area : `${propForm.area}m²`) : '120m²',
         land_area: propForm.landArea ? (propForm.landArea.includes('m²') ? propForm.landArea : `${propForm.landArea}m²`) : '300m²',
         is_featured: propForm.isFeatured,
@@ -768,11 +771,11 @@ export default function AdminPage() {
                     </div>
                   </div>
 
-                  {/* Dormitorios + Baños */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Dormitorios + Baños + Estacionamientos */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-                        <Building className="w-3.5 h-3.5 text-slate-400" />
+                        <Bed className="w-3.5 h-3.5 text-slate-400" />
                         <span>Dormitorios</span>
                       </label>
                       <input
@@ -786,7 +789,7 @@ export default function AdminPage() {
 
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-                        <Building className="w-3.5 h-3.5 text-slate-400" />
+                        <Bath className="w-3.5 h-3.5 text-slate-400" />
                         <span>Baños</span>
                       </label>
                       <input
@@ -794,6 +797,21 @@ export default function AdminPage() {
                         min="0"
                         value={propForm.bathrooms}
                         onChange={(e) => setPropForm({ ...propForm, bathrooms: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                        <Car className="w-3.5 h-3.5 text-teal-400" />
+                        <span>Estacionamientos</span>
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={propForm.parking}
+                        onChange={(e) => setPropForm({ ...propForm, parking: e.target.value })}
+                        placeholder="Ej: 1 o 2"
                         className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500 transition-colors"
                       />
                     </div>
