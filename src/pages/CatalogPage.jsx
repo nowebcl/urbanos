@@ -373,9 +373,6 @@ export default function CatalogPage() {
                       <div className="text-xl sm:text-2xl font-extrabold text-[#f97316] tracking-tight">
                         {prop.priceDisplay}
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">
-                        Aprox. ${prop.priceCLP.toLocaleString('es-CL')} CLP
-                      </div>
                     </div>
 
                     <div className="pt-3 border-t border-slate-800/90 flex flex-wrap items-center gap-3.5 text-slate-300 text-xs font-semibold">

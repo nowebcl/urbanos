@@ -109,14 +109,9 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
 
             <div className="sm:text-right bg-slate-900/80 p-4 rounded-2xl border border-slate-800 shrink-0">
               <div className="text-2xl sm:text-3xl font-extrabold text-orange-400">
-                {currencyMode === 'UF'
+                {property.priceDisplay || (currencyMode === 'UF'
                   ? `UF ${property.priceUF.toLocaleString('es-CL')}`
-                  : `$${property.priceCLP.toLocaleString('es-CL')}`}
-              </div>
-              <div className="text-xs text-slate-400 font-medium mt-1">
-                {currencyMode === 'UF'
-                  ? `$${property.priceCLP.toLocaleString('es-CL')} CLP`
-                  : `UF ${property.priceUF.toLocaleString('es-CL')}`}
+                  : `$${property.priceCLP.toLocaleString('es-CL')}`)}
               </div>
             </div>
           </div>

@@ -119,9 +119,6 @@ export default function PropertyDetailPage() {
             <div className="text-2xl sm:text-4xl font-extrabold text-[#f97316]">
               {property.priceDisplay}
             </div>
-            <div className="text-xs text-slate-400 font-medium mt-1">
-              Aprox. ${property.priceCLP.toLocaleString('es-CL')} CLP
-            </div>
           </div>
         </div>
 
