@@ -297,7 +297,7 @@ def build_pdf(filename="Informe_Tecnico_Entrega_Urbanos.pdf"):
     story.append(Paragraph("B. Publicación de Nuevas Propiedades", h2_style))
     story.append(Paragraph(
         "• <b>Formulario Principal:</b> Ingrese título del inmueble, código interno (ej: URB-1050), tipo de operación (Venta / Arriendo), tipo de inmueble (Casa, Departamento, Parcela, etc.), precio en UF o CLP, ubicación y características (dormitorios, baños, estacionamientos, superficie útil y total).<br/>"
-        "• <b>Subida de Imágenes Automática:</b> Arrastre o seleccione la imagen principal y hasta 7 fotografías adicionales para la galería. El sistema cuenta con un <b>optimizador inteligente integrado</b> que convierte y comprime automáticamente los archivos al formato ultraligero <b>.WebP</b>, reduciendo el peso hasta en un 80% sin perder calidad visual.<br/>"
+        "• <b>Subida de Imágenes Automática:</b> Arrastre o seleccione la imagen principal y hasta 10 fotografías adicionales para la galería. El sistema cuenta con un <b>optimizador inteligente integrado</b> que convierte y comprime automáticamente los archivos al formato ultraligero <b>.WebP</b>, reduciendo el peso hasta en un 80% sin perder calidad visual.<br/>"
         "• <b>Publicación Instantánea:</b> Al presionar <i>'Publicar Propiedad'</i>, el inmueble queda disponible de inmediato en la base de datos y visible en el catálogo web.",
         body_style
     ))
@@ -395,5 +395,10 @@ def build_pdf(filename="Informe_Tecnico_Entrega_Urbanos.pdf"):
     print(f"PDF successfully created: {filename}")
 
 if __name__ == '__main__':
-    output_pdf = sys.argv[1] if len(sys.argv) > 1 else "Informe_Tecnico_Entrega_Urbanos.pdf"
-    build_pdf(output_pdf)
+    out_dir = os.path.dirname(__file__)
+    pdf_public = os.path.join(out_dir, "public", "Informe_Tecnico_Entrega_Urbanos_Inmobiliaria.pdf")
+    build_pdf(pdf_public)
+    
+    pdf_root = os.path.join(out_dir, "Informe_Tecnico_Entrega_Urbanos_Inmobiliaria.pdf")
+    build_pdf(pdf_root)
+

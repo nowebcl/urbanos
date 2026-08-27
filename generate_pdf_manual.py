@@ -283,7 +283,7 @@ def create_manual_pdf(filename):
 
     photo_steps = [
         "<b>1. Imagen Principal (Portada):</b> Selecciona o arrastra tu imagen. <b>¡Compresión WebP Automática!</b> El sistema reduce automáticamente el peso de la foto entre 75% y 90% convirtiéndola a WebP de ultra-alta velocidad sin perder calidad.",
-        "<b>2. Galería de Fotos (Imágenes adicionales):</b> Puedes subir hasta 5 fotos adicionales de dormitorios, cocina, terraza y áreas comunes. Todas serán optimizadas automáticamente.",
+        "<b>2. Galería de Fotos (Imágenes adicionales):</b> Puedes subir hasta 10 fotos adicionales de dormitorios, cocina, terraza y áreas comunes. Todas serán optimizadas automáticamente.",
         "<b>3. Recomendación de imágenes:</b> Utiliza fotografías tomadas en formato horizontal (apaisado), con buena luz natural y en orden (primero vista/living, luego cocina y dormitorios)."
     ]
     for step in photo_steps:

@@ -201,12 +201,11 @@ export default function AdminPage() {
         setPropForm(prev => ({ ...prev, image: result.url }));
       } else {
         setGalleryFiles(prev => {
-          if (prev.length >= 7) return prev;
+          if (prev.length >= 10) return prev;
           return [...prev, result.file || file];
         });
         setPropForm(prev => {
-          if (prev.gallery.length >= 7) {
-            alert('Máximo 7 imágenes en la galería');
+          if (prev.gallery.length >= 10) {
             return prev;
           }
           return { ...prev, gallery: [...prev.gallery, result.url] };
@@ -227,11 +226,38 @@ export default function AdminPage() {
           setMainImageFile(file);
           setPropForm(prev => ({ ...prev, image: reader.result }));
         } else {
-          setGalleryFiles(prev => [...prev, file]);
-          setPropForm(prev => ({ ...prev, gallery: [...prev.gallery, reader.result] }));
+          setGalleryFiles(prev => {
+            if (prev.length >= 10) return prev;
+            return [...prev, file];
+          });
+          setPropForm(prev => {
+            if (prev.gallery.length >= 10) return prev;
+            return { ...prev, gallery: [...prev.gallery, reader.result] };
+          });
         }
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleMultipleGalleryUpload = async (fileList) => {
+    const MAX_GALLERY = 10;
+    const currentCount = propForm.gallery.length;
+    const availableSlots = MAX_GALLERY - currentCount;
+
+    if (availableSlots <= 0) {
+      alert(`Ya has alcanzado el límite máximo de ${MAX_GALLERY} imágenes en la galería.`);
+      return;
+    }
+
+    let selectedFiles = Array.from(fileList || []);
+    if (selectedFiles.length > availableSlots) {
+      alert(`Seleccionaste ${selectedFiles.length} fotos. Solo se agregarán las primeras ${availableSlots} para respetar el límite de ${MAX_GALLERY} fotos.`);
+      selectedFiles = selectedFiles.slice(0, availableSlots);
+    }
+
+    for (const f of selectedFiles) {
+      await handleFileUpload(f, false);
     }
   };
 
@@ -911,8 +937,9 @@ export default function AdminPage() {
 
                   {/* Galería de Imágenes Dropzone */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Galería de Imágenes (Máximo 7 imágenes)
+                    <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
+                      <span>Galería de Imágenes (Hasta 10 fotografías)</span>
+                      <span className="text-slate-500 font-normal text-[11px]">{propForm.gallery?.length || 0}/10 fotos</span>
                     </label>
 
                     <div className="relative border-2 border-dashed border-slate-700 hover:border-teal-500/60 bg-[#080c14] rounded-2xl p-5 text-center transition-colors">
@@ -921,8 +948,8 @@ export default function AdminPage() {
                         accept="image/*"
                         multiple
                         onChange={(e) => {
-                          const files = Array.from(e.target.files);
-                          files.forEach(f => handleFileUpload(f, false));
+                          handleMultipleGalleryUpload(e.target.files);
+                          e.target.value = '';
                         }}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       />
@@ -931,8 +958,8 @@ export default function AdminPage() {
                         <div className="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center mx-auto">
                           <UploadCloud className="w-5 h-5" />
                         </div>
-                        <p className="text-xs font-semibold text-slate-300">Subir imágenes para galería (Máximo 7)</p>
-                        <p className="text-[10px] text-slate-500">Puedes seleccionar hasta 7 fotos adicionales para el slider deslizante.</p>
+                        <p className="text-xs font-semibold text-slate-300">Subir imágenes para galería (Máximo 10)</p>
+                        <p className="text-[10px] text-slate-500">Puedes seleccionar hasta 10 fotos adicionales para el slider deslizante.</p>
                       </div>
                     </div>
 
