@@ -1,15 +1,46 @@
 import React, { useState } from 'react';
 import { Building, ShieldCheck, FileText, Wrench, Wallet, CheckCircle2, Send, Phone, MessageSquare, Tag, FileSignature, Calendar, Award } from 'lucide-react';
 import EditableText from '../components/EditableText';
+import { sendPocketBaseOrder } from '../lib/pocketbaseServices';
 
 export default function ServicesPage() {
   const [activeTab, setActiveTab] = useState('captacion'); // 'captacion' | 'oferta'
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    commune: '',
+    operation_type: 'vender',
+    property_type: 'casa',
+    details: '',
+    target_property: '',
+    offer_amount: ''
+  });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    try {
+      await sendPocketBaseOrder({
+        order_type: activeTab,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        commune: formData.commune,
+        operation_type: activeTab === 'captacion' ? formData.operation_type : 'oferta_compra',
+        property_type: activeTab === 'captacion' ? formData.property_type : '',
+        details: formData.details,
+        offer_amount: activeTab === 'oferta' ? formData.offer_amount : '',
+        target_property: activeTab === 'oferta' ? formData.target_property : ''
+      });
+    } catch (err) {
+      console.warn('PocketBase order submission notice:', err);
+    }
+    setLoading(false);
     setFormSubmitted(true);
-    setTimeout(() => setFormSubmitted(false), 5000);
+    setTimeout(() => setFormSubmitted(false), 7000);
   };
 
   return (
@@ -121,7 +152,7 @@ export default function ServicesPage() {
 
             <div className="pt-6 border-t border-slate-800/80 mt-6">
               <a
-                href="https://wa.me/56995930321?text=Hola,%20quisiera%20solicitar%20información%20sobre%20la%20Administración%20de%20Arriendos%20de%20mi%20propiedad"
+                href="https://wa.me/56961924570?text=Hola,%20quisiera%20solicitar%20información%20sobre%20la%20Administración%20de%20Arriendos%20de%20mi%20propiedad"
                 target="_blank"
                 rel="noreferrer"
                 className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-orange-500 bg-orange-500/10 text-white text-xs sm:text-sm font-bold hover:bg-orange-500/20 transition-all"
@@ -231,13 +262,13 @@ export default function ServicesPage() {
 
               <div className="pt-4 border-t border-slate-800 flex flex-col sm:flex-row gap-3">
                 <a
-                  href="https://wa.me/56995930321?text=Hola,%20quisiera%20consultar%20por%20servicios%20de%20gestión%20inmobiliaria"
+                  href="https://wa.me/56961924570?text=Hola,%20quisiera%20consultar%20por%20servicios%20de%20gestión%20inmobiliaria"
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-teal-500/50 bg-teal-500/10 text-teal-300 font-bold text-xs hover:bg-teal-500/20 transition-all"
                 >
                   <MessageSquare className="w-4 h-4 text-teal-400" />
-                  <span>WhatsApp de Atención Directa (+56 9 9593 0321)</span>
+                  <span>WhatsApp de Atención Directa (+56 9 6192 4570)</span>
                 </a>
               </div>
             </div>
@@ -252,12 +283,23 @@ export default function ServicesPage() {
               </div>
 
               {formSubmitted ? (
-                <div className="py-12 text-center space-y-3 bg-teal-500/10 border border-teal-500/30 rounded-2xl p-6">
+                <div className="py-12 text-center space-y-4 bg-teal-500/10 border border-teal-500/30 rounded-2xl p-6">
                   <CheckCircle2 className="w-12 h-12 text-teal-400 mx-auto" />
                   <h4 className="text-lg font-bold text-white">¡Solicitud Registrada con Éxito!</h4>
                   <p className="text-xs text-slate-300 max-w-md mx-auto">
-                    Un asesor especializado de Urbanos se pondrá en contacto contigo en breve.
+                    Tu solicitud ha sido guardada en nuestra base de datos. Un asesor especializado de Urbanos se pondrá en contacto contigo a la brevedad.
                   </p>
+                  <div className="pt-2">
+                    <a
+                      href={`https://wa.me/56961924570?text=${encodeURIComponent(`Hola, acabo de enviar mi ${activeTab === 'captacion' ? 'Orden de Venta / Captación' : 'Oferta de Compra'} a nombre de ${formData.name}.`)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-500 text-slate-950 font-bold text-xs shadow-lg hover:bg-teal-400 transition-all"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      <span>Avisar también por WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -267,6 +309,8 @@ export default function ServicesPage() {
                       <input
                         type="text"
                         required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Ej: Pedro Morales"
                         className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
                       />
@@ -277,6 +321,8 @@ export default function ServicesPage() {
                       <input
                         type="tel"
                         required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         placeholder="+56 9 1234 5678"
                         className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
                       />
@@ -289,6 +335,8 @@ export default function ServicesPage() {
                       <input
                         type="email"
                         required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="correo@ejemplo.com"
                         className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
                       />
@@ -299,6 +347,8 @@ export default function ServicesPage() {
                       <input
                         type="text"
                         required
+                        value={formData.commune}
+                        onChange={(e) => setFormData({ ...formData, commune: e.target.value })}
                         placeholder="Ej: Puerto Varas, Puerto Montt..."
                         className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
                       />
@@ -310,7 +360,11 @@ export default function ServicesPage() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-xs font-semibold text-slate-300 mb-1">Tipo de Operación *</label>
-                          <select className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500">
+                          <select
+                            value={formData.operation_type}
+                            onChange={(e) => setFormData({ ...formData, operation_type: e.target.value })}
+                            className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
+                          >
                             <option value="vender">Quiero Vender</option>
                             <option value="arrendar">Quiero Arrendar</option>
                             <option value="administrar">Administración de Arriendo</option>
@@ -319,7 +373,11 @@ export default function ServicesPage() {
 
                         <div>
                           <label className="block text-xs font-semibold text-slate-300 mb-1">Tipo de Propiedad *</label>
-                          <select className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500">
+                          <select
+                            value={formData.property_type}
+                            onChange={(e) => setFormData({ ...formData, property_type: e.target.value })}
+                            className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
+                          >
                             <option value="casa">Casa</option>
                             <option value="departamento">Departamento</option>
                             <option value="terreno">Terreno / Parcela</option>
@@ -332,6 +390,8 @@ export default function ServicesPage() {
                         <label className="block text-xs font-semibold text-slate-300 mb-1">Dirección / Características</label>
                         <textarea
                           rows={3}
+                          value={formData.details}
+                          onChange={(e) => setFormData({ ...formData, details: e.target.value })}
                           placeholder="Indica m², dorms, valor pretendido..."
                           className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-orange-500"
                         />
@@ -345,6 +405,8 @@ export default function ServicesPage() {
                           <input
                             type="text"
                             required
+                            value={formData.target_property}
+                            onChange={(e) => setFormData({ ...formData, target_property: e.target.value })}
                             placeholder="Ej: URB-1047 o Dirección"
                             className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-teal-400"
                           />
@@ -355,6 +417,8 @@ export default function ServicesPage() {
                           <input
                             type="text"
                             required
+                            value={formData.offer_amount}
+                            onChange={(e) => setFormData({ ...formData, offer_amount: e.target.value })}
                             placeholder="Ej: UF 5.000 o $190.000.000"
                             className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-teal-400"
                           />
@@ -365,6 +429,8 @@ export default function ServicesPage() {
                         <label className="block text-xs font-semibold text-slate-300 mb-1">Condiciones de Pago / Comentarios</label>
                         <textarea
                           rows={3}
+                          value={formData.details}
+                          onChange={(e) => setFormData({ ...formData, details: e.target.value })}
                           placeholder="Ej: Contado, Crédito Hipotecario Aprobado en Banco X, fecha estimada de escrituración..."
                           className="w-full px-4 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs focus:outline-none focus:border-teal-400"
                         />
@@ -374,10 +440,11 @@ export default function ServicesPage() {
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 btn-orange rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg"
+                    disabled={loading}
+                    className="w-full py-3.5 btn-orange rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-lg disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
-                    <span>{activeTab === 'captacion' ? 'Enviar Orden de Venta' : 'Presentar Oferta de Compra'}</span>
+                    <span>{loading ? 'Enviando...' : activeTab === 'captacion' ? 'Enviar Orden de Venta' : 'Presentar Oferta de Compra'}</span>
                   </button>
                 </form>
               )}

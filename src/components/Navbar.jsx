@@ -49,7 +49,7 @@ export default function Navbar({ onOpenContact }) {
           {/* Call / WhatsApp Actions */}
           <div className="flex items-center gap-3.5">
             <a
-              href="https://wa.me/56995930321?text=Hola,%20quisiera%20consultar%20por%20sus%20servicios%20en%20Urbanos%20Gestión%20Inmobiliaria"
+              href="https://wa.me/56961924570?text=Hola,%20quisiera%20consultar%20por%20sus%20servicios%20en%20Urbanos%20Gestión%20Inmobiliaria"
               target="_blank"
               rel="noreferrer"
               className="hidden lg:flex items-center gap-2 px-5 py-2.5 rounded-full border border-teal-500/40 bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 text-xs sm:text-sm font-bold transition-all shadow-lg"
@@ -99,7 +99,7 @@ export default function Navbar({ onOpenContact }) {
           
           <div className="pt-4 border-t border-slate-800/80 flex flex-col gap-3">
             <a
-              href="https://wa.me/56995930321?text=Hola,%20quisiera%20consultar%20por%20propiedades%20en%20Urbanos"
+              href="https://wa.me/56961924570?text=Hola,%20quisiera%20consultar%20por%20propiedades%20en%20Urbanos"
               target="_blank"
               rel="noreferrer"
               className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-teal-500/50 bg-teal-500/10 text-teal-300 font-bold text-xs sm:text-sm"

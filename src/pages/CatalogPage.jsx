@@ -206,6 +206,7 @@ export default function CatalogPage() {
                 <option value="All">Todas</option>
                 <option value="Venta">Venta</option>
                 <option value="Arriendo">Arriendo</option>
+                <option value="Reservado">Reservado</option>
                 <option value="Vendido">Vendido</option>
                 <option value="Arrendado">Arrendado</option>
               </select>
@@ -343,6 +344,7 @@ export default function CatalogPage() {
                         </span>
                       )}
                       <span className={`px-2.5 py-1 rounded font-extrabold text-[10px] tracking-wider uppercase shadow ${
+                        prop.operation === 'Reservado' ? 'bg-amber-500 text-slate-950 font-black' :
                         prop.operation === 'Vendido' ? 'bg-red-600 text-white' :
                         prop.operation === 'Arrendado' ? 'bg-purple-600 text-white' :
                         prop.operation === 'Arriendo' ? 'bg-blue-600 text-white' :

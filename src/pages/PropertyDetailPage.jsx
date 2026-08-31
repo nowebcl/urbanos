@@ -4,6 +4,7 @@ import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, MessageSquare, Send, A
 import { PROPERTIES } from '../data/mockData';
 import { useContent } from '../context/ContentContext';
 import { handleImageError } from '../utils/imageUtils';
+import { sendPocketBaseLead } from '../lib/pocketbaseServices';
 
 export default function PropertyDetailPage() {
   const { properties } = useContent();
@@ -17,6 +18,7 @@ export default function PropertyDetailPage() {
   const [activeImage, setActiveImage] = useState(property?.image);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [leadForm, setLeadForm] = useState({ name: '', phone: '', email: '', message: '' });
 
   // Related properties (same commune or operation)
   const relatedProperties = allProps.filter(
@@ -31,16 +33,27 @@ export default function PropertyDetailPage() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormSubmitted(true);
+    try {
+      await sendPocketBaseLead({
+        name: leadForm.name,
+        phone: leadForm.phone,
+        email: leadForm.email,
+        message: leadForm.message || `Hola, me interesa la propiedad "${property.title}" (Código: ${property.code}). Quisiera coordinar una visita.`,
+        propertyCode: property.code
+      });
+    } catch (err) {
+      console.warn('Lead submission notice:', err);
+    }
     setTimeout(() => setFormSubmitted(false), 4000);
   };
 
   const whatsappMessage = encodeURIComponent(
     `Hola, me interesa la propiedad "${property.title}" (Código: ${property.code}). Quisiera solicitar una visita.`
   );
-  const whatsappUrl = `https://wa.me/56995930321?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/56961924570?text=${whatsappMessage}`;
 
   const renderSpecValue = (val) => {
     if (val && val !== '0' && val !== 0 && val !== '-') {
@@ -92,6 +105,7 @@ export default function PropertyDetailPage() {
                 </span>
               )}
               <span className={`px-2.5 py-0.5 rounded font-extrabold text-[10px] uppercase ${
+                property.operation === 'Reservado' ? 'bg-amber-500 text-slate-950 font-black' :
                 property.operation === 'Vendido' ? 'bg-red-600 text-white' :
                 property.operation === 'Arrendado' ? 'bg-purple-600 text-white' :
                 property.operation === 'Arriendo' ? 'bg-blue-600 text-white' :
@@ -253,6 +267,8 @@ export default function PropertyDetailPage() {
                     <input
                       type="text"
                       required
+                      value={leadForm.name}
+                      onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
                       placeholder="Ej: Juan Pérez"
                       className="w-full px-3.5 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
@@ -263,6 +279,8 @@ export default function PropertyDetailPage() {
                     <input
                       type="tel"
                       required
+                      value={leadForm.phone}
+                      onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
                       placeholder="+56 9 1234 5678"
                       className="w-full px-3.5 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
@@ -273,6 +291,8 @@ export default function PropertyDetailPage() {
                     <input
                       type="email"
                       required
+                      value={leadForm.email}
+                      onChange={(e) => setLeadForm({ ...leadForm, email: e.target.value })}
                       placeholder="nombre@ejemplo.com"
                       className="w-full px-3.5 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
@@ -282,7 +302,8 @@ export default function PropertyDetailPage() {
                     <label className="block text-[11px] font-semibold text-slate-300 mb-1">Mensaje</label>
                     <textarea
                       rows={3}
-                      defaultValue={`Hola, me interesa la propiedad "${property.title}" (Código: ${property.code}). Quisiera coordinar una visita.`}
+                      value={leadForm.message || `Hola, me interesa la propiedad "${property.title}" (Código: ${property.code}). Quisiera coordinar una visita.`}
+                      onChange={(e) => setLeadForm({ ...leadForm, message: e.target.value })}
                       className="w-full px-3.5 py-2.5 bg-[#080c14] border border-slate-700 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
                   </div>

@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
 import { X, MapPin, Bed, Bath, Car, Maximize2, Phone, Mail, CheckCircle2, Send, Clock } from 'lucide-react';
 import { handleImageError } from '../utils/imageUtils';
+import { sendPocketBaseLead } from '../lib/pocketbaseServices';
 
 export default function PropertyModal({ property, onClose, currencyMode }) {
   const [activeImage, setActiveImage] = useState(property?.image);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [leadForm, setLeadForm] = useState({ name: '', phone: '', message: '' });
 
   if (!property) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormSubmitted(true);
+    try {
+      await sendPocketBaseLead({
+        name: leadForm.name,
+        phone: leadForm.phone,
+        email: '',
+        message: leadForm.message || `Hola, me interesa la propiedad "${property.title}" (${property.location}). Quisiera más información.`,
+        propertyCode: property.code
+      });
+    } catch (err) {
+      console.warn('Lead submit notice:', err);
+    }
     setTimeout(() => {
       setFormSubmitted(false);
     }, 4000);
@@ -46,6 +59,7 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
               </span>
             )}
             <span className={`px-2.5 py-0.5 rounded text-xs font-extrabold uppercase ${
+              property.operation === 'Reservado' ? 'bg-amber-500 text-slate-950 font-black' :
               property.operation === 'Vendido' ? 'bg-red-600 text-white' :
               property.operation === 'Arrendado' ? 'bg-purple-600 text-white' :
               property.operation === 'Arriendo' ? 'bg-blue-600 text-white' :
@@ -182,6 +196,8 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
                     <input
                       type="text"
                       required
+                      value={leadForm.name}
+                      onChange={(e) => setLeadForm({ ...leadForm, name: e.target.value })}
                       placeholder="Tu nombre completo"
                       className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
@@ -190,6 +206,8 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
                     <input
                       type="tel"
                       required
+                      value={leadForm.phone}
+                      onChange={(e) => setLeadForm({ ...leadForm, phone: e.target.value })}
                       placeholder="Teléfono (+56 9 ...)"
                       className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
@@ -197,7 +215,8 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
                   <div>
                     <textarea
                       rows={3}
-                      defaultValue={`Hola, me interesa la propiedad "${property.title}" (${property.location}). Quisiera más información.`}
+                      value={leadForm.message || `Hola, me interesa la propiedad "${property.title}" (${property.location}). Quisiera más información.`}
+                      onChange={(e) => setLeadForm({ ...leadForm, message: e.target.value })}
                       className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-xs placeholder-slate-500 focus:outline-none focus:border-orange-500"
                     />
                   </div>
@@ -214,11 +233,11 @@ export default function PropertyModal({ property, onClose, currencyMode }) {
 
               <div className="pt-3 border-t border-slate-800/80 flex flex-col gap-2 text-xs">
                 <a
-                  href="tel:+56995930321"
+                  href="tel:+56961924570"
                   className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-700 bg-slate-800/60 text-slate-200 hover:text-white font-semibold hover:border-slate-500 transition-colors"
                 >
                   <Phone className="w-3.5 h-3.5 text-teal-400" />
-                  <span>Llamar al +56 9 9593 0321</span>
+                  <span>Llamar al +56 9 6192 4570</span>
                 </a>
               </div>
             </div>

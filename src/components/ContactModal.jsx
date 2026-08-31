@@ -1,14 +1,30 @@
 import React, { useState } from 'react';
 import { X, Phone, Mail, MessageSquare, Check, Sparkles } from 'lucide-react';
+import { sendPocketBaseLead } from '../lib/pocketbaseServices';
 
 export default function ContactModal({ isOpen, onClose }) {
   const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    interest: 'comprar'
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
+    try {
+      await sendPocketBaseLead({
+        name: formData.name,
+        phone: formData.phone,
+        email: '',
+        message: `[${formData.interest.toUpperCase()}] Contacto Directo desde Ventana Modal`
+      });
+    } catch (err) {
+      console.warn('Lead submit notice:', err);
+    }
     setTimeout(() => {
       setSubmitted(false);
       onClose();
@@ -47,7 +63,7 @@ export default function ContactModal({ isOpen, onClose }) {
             </div>
             <h4 className="text-xl font-bold text-white">¡Solicitud recibida!</h4>
             <p className="text-sm text-slate-300">
-              Un asesor de nuestro equipo en el Sur de Chile se pondrá en contacto contigo en breve.
+              Un asesor de nuestro equipo se pondrá en contacto contigo en breve.
             </p>
           </div>
         ) : (
@@ -56,14 +72,14 @@ export default function ContactModal({ isOpen, onClose }) {
             {/* Quick Call Actions */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <a
-                href="tel:+56995930321"
+                href="tel:+56961924570"
                 className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-orange-500/50 bg-orange-500/10 text-white font-semibold text-xs hover:bg-orange-500/20 transition-colors"
               >
                 <Phone className="w-4 h-4 text-orange-400" />
-                <span>+56 9 9593 0321</span>
+                <span>+56 9 6192 4570</span>
               </a>
               <a
-                href="https://wa.me/56995930321?text=Hola,%20quisiera%20consultar%20por%20una%20propiedad%20en%20Urbanos"
+                href="https://wa.me/56961924570?text=Hola,%20quisiera%20consultar%20por%20una%20propiedad%20en%20Urbanos"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-teal-500/50 bg-teal-500/10 text-white font-semibold text-xs hover:bg-teal-500/20 transition-colors"
@@ -86,6 +102,8 @@ export default function ContactModal({ isOpen, onClose }) {
                 <input
                   type="text"
                   required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Ej: María González"
                   className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-orange-500"
                 />
@@ -96,6 +114,8 @@ export default function ContactModal({ isOpen, onClose }) {
                 <input
                   type="tel"
                   required
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="+56 9 1234 5678"
                   className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-orange-500"
                 />
@@ -103,7 +123,11 @@ export default function ContactModal({ isOpen, onClose }) {
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">¿Qué necesitas?</label>
-                <select className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-orange-500">
+                <select
+                  value={formData.interest}
+                  onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white text-sm focus:outline-none focus:border-orange-500"
+                >
                   <option value="comprar">Quiero Comprar una propiedad</option>
                   <option value="vender">Quiero Vender mi propiedad</option>
                   <option value="arrendar">Quiero Arrendar</option>

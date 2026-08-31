@@ -725,6 +725,7 @@ export default function AdminPage() {
                       >
                         <option value="Venta">Venta</option>
                         <option value="Arriendo">Arriendo</option>
+                        <option value="Reservado">Reservado</option>
                         <option value="Vendido">Vendido</option>
                         <option value="Arrendado">Arrendado</option>
                       </select>
@@ -1058,6 +1059,7 @@ export default function AdminPage() {
                               {p.code}
                             </span>
                             <span className={`px-1.5 py-0.5 rounded font-extrabold uppercase ${
+                              p.operation === 'Reservado' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
                               p.operation === 'Vendido' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
                               p.operation === 'Arrendado' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' :
                               p.operation === 'Arriendo' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
@@ -1130,17 +1132,44 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {dbLeads.map((lead) => (
-                  <div key={lead.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <span className="font-bold text-white text-xs">{lead.name}</span>
-                      <span className="text-[10px] text-slate-500">{new Date(lead.created_at).toLocaleDateString()}</span>
+                {dbLeads.map((lead) => {
+                  const leadPhone = lead.phone ? lead.phone.replace(/\D/g, '') : '';
+                  return (
+                    <div key={lead.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span className="font-bold text-white text-xs">{lead.name}</span>
+                        <span className="text-[10px] text-slate-500">
+                          {lead.created || lead.created_at ? new Date(lead.created || lead.created_at).toLocaleDateString('es-CL') : ''}
+                        </span>
+                      </div>
+                      <p className="text-xs text-teal-400">
+                        {lead.email && <span>Email: {lead.email} | </span>}
+                        <span>Tel: {lead.phone || 'No especificado'}</span>
+                      </p>
+                      {lead.property_code && (
+                        <p className="text-xs text-orange-400 font-semibold">Código Propiedad: {lead.property_code}</p>
+                      )}
+                      {lead.message && (
+                        <p className="text-xs text-slate-300 pt-1 italic bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                          "{lead.message}"
+                        </p>
+                      )}
+                      {leadPhone && (
+                        <div className="pt-2 flex justify-end">
+                          <a
+                            href={`https://wa.me/${leadPhone.startsWith('56') ? leadPhone : `56${leadPhone}`}?text=${encodeURIComponent(`Hola ${lead.name}, te contactamos desde Urbanos Gestión Inmobiliaria sobre tu consulta.`)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-500/10 border border-teal-500/30 text-teal-300 hover:bg-teal-500/20 text-[11px] font-semibold transition-all"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5 text-teal-400" />
+                            <span>Contactar por WhatsApp</span>
+                          </a>
+                        </div>
+                      )}
                     </div>
-                    <p className="text-xs text-teal-400">Email: {lead.email} | Tel: {lead.phone}</p>
-                    {lead.property_code && <p className="text-xs text-orange-400">Código Propiedad: {lead.property_code}</p>}
-                    <p className="text-xs text-slate-300 pt-1 italic">"{lead.message}"</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -1156,22 +1185,50 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {dbOrders.map((ord) => (
-                  <div key={ord.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/20 text-orange-400 uppercase">
-                        {ord.order_type === 'captacion' ? 'Orden de Venta / Captación' : 'Oferta de Compra'}
-                      </span>
-                      <span className="text-[10px] text-slate-500">{new Date(ord.created_at).toLocaleDateString()}</span>
+                {dbOrders.map((ord) => {
+                  const ordPhone = ord.phone ? ord.phone.replace(/\D/g, '') : '';
+                  return (
+                    <div key={ord.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2.5">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                          ord.order_type === 'captacion'
+                            ? 'bg-orange-500/20 text-orange-400 border border-orange-500/30'
+                            : 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                        }`}>
+                          {ord.order_type === 'captacion' ? 'Orden de Venta / Captación' : 'Oferta de Compra'}
+                        </span>
+                        <span className="text-[10px] text-slate-500">
+                          {ord.created || ord.created_at ? new Date(ord.created || ord.created_at).toLocaleDateString('es-CL') : ''}
+                        </span>
+                      </div>
+                      <p className="font-bold text-white text-xs">{ord.name}</p>
+                      <p className="text-xs text-teal-400">Email: {ord.email} | Tel: {ord.phone}</p>
+                      {ord.commune && <p className="text-xs text-slate-300">📍 Comuna: <strong className="text-white">{ord.commune}</strong></p>}
+                      {ord.operation_type && <p className="text-xs text-slate-300">💼 Operación: <strong className="text-white capitalize">{ord.operation_type}</strong></p>}
+                      {ord.property_type && <p className="text-xs text-slate-300">🏠 Inmueble: <strong className="text-white capitalize">{ord.property_type}</strong></p>}
+                      {ord.offer_amount && <p className="text-xs font-bold text-orange-400">💰 Monto Oferta: {ord.offer_amount}</p>}
+                      {ord.target_property && <p className="text-xs text-teal-300">🏷️ Propiedad Interés: {ord.target_property}</p>}
+                      {ord.details && (
+                        <p className="text-xs text-slate-300 pt-1 italic bg-slate-900/60 p-2.5 rounded-lg border border-slate-800">
+                          "{ord.details}"
+                        </p>
+                      )}
+                      {ordPhone && (
+                        <div className="pt-2 flex justify-end">
+                          <a
+                            href={`https://wa.me/${ordPhone.startsWith('56') ? ordPhone : `56${ordPhone}`}?text=${encodeURIComponent(`Hola ${ord.name}, te contactamos desde Urbanos Gestión Inmobiliaria sobre tu solicitud (${ord.order_type === 'captacion' ? 'Orden de Venta' : 'Oferta de Compra'}).`)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-300 hover:bg-orange-500/20 text-[11px] font-semibold transition-all"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5 text-orange-400" />
+                            <span>Responder por WhatsApp</span>
+                          </a>
+                        </div>
+                      )}
                     </div>
-                    <p className="font-bold text-white text-xs">{ord.name}</p>
-                    <p className="text-xs text-teal-400">Email: {ord.email} | Tel: {ord.phone}</p>
-                    {ord.commune && <p className="text-xs text-slate-300">Comuna: {ord.commune}</p>}
-                    {ord.offer_amount && <p className="text-xs font-bold text-orange-400">Oferta: {ord.offer_amount}</p>}
-                    {ord.target_property && <p className="text-xs text-teal-300">Propiedad: {ord.target_property}</p>}
-                    {ord.details && <p className="text-xs text-slate-300 pt-1 italic">"{ord.details}"</p>}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
