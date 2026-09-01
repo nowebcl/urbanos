@@ -62,7 +62,14 @@ export function ContentProvider({ children }) {
         return { user: pb.authStore.model, token: pb.authStore.token };
       }
       const saved = localStorage.getItem('urbanos_admin_session');
-      return saved ? JSON.parse(saved) : null;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.token && parsed?.user) {
+          pb.authStore.save(parsed.token, parsed.user);
+        }
+        return parsed;
+      }
+      return null;
     } catch (e) {
       return null;
     }

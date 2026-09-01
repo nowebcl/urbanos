@@ -10,6 +10,13 @@ import {
 import { PROPERTIES } from '../data/mockData';
 import { compressAndConvertToWebP, processAndUploadPropertyImage } from '../lib/imageOptimizer';
 import { handleImageError, formatImageUrl } from '../utils/imageUtils';
+import { 
+  getPocketBaseOrders, 
+  getPocketBaseLeads, 
+  deletePocketBaseOrder, 
+  deletePocketBaseLead, 
+  ensureAdminAuth 
+} from '../lib/pocketbaseServices';
 
 export default function AdminPage() {
   const { session, setSession, properties: dbProperties, saveProperty, deleteProperty, refetchProperties } = useContent();
@@ -78,30 +85,46 @@ export default function AdminPage() {
   const fetchAdminData = async () => {
     setLoading(true);
     try {
+      // Ensure PB auth is established
+      await ensureAdminAuth();
+
       // Fetch Properties
       if (refetchProperties) await refetchProperties();
 
-      // Fetch Leads from PocketBase
-      try {
-        const leads = await pb.collection('leads').getFullList();
-        setDbLeads(leads || []);
-      } catch (err) {
-        console.warn('PocketBase leads fetch notice:', err.message);
-        setDbLeads([]);
-      }
+      // Fetch Leads & Orders from PocketBase
+      const [leads, orders] = await Promise.all([
+        getPocketBaseLeads(),
+        getPocketBaseOrders()
+      ]);
 
-      // Fetch Orders from PocketBase
-      try {
-        const orders = await pb.collection('orders').getFullList();
-        setDbOrders(orders || []);
-      } catch (err) {
-        console.warn('PocketBase orders fetch notice:', err.message);
-        setDbOrders([]);
-      }
+      setDbLeads(leads || []);
+      setDbOrders(orders || []);
     } catch (err) {
       console.warn('Admin fetch error:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteOrder = async (id) => {
+    if (window.confirm('¿Deseas eliminar este registro de orden?')) {
+      try {
+        await deletePocketBaseOrder(id);
+        setDbOrders(prev => prev.filter(o => o.id !== id));
+      } catch (e) {
+        alert('Error al eliminar la orden: ' + (e.message || 'Error'));
+      }
+    }
+  };
+
+  const handleDeleteLead = async (id) => {
+    if (window.confirm('¿Deseas eliminar este mensaje de contacto?')) {
+      try {
+        await deletePocketBaseLead(id);
+        setDbLeads(prev => prev.filter(l => l.id !== id));
+      } catch (e) {
+        alert('Error al eliminar el mensaje: ' + (e.message || 'Error'));
+      }
     }
   };
 
@@ -1125,7 +1148,22 @@ export default function AdminPage() {
         {/* Tab 2: Leads */}
         {activeTab === 'leads' && (
           <div className="space-y-4">
-            <h2 className="text-base font-bold text-white">Mensajes de Contacto Recibidos ({dbLeads.length})</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <MessageSquare className="w-4 h-4 text-teal-400" />
+                <span>Mensajes de Contacto Recibidos ({dbLeads.length})</span>
+              </h2>
+              <button
+                onClick={fetchAdminData}
+                disabled={loading}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e1422] border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all disabled:opacity-50"
+                title="Actualizar lista de mensajes"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 text-teal-400 ${loading ? 'animate-spin' : ''}`} />
+                <span>Actualizar</span>
+              </button>
+            </div>
+
             {dbLeads.length === 0 ? (
               <div className="text-center py-12 bg-[#0e1422] rounded-2xl border border-slate-800 text-slate-400 text-xs">
                 No hay consultas de contacto registradas aún.
@@ -1135,12 +1173,21 @@ export default function AdminPage() {
                 {dbLeads.map((lead) => {
                   const leadPhone = lead.phone ? lead.phone.replace(/\D/g, '') : '';
                   return (
-                    <div key={lead.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2">
+                    <div key={lead.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2 relative">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                         <span className="font-bold text-white text-xs">{lead.name}</span>
-                        <span className="text-[10px] text-slate-500">
-                          {lead.created || lead.created_at ? new Date(lead.created || lead.created_at).toLocaleDateString('es-CL') : ''}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-slate-500">
+                            {lead.created || lead.created_at ? new Date(lead.created || lead.created_at).toLocaleDateString('es-CL') : ''}
+                          </span>
+                          <button
+                            onClick={() => handleDeleteLead(lead.id)}
+                            className="p-1 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                            title="Eliminar mensaje"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                       <p className="text-xs text-teal-400">
                         {lead.email && <span>Email: {lead.email} | </span>}
@@ -1178,7 +1225,22 @@ export default function AdminPage() {
         {/* Tab 3: Orders */}
         {activeTab === 'orders' && (
           <div className="space-y-4">
-            <h2 className="text-base font-bold text-white">Órdenes de Venta y Ofertas ({dbOrders.length})</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                <FileText className="w-4 h-4 text-orange-400" />
+                <span>Órdenes de Venta y Ofertas ({dbOrders.length})</span>
+              </h2>
+              <button
+                onClick={fetchAdminData}
+                disabled={loading}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0e1422] border border-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-all disabled:opacity-50"
+                title="Actualizar lista de órdenes"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 text-orange-400 ${loading ? 'animate-spin' : ''}`} />
+                <span>Actualizar</span>
+              </button>
+            </div>
+
             {dbOrders.length === 0 ? (
               <div className="text-center py-12 bg-[#0e1422] rounded-2xl border border-slate-800 text-slate-400 text-xs">
                 No hay órdenes de venta ni ofertas registradas aún.
@@ -1188,7 +1250,7 @@ export default function AdminPage() {
                 {dbOrders.map((ord) => {
                   const ordPhone = ord.phone ? ord.phone.replace(/\D/g, '') : '';
                   return (
-                    <div key={ord.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2.5">
+                    <div key={ord.id} className="bg-[#0e1422] p-5 rounded-2xl border border-slate-800 space-y-2.5 relative">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                           ord.order_type === 'captacion'
@@ -1197,9 +1259,18 @@ export default function AdminPage() {
                         }`}>
                           {ord.order_type === 'captacion' ? 'Orden de Venta / Captación' : 'Oferta de Compra'}
                         </span>
-                        <span className="text-[10px] text-slate-500">
-                          {ord.created || ord.created_at ? new Date(ord.created || ord.created_at).toLocaleDateString('es-CL') : ''}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-slate-500">
+                            {ord.created || ord.created_at ? new Date(ord.created || ord.created_at).toLocaleDateString('es-CL') : ''}
+                          </span>
+                          <button
+                            onClick={() => handleDeleteOrder(ord.id)}
+                            className="p-1 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                            title="Eliminar orden"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                       <p className="font-bold text-white text-xs">{ord.name}</p>
                       <p className="text-xs text-teal-400">Email: {ord.email} | Tel: {ord.phone}</p>

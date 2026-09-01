@@ -97,3 +97,94 @@ export async function sendPocketBaseOrder(orderData) {
     return { success: true, fallback: true };
   }
 }
+
+/**
+ * Ensure admin is authenticated with PocketBase to access protected collections (orders, leads, etc.)
+ */
+export async function ensureAdminAuth() {
+  if (pb.authStore.isValid) return true;
+  try {
+    const res = await pb.collection('users').authWithPassword('admin@urbanosinmobiliaria.cl', 'Urbanos2026!*');
+    return !!res?.token;
+  } catch (err) {
+    try {
+      const res2 = await pb.collection('_superusers').authWithPassword('admin@urbanosinmobiliaria.cl', 'Urbanos2026!*');
+      return !!res2?.token;
+    } catch (e2) {
+      console.warn('ensureAdminAuth warning:', e2.message);
+      return false;
+    }
+  }
+}
+
+/**
+ * Fetch all orders from PocketBase with auth guarantee
+ */
+export async function getPocketBaseOrders() {
+  try {
+    await ensureAdminAuth();
+    const records = await pb.collection('orders').getFullList({
+      sort: '-id'
+    });
+    return records || [];
+  } catch (err) {
+    console.warn('Error fetching PocketBase orders with sort:', err);
+    try {
+      const fallback = await pb.collection('orders').getFullList();
+      return fallback ? fallback.reverse() : [];
+    } catch (e2) {
+      console.error('Error fetching fallback orders:', e2);
+      return [];
+    }
+  }
+}
+
+/**
+ * Fetch all leads from PocketBase with auth guarantee
+ */
+export async function getPocketBaseLeads() {
+  try {
+    await ensureAdminAuth();
+    const records = await pb.collection('leads').getFullList({
+      sort: '-id'
+    });
+    return records || [];
+  } catch (err) {
+    console.warn('Error fetching PocketBase leads with sort:', err);
+    try {
+      const fallback = await pb.collection('leads').getFullList();
+      return fallback ? fallback.reverse() : [];
+    } catch (e2) {
+      console.error('Error fetching fallback leads:', e2);
+      return [];
+    }
+  }
+}
+
+/**
+ * Delete order from PocketBase
+ */
+export async function deletePocketBaseOrder(id) {
+  try {
+    await ensureAdminAuth();
+    await pb.collection('orders').delete(id);
+    return { success: true };
+  } catch (err) {
+    console.error('Error deleting order from PocketBase:', err);
+    throw err;
+  }
+}
+
+/**
+ * Delete lead from PocketBase
+ */
+export async function deletePocketBaseLead(id) {
+  try {
+    await ensureAdminAuth();
+    await pb.collection('leads').delete(id);
+    return { success: true };
+  } catch (err) {
+    console.error('Error deleting lead from PocketBase:', err);
+    throw err;
+  }
+}
