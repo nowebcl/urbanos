@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 
-const pbUrl = process.env.VITE_POCKETBASE_URL || 'https://urbano.noweb.tech';
+const pbUrl = process.env.VITE_POCKETBASE_URL || 'https://urbanospb.noweb.cl';
 
 export default async function handler(req, res) {
   // CORS Headers

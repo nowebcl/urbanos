@@ -406,7 +406,7 @@ export default function AdminPage() {
         is_featured: propForm.isFeatured,
         operation: propForm.operation,
         type: propForm.type,
-        image: propForm.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80',
+        image: propForm.image || '/images/placeholder_property.svg',
         gallery: propForm.gallery,
         description: propForm.description
       };
@@ -934,7 +934,20 @@ export default function AdminPage() {
                             onError={handleImageError}
                             className="h-32 w-auto object-cover rounded-xl border border-slate-700 shadow-md"
                           />
-                          <p className="text-[11px] text-teal-400 font-semibold">✓ Imagen cargada correctamente (Haz clic para cambiar)</p>
+                          <div className="flex items-center gap-3 z-10">
+                            <span className="text-[11px] text-teal-400 font-semibold">✓ Imagen cargada (Haz clic para cambiar)</span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setMainImageFile(null);
+                                setPropForm(prev => ({ ...prev, image: '' }));
+                              }}
+                              className="text-[11px] text-red-400 hover:text-red-300 font-semibold underline cursor-pointer"
+                            >
+                              Quitar
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         <div className="space-y-2 pointer-events-none">
@@ -1071,8 +1084,9 @@ export default function AdminPage() {
                       {/* Izquierda: Imagen + Detalles */}
                       <div className="flex items-center gap-3 w-full sm:w-auto">
                         <img
-                          src={p.image || 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80'}
+                          src={formatImageUrl(p.image) || '/images/placeholder_property.svg'}
                           alt={p.title}
+                          onError={handleImageError}
                           className="w-20 h-16 object-cover rounded-lg border border-slate-700 flex-shrink-0"
                         />
                         <div className="space-y-1">
@@ -1118,6 +1132,17 @@ export default function AdminPage() {
                         </span>
 
                         <div className="flex items-center gap-2">
+                          <a
+                            href={`/propiedades/${p.slug || p.code || p.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-teal-500/40 bg-teal-500/10 text-teal-300 hover:bg-teal-500/25 text-[11px] font-bold transition-colors"
+                            title="Ver publicación pública"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            <span>Ver</span>
+                          </a>
+
                           <button
                             onClick={() => handleEditPropertyClick(p)}
                             className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-emerald-500/50 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 text-[11px] font-bold transition-colors"

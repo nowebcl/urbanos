@@ -40,7 +40,7 @@ export function formatImageUrl(url) {
   return cleanUrl;
 }
 
-export const DEFAULT_PLACEHOLDER_IMAGE = '/images/placeholder_property.webp';
+export const DEFAULT_PLACEHOLDER_IMAGE = '/images/placeholder_property.svg';
 
 /**
  * Fallback event handler for <img> onError events

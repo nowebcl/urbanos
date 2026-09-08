@@ -172,6 +172,9 @@ export function ContentProvider({ children }) {
           if ((!mainImg || mainImg.startsWith('data:')) && Array.isArray(p.photos) && p.photos.length > 0) {
             mainImg = pb.files.getURL(p, p.photos[0]);
           }
+          if (!mainImg) {
+            mainImg = '/images/placeholder_property.svg';
+          }
           
           let gal = Array.isArray(p.gallery) ? p.gallery.filter(Boolean).map(fixUrl) : [];
           if ((!gal || gal.length === 0) && Array.isArray(p.photos) && p.photos.length > 0) {
@@ -293,8 +296,27 @@ export function ContentProvider({ children }) {
 
     // Handle files: append any new WebP files/blobs to 'photos' field
     const { mainFile, galleryFiles } = imageFiles;
+    const hasNewMainFile = mainFile instanceof Blob || mainFile instanceof File;
+    const hasNewGalleryFiles = Array.isArray(galleryFiles) && galleryFiles.some(f => f instanceof Blob || f instanceof File);
+    const hasNewFiles = hasNewMainFile || hasNewGalleryFiles;
 
-    if (mainFile instanceof Blob || mainFile instanceof File) {
+    // If updating an existing record, detect which old photos were removed by the admin
+    if (existingRecord && Array.isArray(existingRecord.photos)) {
+      const keptUrls = [
+        cleanImageUrl(propData.image),
+        ...(Array.isArray(propData.gallery) ? propData.gallery.map(cleanImageUrl) : [])
+      ].filter(u => u && !u.startsWith('data:') && !u.startsWith('blob:'));
+
+      existingRecord.photos.forEach(oldFn => {
+        const isKept = keptUrls.some(u => u.includes(oldFn));
+        // If not in kept URLs or if replacing main photo and it was a single old photo, delete from PB
+        if (!isKept || (hasNewMainFile && existingRecord.photos.length === 1)) {
+          formData.append('photos-', oldFn);
+        }
+      });
+    }
+
+    if (hasNewMainFile) {
       const fileName = mainFile.name || `photo_main_${Date.now()}.webp`;
       formData.append('photos', mainFile, fileName);
     }
@@ -336,27 +358,41 @@ export function ContentProvider({ children }) {
     }
 
     // If new photos were attached, obtain their public URLs and update image/gallery fields in PB
-    if (savedRecord && Array.isArray(savedRecord.photos) && savedRecord.photos.length > 0) {
+    if (hasNewFiles && savedRecord && Array.isArray(savedRecord.photos) && savedRecord.photos.length > 0) {
       try {
         const photoUrls = savedRecord.photos.map(pName => pb.files.getURL(savedRecord, pName));
-        const mainUrl = photoUrls[0];
         
-        let existingGallery = [];
-        if (Array.isArray(savedRecord.gallery)) {
-          existingGallery = savedRecord.gallery.filter(u => u && !u.startsWith('data:'));
+        let mainUrl = photoUrls[0];
+        if (hasNewMainFile && savedRecord.photos.length > 1) {
+          const newFilesCount = 1 + (Array.isArray(galleryFiles) ? galleryFiles.filter(f => f instanceof Blob || f instanceof File).length : 0);
+          const mainFileIndex = Math.max(0, savedRecord.photos.length - newFilesCount);
+          mainUrl = photoUrls[mainFileIndex] || photoUrls[0];
         }
-        const combinedGallery = Array.from(new Set([...photoUrls, ...existingGallery]));
+
+        const remainingUrls = photoUrls.filter(u => u !== mainUrl);
+        const finalGallery = [mainUrl, ...remainingUrls];
 
         await pb.collection('properties').update(savedRecord.id, {
           image: mainUrl,
-          gallery: combinedGallery
+          gallery: finalGallery
         });
         
         savedRecord.image = mainUrl;
-        savedRecord.gallery = combinedGallery;
+        savedRecord.gallery = finalGallery;
       } catch (err) {
         console.warn('Notice updating resolved photo URLs:', err);
       }
+    } else if (!hasNewFiles && savedRecord) {
+      // User only edited text fields, ensure image & gallery reflect user selections without resurrecting deleted photos
+      const cleanMain = cleanImageUrl(propData.image) || savedRecord.image;
+      const cleanGal = Array.isArray(propData.gallery)
+        ? propData.gallery.map(cleanImageUrl).filter(u => u && !u.startsWith('data:') && !u.startsWith('blob:'))
+        : (Array.isArray(savedRecord.gallery) ? savedRecord.gallery : [cleanMain]);
+
+      await pb.collection('properties').update(savedRecord.id, {
+        image: cleanMain,
+        gallery: cleanGal.length > 0 ? cleanGal : [cleanMain]
+      }).catch(() => {});
     }
 
     // Refresh properties from remote DB to keep state perfectly synchronized

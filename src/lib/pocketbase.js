@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 
-const pbUrl = import.meta.env.VITE_POCKETBASE_URL || 'https://urbano.noweb.tech';
+const pbUrl = import.meta.env.VITE_POCKETBASE_URL || 'https://urbanospb.noweb.cl';
 
 export const pb = new PocketBase(pbUrl);
 

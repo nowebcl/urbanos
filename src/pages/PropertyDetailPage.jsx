@@ -1,29 +1,104 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, MessageSquare, Send, ArrowLeft, Share2, Clock } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { useContent } from '../context/ContentContext';
 import { handleImageError } from '../utils/imageUtils';
 import { sendPocketBaseLead } from '../lib/pocketbaseServices';
+import { pb } from '../lib/pocketbase';
 
 export default function PropertyDetailPage() {
-  const { properties } = useContent();
+  const { properties, loading } = useContent();
   const allProps = properties && properties.length > 0 ? properties : PROPERTIES;
   const { slug } = useParams();
   const navigate = useNavigate();
 
-  // Find property by slug or ID
-  const property = allProps.find(p => p.slug === slug || String(p.id) === String(slug)) || allProps[0];
+  // Find property by slug, ID, or code
+  const matchedProp = allProps.find(p => p.slug === slug || String(p.id) === String(slug) || String(p.code).toLowerCase() === String(slug).toLowerCase());
 
-  const [activeImage, setActiveImage] = useState(property?.image);
+  const [directProp, setDirectProp] = useState(null);
+  const [directLoading, setDirectLoading] = useState(false);
+
+  // If not found in current props list, fetch directly from PocketBase
+  useEffect(() => {
+    if (!matchedProp && slug) {
+      setDirectLoading(true);
+      const cleanSlug = decodeURIComponent(slug).trim();
+      pb.collection('properties').getFirstListItem(`slug="${cleanSlug}" || code="${cleanSlug}" || id="${cleanSlug}"`)
+        .then(p => {
+          let mainImg = p.image;
+          if ((!mainImg || mainImg.startsWith('data:')) && Array.isArray(p.photos) && p.photos.length > 0) {
+            mainImg = pb.files.getURL(p, p.photos[0]);
+          }
+          let gal = Array.isArray(p.gallery) ? p.gallery.filter(Boolean) : [];
+          if ((!gal || gal.length === 0) && Array.isArray(p.photos) && p.photos.length > 0) {
+            gal = p.photos.map(ph => pb.files.getURL(p, ph));
+          } else if (gal.length === 0 && mainImg) {
+            gal = [mainImg];
+          }
+
+          setDirectProp({
+            id: p.legacy_id || p.id,
+            pb_id: p.id,
+            code: p.code,
+            slug: p.slug,
+            title: p.title,
+            commune: p.commune,
+            location: p.location || p.address,
+            address: p.address || p.location,
+            priceDisplay: p.price_display,
+            priceUF: parseFloat(p.price_uf || 0),
+            priceCLP: parseFloat(p.price_clp || 0),
+            bedrooms: p.bedrooms || 0,
+            bathrooms: p.bathrooms || 0,
+            parking: p.parking || 0,
+            area: p.area,
+            landArea: p.land_area,
+            isFeatured: p.is_featured ?? true,
+            operation: p.operation || 'Venta',
+            type: p.type || 'Departamento',
+            createdAt: p.created ? p.created.split(' ')[0] : '2026-01-01',
+            image: mainImg,
+            gallery: gal,
+            description: p.description || '',
+            features: Array.isArray(p.features) ? p.features : [],
+            mapCoords: p.map_coords || { lat: -41.4693, lng: -72.9424 },
+            agent: {
+              id: 1,
+              name: 'Cristián Muñoz',
+              role: 'Agente Inmobiliario Senior',
+              phone: '+56 9 6192 4570',
+              email: 'urbanos@urbanosinmobiliaria.cl',
+              image: '/images/agent_cristian.webp'
+            }
+          });
+        })
+        .catch(err => {
+          console.warn('Direct property fetch notice:', err.message);
+        })
+        .finally(() => setDirectLoading(false));
+    }
+  }, [slug, matchedProp]);
+
+  const property = matchedProp || directProp;
+
+  const [activeImage, setActiveImage] = useState(property?.image || '');
+
+  // Synchronize activeImage whenever property updates
+  useEffect(() => {
+    if (property?.image) {
+      setActiveImage(property.image);
+    }
+  }, [property?.id, property?.image]);
+
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
   const [leadForm, setLeadForm] = useState({ name: '', phone: '', email: '', message: '' });
 
   // Related properties (same commune or operation)
-  const relatedProperties = allProps.filter(
+  const relatedProperties = property ? allProps.filter(
     p => p.id !== property?.id && (p.commune === property?.commune || p.type === property?.type)
-  ).slice(0, 3);
+  ).slice(0, 3) : [];
 
   const handleShare = () => {
     if (navigator.clipboard) {
@@ -49,6 +124,32 @@ export default function PropertyDetailPage() {
     }
     setTimeout(() => setFormSubmitted(false), 4000);
   };
+
+  if (!property) {
+    if (loading || directLoading) {
+      return (
+        <div className="min-h-screen bg-[#080c14] py-20 px-4 flex flex-col items-center justify-center space-y-4">
+          <div className="w-12 h-12 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin"></div>
+          <p className="text-slate-400 text-sm font-medium animate-pulse">Cargando publicación y fotografías...</p>
+        </div>
+      );
+    }
+    return (
+      <div className="min-h-screen bg-[#080c14] py-20 px-4 flex flex-col items-center justify-center text-center space-y-4">
+        <div className="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-500">
+          <MapPin className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-bold text-white">Propiedad no encontrada</h2>
+        <p className="text-slate-400 text-sm max-w-md">La propiedad que estás buscando no está disponible o el enlace ha cambiado.</p>
+        <button
+          onClick={() => navigate('/propiedades')}
+          className="mt-4 px-6 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs uppercase tracking-wider transition-colors"
+        >
+          Explorar Catálogo de Propiedades
+        </button>
+      </div>
+    );
+  }
 
   const whatsappMessage = encodeURIComponent(
     `Hola, me interesa la propiedad "${property.title}" (Código: ${property.code}). Quisiera solicitar una visita.`
