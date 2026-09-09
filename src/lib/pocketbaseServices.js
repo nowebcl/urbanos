@@ -35,8 +35,14 @@ export async function getPocketBaseProperties() {
       operation: p.operation,
       type: p.type,
       createdAt: p.created ? p.created.split(' ')[0] : '2026-01-01',
-      image: p.image,
-      gallery: Array.isArray(p.gallery) ? p.gallery : (p.image ? [p.image] : []),
+      image: p.image || (Array.isArray(p.photos) && p.photos.length > 0 ? pb.files.getURL(p, p.photos[0]) : '/images/placeholder_property.svg'),
+      gallery: Array.isArray(p.gallery) && p.gallery.length > 0 
+        ? p.gallery 
+        : (typeof p.gallery === 'string' && p.gallery.trim().startsWith('[') 
+            ? (function() { try { return JSON.parse(p.gallery); } catch(e) { return []; } })() 
+            : (Array.isArray(p.photos) && p.photos.length > 0 
+                ? p.photos.map(ph => pb.files.getURL(p, ph)) 
+                : (p.image ? [p.image] : []))),
       agent: {
         id: 1,
         name: 'Cristián Muñoz',

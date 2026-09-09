@@ -5,7 +5,7 @@ import {
   Lock, LogOut, Plus, Trash2, Edit3, CheckCircle2, MessageSquare, 
   FileText, Building, Tag, ShieldCheck, RefreshCw, ExternalLink, 
   UploadCloud, Image as ImageIcon, Search, ChevronDown, ChevronUp, X, Send,
-  Car, Bed, Bath
+  Car, Bed, Bath, Star
 } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { compressAndConvertToWebP, processAndUploadPropertyImage } from '../lib/imageOptimizer';
@@ -56,6 +56,7 @@ export default function AdminPage() {
   const [editingProp, setEditingProp] = useState(null);
   const [mainImageFile, setMainImageFile] = useState(null);
   const [galleryFiles, setGalleryFiles] = useState([]);
+  const [galleryItems, setGalleryItems] = useState([]);
   const [propForm, setPropForm] = useState({
     title: '',
     code: '',
@@ -211,61 +212,41 @@ export default function AdminPage() {
 
   const [compressNotice, setCompressNotice] = useState(null);
 
-  // Image Upload helper (Compresses & Converts File to WebP and prepares for PocketBase upload)
-  const handleFileUpload = async (file, isMain = true) => {
+  // Image Upload helper for Main Cover (Compresses & Converts File to WebP)
+  const handleMainFileUpload = async (file) => {
     if (!file) return;
     try {
-      setCompressNotice({ type: 'loading', message: 'Comprimiendo y preparando imagen .WebP...' });
-      
+      setCompressNotice({ type: 'loading', message: 'Comprimiendo y preparando portada .WebP...' });
       const result = await processAndUploadPropertyImage(file, pb);
+      const newFile = result.file || file;
+      
+      setMainImageFile(newFile);
+      setPropForm(prev => ({ ...prev, image: result.url }));
 
-      if (isMain) {
-        setMainImageFile(result.file || file);
-        setPropForm(prev => ({ ...prev, image: result.url }));
-      } else {
-        setGalleryFiles(prev => {
-          if (prev.length >= 10) return prev;
-          return [...prev, result.file || file];
-        });
-        setPropForm(prev => {
-          if (prev.gallery.length >= 10) {
-            return prev;
-          }
-          return { ...prev, gallery: [...prev.gallery, result.url] };
-        });
-      }
+      // Also ensure this image is visible in galleryItems
+      setGalleryItems(prev => {
+        const exists = prev.some(item => item.url === result.url);
+        if (!exists && prev.length < 10) {
+          return [{ id: `main_${Date.now()}`, url: result.url, file: newFile }, ...prev];
+        }
+        return prev;
+      });
 
       setCompressNotice({
         type: 'success',
-        message: `✨ Imagen optimizada a .WebP | Peso reducido un ${result.savedPercent}% (de ${result.originalSizeKB} KB a ${result.compressedSizeKB} KB)`
+        message: `✨ Portada optimizada a .WebP | Peso reducido un ${result.savedPercent}% (${result.originalSizeKB} KB → ${result.compressedSizeKB} KB)`
       });
-
       setTimeout(() => setCompressNotice(null), 6000);
     } catch (err) {
-      console.error('Error procesando imagen:', err);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (isMain) {
-          setMainImageFile(file);
-          setPropForm(prev => ({ ...prev, image: reader.result }));
-        } else {
-          setGalleryFiles(prev => {
-            if (prev.length >= 10) return prev;
-            return [...prev, file];
-          });
-          setPropForm(prev => {
-            if (prev.gallery.length >= 10) return prev;
-            return { ...prev, gallery: [...prev.gallery, reader.result] };
-          });
-        }
-      };
-      reader.readAsDataURL(file);
+      console.error('Error procesando portada:', err);
+      alert('No se pudo procesar la imagen seleccionada.');
     }
   };
 
+  // Upload helper for Gallery (Multiple images)
   const handleMultipleGalleryUpload = async (fileList) => {
     const MAX_GALLERY = 10;
-    const currentCount = propForm.gallery.length;
+    const currentCount = galleryItems.length;
     const availableSlots = MAX_GALLERY - currentCount;
 
     if (availableSlots <= 0) {
@@ -279,23 +260,86 @@ export default function AdminPage() {
       selectedFiles = selectedFiles.slice(0, availableSlots);
     }
 
-    for (const f of selectedFiles) {
-      await handleFileUpload(f, false);
+    setCompressNotice({ type: 'loading', message: `Optimizando ${selectedFiles.length} foto(s) a formato .WebP...` });
+    
+    let addedCount = 0;
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const f = selectedFiles[i];
+      try {
+        const result = await processAndUploadPropertyImage(f, pb);
+        const newItem = {
+          id: `new_${Date.now()}_${i}_${Math.random()}`,
+          url: result.url,
+          file: result.file || f
+        };
+        
+        setGalleryItems(prev => {
+          if (prev.length >= MAX_GALLERY) return prev;
+          return [...prev, newItem];
+        });
+
+        setPropForm(prev => {
+          // If no cover image yet or using default placeholder, assign first uploaded photo as cover
+          if (!prev.image || prev.image.includes('placeholder')) {
+            setMainImageFile(newItem.file);
+            return {
+              ...prev,
+              image: newItem.url,
+              gallery: [...prev.gallery, newItem.url]
+            };
+          }
+          return {
+            ...prev,
+            gallery: [...prev.gallery, newItem.url]
+          };
+        });
+        addedCount++;
+      } catch (err) {
+        console.error('Error procesando foto de galería:', err);
+      }
     }
+
+    setCompressNotice({
+      type: 'success',
+      message: `✨ Se agregaron ${addedCount} fotografía(s) optimizadas a la galería.`
+    });
+    setTimeout(() => setCompressNotice(null), 6000);
   };
 
+  // Select ANY gallery image as the Main Cover (Portada)
+  const handleSetAsPortada = (item) => {
+    setPropForm(prev => ({ ...prev, image: item.url }));
+    setMainImageFile(item.file || null);
+    setCompressNotice({
+      type: 'success',
+      message: '⭐ ¡Foto seleccionada como Portada Principal! Recuerda guardar los cambios.'
+    });
+    setTimeout(() => setCompressNotice(null), 4000);
+  };
+
+  // Remove a photo from gallery
   const removeGalleryImage = (index) => {
-    setGalleryFiles(prev => prev.filter((_, i) => i !== index));
-    setPropForm(prev => ({
-      ...prev,
-      gallery: prev.gallery.filter((_, i) => i !== index)
-    }));
+    const itemToRemove = galleryItems[index];
+    const newItems = galleryItems.filter((_, i) => i !== index);
+    setGalleryItems(newItems);
+    
+    setPropForm(prev => {
+      let newMainImage = prev.image;
+      if (itemToRemove && prev.image === itemToRemove.url) {
+        newMainImage = newItems.length > 0 ? newItems[0].url : '';
+        setMainImageFile(newItems.length > 0 ? (newItems[0].file || null) : null);
+      }
+      return {
+        ...prev,
+        image: newMainImage,
+        gallery: newItems.map(it => it.url)
+      };
+    });
   };
 
   const handleEditPropertyClick = (prop) => {
     setEditingProp(prop);
     setMainImageFile(null);
-    setGalleryFiles([]);
     
     // Parse currency & numeric value
     let valStr = '';
@@ -308,6 +352,28 @@ export default function AdminPage() {
       curr = 'UF';
       valStr = (prop.price_uf || disp.replace(/[^0-9.]/g, '')).toString();
     }
+
+    let initialGal = [];
+    if (Array.isArray(prop.gallery)) {
+      initialGal = prop.gallery;
+    } else if (typeof prop.gallery === 'string' && prop.gallery.trim().startsWith('[')) {
+      try { initialGal = JSON.parse(prop.gallery); } catch(e) {}
+    }
+    if (initialGal.length === 0 && prop.image) {
+      initialGal = [prop.image];
+    }
+
+    // If main image is not in gallery, prepend it so all property photos are accessible
+    if (prop.image && !initialGal.includes(prop.image) && !prop.image.includes('placeholder')) {
+      initialGal = [prop.image, ...initialGal];
+    }
+
+    const items = initialGal.map((url, i) => ({
+      id: `existing_${i}_${Date.now()}`,
+      url: url,
+      file: null
+    }));
+    setGalleryItems(items);
 
     setPropForm({
       title: prop.title || '',
@@ -325,7 +391,7 @@ export default function AdminPage() {
       area: prop.area || '',
       landArea: prop.land_area || prop.landArea || '',
       image: prop.image || '',
-      gallery: Array.isArray(prop.gallery) ? prop.gallery : [],
+      gallery: initialGal,
       description: prop.description || '',
       isFeatured: prop.is_featured ?? true
     });
@@ -339,7 +405,7 @@ export default function AdminPage() {
   const handleResetForm = () => {
     setEditingProp(null);
     setMainImageFile(null);
-    setGalleryFiles([]);
+    setGalleryItems([]);
     setPropForm({
       title: '',
       code: '',
@@ -388,6 +454,9 @@ export default function AdminPage() {
       const defaultCommune = propForm.commune || 'Puerto Montt';
       const defaultLoc = propForm.location || `${defaultCommune}, Región de Los Lagos`;
 
+      const galleryUrls = galleryItems.map(it => it.url);
+      const chosenImage = propForm.image || (galleryUrls.length > 0 ? galleryUrls[0] : '/images/placeholder_property.svg');
+
       const payload = {
         code: generatedCode,
         slug: generatedSlug,
@@ -406,22 +475,23 @@ export default function AdminPage() {
         is_featured: propForm.isFeatured,
         operation: propForm.operation,
         type: propForm.type,
-        image: propForm.image || '/images/placeholder_property.svg',
-        gallery: propForm.gallery,
+        image: chosenImage,
+        gallery: galleryUrls,
         description: propForm.description
       };
 
+      const wasEditing = !!editingProp;
       await saveProperty(
         payload, 
         editingProp ? (editingProp.pb_id || editingProp.id) : null,
         {
           mainFile: mainImageFile,
-          galleryFiles: galleryFiles
+          galleryItems: galleryItems
         }
       );
 
       handleResetForm();
-      alert(editingProp ? '¡Propiedad actualizada exitosamente en la base de datos!' : '¡Propiedad publicada exitosamente en la base de datos!');
+      alert(wasEditing ? '¡Propiedad actualizada exitosamente en la base de datos!' : '¡Propiedad publicada exitosamente en la base de datos!');
     } catch (err) {
       console.error(err);
       alert(err.message || 'Error al guardar la propiedad en la base de datos.');
@@ -915,27 +985,38 @@ export default function AdminPage() {
                   {/* Imagen Principal Drag & Drop Dropzone */}
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                      Imagen Principal <span className="text-orange-500">*</span>
+                      Imagen Principal / Portada <span className="text-orange-500">*</span>
                     </label>
                     
                     <div className="relative border-2 border-dashed border-slate-700 hover:border-orange-500/60 bg-[#080c14] rounded-2xl p-6 text-center transition-colors">
                       <input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => handleFileUpload(e.target.files[0], true)}
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            handleMainFileUpload(e.target.files[0]);
+                          }
+                          e.target.value = '';
+                        }}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                       />
                       
                       {propForm.image ? (
                         <div className="flex flex-col items-center gap-3">
-                          <img
-                            src={formatImageUrl(propForm.image)}
-                            alt="Vista previa"
-                            onError={handleImageError}
-                            className="h-32 w-auto object-cover rounded-xl border border-slate-700 shadow-md"
-                          />
+                          <div className="relative">
+                            <img
+                              src={formatImageUrl(propForm.image)}
+                              alt="Vista previa portada"
+                              onError={handleImageError}
+                              className="h-36 w-auto object-cover rounded-xl border-2 border-orange-500/80 shadow-xl"
+                            />
+                            <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-orange-500 text-white text-[10px] font-extrabold shadow flex items-center gap-1">
+                              <Star className="w-3 h-3 fill-current" />
+                              PORTADA PRINCIPAL
+                            </span>
+                          </div>
                           <div className="flex items-center gap-3 z-10">
-                            <span className="text-[11px] text-teal-400 font-semibold">✓ Imagen cargada (Haz clic para cambiar)</span>
+                            <span className="text-[11px] text-teal-400 font-semibold">✓ Imagen cargada (Haz clic para cambiar o selecciona de la galería abajo)</span>
                             <button
                               type="button"
                               onClick={(e) => {
@@ -954,8 +1035,8 @@ export default function AdminPage() {
                           <div className="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center mx-auto">
                             <ImageIcon className="w-5 h-5" />
                           </div>
-                          <p className="text-xs font-semibold text-slate-300">Haz clic o arrastra una foto aquí</p>
-                          <p className="text-[10px] text-slate-500">Formatos soportados: JPG, PNG, WEBP</p>
+                          <p className="text-xs font-semibold text-slate-300">Haz clic o arrastra una foto aquí para la PORTADA</p>
+                          <p className="text-[10px] text-slate-500">Formatos soportados: JPG, PNG, WEBP (Se optimiza automáticamente)</p>
                         </div>
                       )}
                     </div>
@@ -966,7 +1047,7 @@ export default function AdminPage() {
                         type="url"
                         value={propForm.image}
                         onChange={(e) => setPropForm({ ...propForm, image: e.target.value })}
-                        placeholder="O pega una URL directa de la imagen (https://...)"
+                        placeholder="O pega una URL directa de la imagen de portada (https://...)"
                         className="w-full px-3.5 py-2 bg-[#080c14] border border-slate-800 rounded-xl text-slate-300 text-[11px] focus:outline-none focus:border-orange-500"
                       />
                     </div>
@@ -974,10 +1055,13 @@ export default function AdminPage() {
 
                   {/* Galería de Imágenes Dropzone */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center justify-between">
-                      <span>Galería de Imágenes (Hasta 10 fotografías)</span>
-                      <span className="text-slate-500 font-normal text-[11px]">{propForm.gallery?.length || 0}/10 fotos</span>
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                        <span>Galería de Imágenes (Hasta 10 fotografías)</span>
+                        <span className="text-[10px] text-teal-400 font-normal">💡 Puedes pulsar "Hacer Portada" en cualquiera de las fotos</span>
+                      </label>
+                      <span className="text-slate-400 font-bold text-[11px]">{galleryItems?.length || 0}/10 fotos</span>
+                    </div>
 
                     <div className="relative border-2 border-dashed border-slate-700 hover:border-teal-500/60 bg-[#080c14] rounded-2xl p-5 text-center transition-colors">
                       <input
@@ -996,25 +1080,63 @@ export default function AdminPage() {
                           <UploadCloud className="w-5 h-5" />
                         </div>
                         <p className="text-xs font-semibold text-slate-300">Subir imágenes para galería (Máximo 10)</p>
-                        <p className="text-[10px] text-slate-500">Puedes seleccionar hasta 10 fotos adicionales para el slider deslizante.</p>
+                        <p className="text-[10px] text-slate-500">Puedes seleccionar varias fotos a la vez para agregarlas a la publicación.</p>
                       </div>
                     </div>
 
-                    {/* Vista Previa de la Galería */}
-                    {propForm.gallery && propForm.gallery.length > 0 && (
-                      <div className="flex flex-wrap gap-3 mt-3">
-                        {propForm.gallery.map((imgUrl, idx) => (
-                          <div key={idx} className="relative group w-20 h-20 rounded-xl overflow-hidden border border-slate-700">
-                            <img src={formatImageUrl(imgUrl)} alt={`Galería ${idx}`} onError={handleImageError} className="w-full h-full object-cover" />
-                            <button
-                              type="button"
-                              onClick={() => removeGalleryImage(idx)}
-                              className="absolute top-1 right-1 p-1 rounded-full bg-red-600 text-white opacity-90 hover:opacity-100 transition-opacity"
+                    {/* Vista Previa de la Galería con selector de portada */}
+                    {galleryItems && galleryItems.length > 0 && (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 mt-3">
+                        {galleryItems.map((item, idx) => {
+                          const isPortada = propForm.image === item.url;
+                          return (
+                            <div
+                              key={item.id || idx}
+                              className={`relative group rounded-xl overflow-hidden border-2 transition-all ${
+                                isPortada
+                                  ? 'border-orange-500 ring-2 ring-orange-500/40 shadow-lg'
+                                  : 'border-slate-700 hover:border-slate-500'
+                              }`}
                             >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                        ))}
+                              <div className="w-full h-24 sm:h-28 bg-slate-950">
+                                <img
+                                  src={formatImageUrl(item.url)}
+                                  alt={`Galería ${idx}`}
+                                  onError={handleImageError}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+
+                              {/* Badge / Botón de Portada */}
+                              {isPortada ? (
+                                <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-orange-500 text-white font-extrabold text-[9px] shadow-md flex items-center gap-1 z-10">
+                                  <Star className="w-2.5 h-2.5 fill-current" />
+                                  PORTADA
+                                </span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSetAsPortada(item)}
+                                  title="Establecer como foto de portada"
+                                  className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-md bg-black/70 hover:bg-orange-500 text-slate-200 hover:text-white font-bold text-[9px] backdrop-blur-sm transition-colors flex items-center gap-1 opacity-90 group-hover:opacity-100 z-10"
+                                >
+                                  <Star className="w-2.5 h-2.5" />
+                                  Hacer Portada
+                                </button>
+                              )}
+
+                              {/* Botón eliminar foto */}
+                              <button
+                                type="button"
+                                onClick={() => removeGalleryImage(idx)}
+                                title="Quitar foto de la galería"
+                                className="absolute top-1.5 right-1.5 p-1 rounded-full bg-red-600/90 hover:bg-red-600 text-white opacity-80 group-hover:opacity-100 transition-opacity z-10"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>

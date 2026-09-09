@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Car, Maximize2, CheckCircle2, MessageSquare, Send, ArrowLeft, Share2, Clock } from 'lucide-react';
 import { PROPERTIES } from '../data/mockData';
 import { useContent } from '../context/ContentContext';
-import { handleImageError } from '../utils/imageUtils';
+import { handleImageError, formatImageUrl } from '../utils/imageUtils';
 import { sendPocketBaseLead } from '../lib/pocketbaseServices';
 import { pb } from '../lib/pocketbase';
 
@@ -19,68 +19,76 @@ export default function PropertyDetailPage() {
   const [directProp, setDirectProp] = useState(null);
   const [directLoading, setDirectLoading] = useState(false);
 
-  // If not found in current props list, fetch directly from PocketBase
+  // Always fetch fresh data directly from PocketBase to guarantee up-to-date photos and cover
   useEffect(() => {
-    if (!matchedProp && slug) {
-      setDirectLoading(true);
-      const cleanSlug = decodeURIComponent(slug).trim();
-      pb.collection('properties').getFirstListItem(`slug="${cleanSlug}" || code="${cleanSlug}" || id="${cleanSlug}"`)
-        .then(p => {
-          let mainImg = p.image;
-          if ((!mainImg || mainImg.startsWith('data:')) && Array.isArray(p.photos) && p.photos.length > 0) {
-            mainImg = pb.files.getURL(p, p.photos[0]);
-          }
-          let gal = Array.isArray(p.gallery) ? p.gallery.filter(Boolean) : [];
-          if ((!gal || gal.length === 0) && Array.isArray(p.photos) && p.photos.length > 0) {
-            gal = p.photos.map(ph => pb.files.getURL(p, ph));
-          } else if (gal.length === 0 && mainImg) {
-            gal = [mainImg];
-          }
+    if (!slug) return;
+    setDirectLoading(true);
+    const cleanSlug = decodeURIComponent(slug).trim();
+    pb.collection('properties').getFirstListItem(`slug="${cleanSlug}" || code="${cleanSlug}" || id="${cleanSlug}"`)
+      .then(p => {
+        let mainImg = formatImageUrl(p.image);
+        if ((!mainImg || mainImg.startsWith('data:') || mainImg.startsWith('blob:')) && Array.isArray(p.photos) && p.photos.length > 0) {
+          mainImg = pb.files.getURL(p, p.photos[0]);
+        }
+        let gal = [];
+        if (Array.isArray(p.gallery)) {
+          gal = p.gallery.filter(Boolean).map(formatImageUrl);
+        } else if (typeof p.gallery === 'string' && p.gallery.trim().startsWith('[')) {
+          try {
+            gal = JSON.parse(p.gallery).filter(Boolean).map(formatImageUrl);
+          } catch (e) {}
+        }
 
-          setDirectProp({
-            id: p.legacy_id || p.id,
-            pb_id: p.id,
-            code: p.code,
-            slug: p.slug,
-            title: p.title,
-            commune: p.commune,
-            location: p.location || p.address,
-            address: p.address || p.location,
-            priceDisplay: p.price_display,
-            priceUF: parseFloat(p.price_uf || 0),
-            priceCLP: parseFloat(p.price_clp || 0),
-            bedrooms: p.bedrooms || 0,
-            bathrooms: p.bathrooms || 0,
-            parking: p.parking || 0,
-            area: p.area,
-            landArea: p.land_area,
-            isFeatured: p.is_featured ?? true,
-            operation: p.operation || 'Venta',
-            type: p.type || 'Departamento',
-            createdAt: p.created ? p.created.split(' ')[0] : '2026-01-01',
-            image: mainImg,
-            gallery: gal,
-            description: p.description || '',
-            features: Array.isArray(p.features) ? p.features : [],
-            mapCoords: p.map_coords || { lat: -41.4693, lng: -72.9424 },
-            agent: {
-              id: 1,
-              name: 'Cristián Muñoz',
-              role: 'Agente Inmobiliario Senior',
-              phone: '+56 9 6192 4570',
-              email: 'urbanos@urbanosinmobiliaria.cl',
-              image: '/images/agent_cristian.webp'
-            }
-          });
-        })
-        .catch(err => {
-          console.warn('Direct property fetch notice:', err.message);
-        })
-        .finally(() => setDirectLoading(false));
-    }
-  }, [slug, matchedProp]);
+        if ((!gal || gal.length === 0) && Array.isArray(p.photos) && p.photos.length > 0) {
+          gal = p.photos.map(ph => pb.files.getURL(p, ph));
+        } else if (gal.length === 0 && mainImg) {
+          gal = [mainImg];
+        }
 
-  const property = matchedProp || directProp;
+        setDirectProp({
+          id: p.legacy_id || p.id,
+          pb_id: p.id,
+          code: p.code,
+          slug: p.slug,
+          title: p.title,
+          commune: p.commune,
+          location: p.location || p.address,
+          address: p.address || p.location,
+          priceDisplay: p.price_display,
+          priceUF: parseFloat(p.price_uf || 0),
+          priceCLP: parseFloat(p.price_clp || 0),
+          bedrooms: p.bedrooms || 0,
+          bathrooms: p.bathrooms || 0,
+          parking: p.parking || 0,
+          area: p.area,
+          landArea: p.land_area,
+          isFeatured: p.is_featured ?? true,
+          operation: p.operation || 'Venta',
+          type: p.type || 'Departamento',
+          createdAt: p.created ? p.created.split(' ')[0] : '2026-01-01',
+          image: mainImg,
+          gallery: gal,
+          description: p.description || '',
+          features: Array.isArray(p.features) ? p.features : [],
+          mapCoords: p.map_coords || { lat: -41.4693, lng: -72.9424 },
+          agent: {
+            id: 1,
+            name: 'Cristián Muñoz',
+            role: 'Agente Inmobiliario Senior',
+            phone: '+56 9 6192 4570',
+            email: 'urbanos@urbanosinmobiliaria.cl',
+            image: '/images/agent_cristian.webp'
+          }
+        });
+      })
+      .catch(err => {
+        console.warn('Direct property fetch notice:', err.message);
+      })
+      .finally(() => setDirectLoading(false));
+  }, [slug]);
+
+  // Prefer direct fresh data from PocketBase over cached list
+  const property = directProp || matchedProp;
 
   const [activeImage, setActiveImage] = useState(property?.image || '');
 
@@ -241,7 +249,7 @@ export default function PropertyDetailPage() {
         <div className="space-y-3">
           <div className="relative h-80 sm:h-[480px] w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800">
             <img
-              src={activeImage}
+              src={formatImageUrl(activeImage)}
               alt={property.title}
               onError={handleImageError}
               className="w-full h-full object-cover object-center transition-all duration-300"
@@ -259,7 +267,7 @@ export default function PropertyDetailPage() {
                     activeImage === imgUrl ? 'border-orange-500 scale-105 shadow-lg' : 'border-slate-800 opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={imgUrl} alt={`Vista ${i}`} onError={handleImageError} className="w-full h-full object-cover" />
+                  <img src={formatImageUrl(imgUrl)} alt={`Vista ${i}`} onError={handleImageError} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

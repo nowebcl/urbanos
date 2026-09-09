@@ -169,14 +169,22 @@ export function ContentProvider({ children }) {
       if (records && records.length > 0) {
         dbMapped = records.map(p => {
           let mainImg = fixUrl(p.image);
-          if ((!mainImg || mainImg.startsWith('data:')) && Array.isArray(p.photos) && p.photos.length > 0) {
+          if ((!mainImg || mainImg.startsWith('data:') || mainImg.startsWith('blob:')) && Array.isArray(p.photos) && p.photos.length > 0) {
             mainImg = pb.files.getURL(p, p.photos[0]);
           }
           if (!mainImg) {
             mainImg = '/images/placeholder_property.svg';
           }
           
-          let gal = Array.isArray(p.gallery) ? p.gallery.filter(Boolean).map(fixUrl) : [];
+          let gal = [];
+          if (Array.isArray(p.gallery)) {
+            gal = p.gallery.filter(Boolean).map(fixUrl);
+          } else if (typeof p.gallery === 'string' && p.gallery.trim().startsWith('[')) {
+            try {
+              gal = JSON.parse(p.gallery).filter(Boolean).map(fixUrl);
+            } catch (e) {}
+          }
+
           if ((!gal || gal.length === 0) && Array.isArray(p.photos) && p.photos.length > 0) {
             gal = p.photos.map(ph => pb.files.getURL(p, ph));
           } else if (gal.length === 0 && mainImg) {
@@ -263,6 +271,9 @@ export function ContentProvider({ children }) {
     if (propData.pb_id) {
       existingRecord = await pb.collection('properties').getOne(propData.pb_id).catch(() => null);
     }
+    if (!existingRecord && editingId) {
+      existingRecord = await pb.collection('properties').getOne(editingId).catch(() => null);
+    }
     if (!existingRecord && propData.code) {
       existingRecord = await pb.collection('properties').getFirstListItem(`code="${propData.code}"`).catch(() => null);
     }
@@ -294,55 +305,46 @@ export function ContentProvider({ children }) {
     formData.append('type', propData.type || 'Casa');
     formData.append('description', propData.description || '');
 
-    // Handle files: append any new WebP files/blobs to 'photos' field
-    const { mainFile, galleryFiles } = imageFiles;
+    // Image & File handling
+    const { mainFile, galleryFiles, galleryItems } = imageFiles;
     const hasNewMainFile = mainFile instanceof Blob || mainFile instanceof File;
-    const hasNewGalleryFiles = Array.isArray(galleryFiles) && galleryFiles.some(f => f instanceof Blob || f instanceof File);
+
+    // Determine new gallery files
+    let newGalleryFilesList = [];
+    if (Array.isArray(galleryItems) && galleryItems.length > 0) {
+      newGalleryFilesList = galleryItems.map(item => item.file).filter(f => f instanceof Blob || f instanceof File);
+    } else if (Array.isArray(galleryFiles)) {
+      newGalleryFilesList = galleryFiles.filter(f => f instanceof Blob || f instanceof File);
+    }
+    const hasNewGalleryFiles = newGalleryFilesList.length > 0;
     const hasNewFiles = hasNewMainFile || hasNewGalleryFiles;
 
-    // If updating an existing record, detect which old photos were removed by the admin
+    // Detect deleted photos from PocketBase storage (only delete photos not present anywhere in main image or gallery)
     if (existingRecord && Array.isArray(existingRecord.photos)) {
       const keptUrls = [
         cleanImageUrl(propData.image),
-        ...(Array.isArray(propData.gallery) ? propData.gallery.map(cleanImageUrl) : [])
-      ].filter(u => u && !u.startsWith('data:') && !u.startsWith('blob:'));
+        ...(Array.isArray(propData.gallery) ? propData.gallery.map(cleanImageUrl) : []),
+        ...(Array.isArray(galleryItems) ? galleryItems.map(item => cleanImageUrl(item.url)) : [])
+      ].filter(u => u && typeof u === 'string' && !u.startsWith('data:') && !u.startsWith('blob:'));
 
       existingRecord.photos.forEach(oldFn => {
         const isKept = keptUrls.some(u => u.includes(oldFn));
-        // If not in kept URLs or if replacing main photo and it was a single old photo, delete from PB
-        if (!isKept || (hasNewMainFile && existingRecord.photos.length === 1)) {
+        if (!isKept) {
           formData.append('photos-', oldFn);
         }
       });
     }
 
+    // Append new files in exact deterministic sequence: mainFile first (if new), then gallery files
     if (hasNewMainFile) {
       const fileName = mainFile.name || `photo_main_${Date.now()}.webp`;
       formData.append('photos', mainFile, fileName);
     }
 
-    if (Array.isArray(galleryFiles)) {
-      galleryFiles.forEach((gFile, idx) => {
-        if (gFile instanceof Blob || gFile instanceof File) {
-          const gName = gFile.name || `photo_gal_${idx}_${Date.now()}.webp`;
-          formData.append('photos', gFile, gName);
-        }
-      });
-    }
-
-    // Only save string image/gallery if it's a real HTTP/HTTPS URL (NOT data: base64!)
-    const cleanMainImg = cleanImageUrl(propData.image);
-    if (cleanMainImg && !cleanMainImg.startsWith('data:') && !cleanMainImg.startsWith('blob:')) {
-      formData.append('image', cleanMainImg);
-    }
-    if (Array.isArray(propData.gallery)) {
-      const cleanGallery = propData.gallery
-        .map(cleanImageUrl)
-        .filter(url => url && !url.startsWith('data:') && !url.startsWith('blob:'));
-      if (cleanGallery.length > 0) {
-        formData.append('gallery', JSON.stringify(cleanGallery));
-      }
-    }
+    newGalleryFilesList.forEach((gFile, idx) => {
+      const gName = gFile.name || `photo_gal_${idx}_${Date.now()}.webp`;
+      formData.append('photos', gFile, gName);
+    });
 
     let savedRecord;
     try {
@@ -357,45 +359,82 @@ export function ContentProvider({ children }) {
       throw new Error(`Fallo al guardar en la base de datos: ${detailMsg}`);
     }
 
-    // If new photos were attached, obtain their public URLs and update image/gallery fields in PB
-    if (hasNewFiles && savedRecord && Array.isArray(savedRecord.photos) && savedRecord.photos.length > 0) {
-      try {
-        const photoUrls = savedRecord.photos.map(pName => pb.files.getURL(savedRecord, pName));
-        
-        let mainUrl = photoUrls[0];
-        if (hasNewMainFile && savedRecord.photos.length > 1) {
-          const newFilesCount = 1 + (Array.isArray(galleryFiles) ? galleryFiles.filter(f => f instanceof Blob || f instanceof File).length : 0);
-          const mainFileIndex = Math.max(0, savedRecord.photos.length - newFilesCount);
-          mainUrl = photoUrls[mainFileIndex] || photoUrls[0];
+    // Resolve public URLs for newly uploaded files and build definitive image & gallery
+    try {
+      const totalNewFiles = (hasNewMainFile ? 1 : 0) + newGalleryFilesList.length;
+      let uploadedNewUrls = [];
+      
+      if (totalNewFiles > 0 && savedRecord && Array.isArray(savedRecord.photos)) {
+        const startIndex = Math.max(0, savedRecord.photos.length - totalNewFiles);
+        for (let i = 0; i < totalNewFiles; i++) {
+          const fn = savedRecord.photos[startIndex + i];
+          if (fn) {
+            uploadedNewUrls.push(pb.files.getURL(savedRecord, fn));
+          }
         }
-
-        const remainingUrls = photoUrls.filter(u => u !== mainUrl);
-        const finalGallery = [mainUrl, ...remainingUrls];
-
-        await pb.collection('properties').update(savedRecord.id, {
-          image: mainUrl,
-          gallery: finalGallery
-        });
-        
-        savedRecord.image = mainUrl;
-        savedRecord.gallery = finalGallery;
-      } catch (err) {
-        console.warn('Notice updating resolved photo URLs:', err);
       }
-    } else if (!hasNewFiles && savedRecord) {
-      // User only edited text fields, ensure image & gallery reflect user selections without resurrecting deleted photos
-      const cleanMain = cleanImageUrl(propData.image) || savedRecord.image;
-      const cleanGal = Array.isArray(propData.gallery)
-        ? propData.gallery.map(cleanImageUrl).filter(u => u && !u.startsWith('data:') && !u.startsWith('blob:'))
-        : (Array.isArray(savedRecord.gallery) ? savedRecord.gallery : [cleanMain]);
 
+      // Determine final main cover URL
+      let finalMainUrl = '';
+      if (hasNewMainFile && uploadedNewUrls.length > 0) {
+        finalMainUrl = uploadedNewUrls[0];
+      } else {
+        finalMainUrl = cleanImageUrl(propData.image);
+      }
+
+      // Determine final gallery URLs in exact sequence requested by user
+      let finalGallery = [];
+      let galUploadIdx = hasNewMainFile ? 1 : 0;
+
+      if (Array.isArray(galleryItems) && galleryItems.length > 0) {
+        finalGallery = galleryItems.map(item => {
+          if ((item.file instanceof Blob || item.file instanceof File) && galUploadIdx < uploadedNewUrls.length) {
+            const resolved = uploadedNewUrls[galUploadIdx];
+            galUploadIdx++;
+            return resolved;
+          }
+          return cleanImageUrl(item.url);
+        }).filter(u => u && typeof u === 'string' && !u.startsWith('data:') && !u.startsWith('blob:'));
+      } else if (Array.isArray(propData.gallery)) {
+        finalGallery = propData.gallery.map(url => {
+          if (typeof url === 'string' && (url.startsWith('data:') || url.startsWith('blob:'))) {
+            if (galUploadIdx < uploadedNewUrls.length) {
+              const resolved = uploadedNewUrls[galUploadIdx];
+              galUploadIdx++;
+              return resolved;
+            }
+            return null;
+          }
+          return cleanImageUrl(url);
+        }).filter(u => u && typeof u === 'string' && !u.startsWith('data:') && !u.startsWith('blob:'));
+      }
+
+      // If finalMainUrl is still empty or invalid, fallback to first photo
+      if ((!finalMainUrl || finalMainUrl.startsWith('data:') || finalMainUrl.startsWith('blob:')) && savedRecord.photos?.length > 0) {
+        finalMainUrl = pb.files.getURL(savedRecord, savedRecord.photos[0]);
+      }
+      if (!finalMainUrl) {
+        finalMainUrl = '/images/placeholder_property.svg';
+      }
+
+      // Ensure gallery has at least the main photo if empty
+      if (finalGallery.length === 0 && finalMainUrl && !finalMainUrl.includes('placeholder')) {
+        finalGallery = [finalMainUrl];
+      }
+
+      // Update PocketBase with resolved image & gallery fields
       await pb.collection('properties').update(savedRecord.id, {
-        image: cleanMain,
-        gallery: cleanGal.length > 0 ? cleanGal : [cleanMain]
-      }).catch(() => {});
+        image: finalMainUrl,
+        gallery: finalGallery
+      });
+
+      savedRecord.image = finalMainUrl;
+      savedRecord.gallery = finalGallery;
+    } catch (updateErr) {
+      console.warn('Notice finalizing image/gallery fields:', updateErr);
     }
 
-    // Refresh properties from remote DB to keep state perfectly synchronized
+    // Refresh properties from remote DB to keep local state perfectly synchronized
     await fetchPropertiesFromPocketBase();
     return savedRecord;
   };

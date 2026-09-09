@@ -46,8 +46,14 @@ export default async function handler(req, res) {
         is_featured: p.is_featured,
         operation: p.operation,
         type: p.type,
-        image: p.image,
-        gallery: p.gallery,
+        image: p.image || (Array.isArray(p.photos) && p.photos.length > 0 ? pb.files.getURL(p, p.photos[0]) : '/images/placeholder_property.svg'),
+        gallery: Array.isArray(p.gallery) && p.gallery.length > 0 
+          ? p.gallery 
+          : (typeof p.gallery === 'string' && p.gallery.trim().startsWith('[') 
+              ? (function() { try { return JSON.parse(p.gallery); } catch(e) { return []; } })() 
+              : (Array.isArray(p.photos) && p.photos.length > 0 
+                  ? p.photos.map(ph => pb.files.getURL(p, ph)) 
+                  : (p.image ? [p.image] : []))),
         description: p.description,
         features: p.features,
         map_coords: p.map_coords
